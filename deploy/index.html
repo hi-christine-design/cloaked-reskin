@@ -7126,36 +7126,25 @@
        // (from assets/original-dark/ — already exists for every entry in
        // originalScreenshots) so dark mode pulls in the actual Cloaked
        // dark-mode colors instead of a CSS filter approximation.
+      // Always show the screen PNG for the original side. The hand-coded
+      // HTML strings in `originals[]` stay in the file as backend-only
+      // reference — not injected into the DOM. Each pane renders both a
+      // light and dark PNG; CSS swaps which is visible based on
+      // body[data-site-theme].
       const fallbackPng = originalScreenshots[entry.tab];
-      const defaultInner = originalHTML
-        ? `<div class="original">${originalHTML}</div>`
-        : fallbackPng
-          ? `<img loading="lazy" class="orig-fallback orig-fallback--light" src="assets/original/${encodeURIComponent(fallbackPng)}" alt="${labelMap[entry.tab]} — original (light)" />
-             <img loading="lazy" class="orig-fallback orig-fallback--dark"  src="assets/original-dark/${encodeURIComponent(fallbackPng)}" alt="${labelMap[entry.tab]} — original (dark)" />`
-          : `<img loading="lazy" src="assets/reskin/${entry.file}" alt="${labelMap[entry.tab]} — original" />`;
-      const screenshotFile = originalScreenshots[entry.tab];
-      // Light + dark versions share the same filename across the two
-      // folders; CSS swaps visibility based on body[data-site-theme].
-      const screenshotInner = screenshotFile
-        ? `<img loading="lazy" class="orig-screenshot orig-screenshot--light" src="assets/original/${encodeURIComponent(screenshotFile)}" alt="${labelMap[entry.tab]} — original screenshot (light)" />
-           <img loading="lazy" class="orig-screenshot orig-screenshot--dark"  src="assets/original-dark/${encodeURIComponent(screenshotFile)}" alt="${labelMap[entry.tab]} — original screenshot (dark)" />`
-        : '';
-      // Each panel-stack carries its own data-orig-mode so toggles are per-page.
-      const origSwitch = screenshotFile ? `
-        <div class="orig-mode-switch" role="tablist" aria-label="Original view mode">
-          <button type="button" role="tab" data-orig-mode="default" aria-selected="true">HTML</button>
-          <button type="button" role="tab" data-orig-mode="png"     aria-selected="false">Screen</button>
-        </div>` : '';
+      const originalInner = fallbackPng
+        ? `<img loading="lazy" class="orig-screenshot orig-screenshot--light" src="assets/original/${encodeURIComponent(fallbackPng)}" alt="${labelMap[entry.tab]} — original (light)" />
+           <img loading="lazy" class="orig-screenshot orig-screenshot--dark"  src="assets/original-dark/${encodeURIComponent(fallbackPng)}" alt="${labelMap[entry.tab]} — original (dark)" />`
+        : `<img loading="lazy" src="assets/reskin/${entry.file}" alt="${labelMap[entry.tab]} — original" />`;
       pane.innerHTML = `
         <div class="pane-row">
-          <div class="panel-stack" data-orig-mode="default">
+          <div class="panel-stack">
             <div class="panel-stack__card">
               <div class="panel"><div class="phone-scale"><div class="phone phone--before"><div class="phone-scroll">
-                <div data-orig-view="default">${defaultInner}</div>
-                ${screenshotInner ? `<div data-orig-view="png">${screenshotInner}</div>` : ''}
+                ${originalInner}
               </div></div></div></div>
             </div>
-            <div class="label"><span>Original</span>${origSwitch}</div>
+            <div class="label"><span>Original</span></div>
           </div>
           <div class="panel-stack">
             <div class="panel-stack__card">
@@ -7166,21 +7155,6 @@
         </div>
       `;
       paneRoot.appendChild(pane);
-    });
-
-    // Per-panel toggle: HTML view <-> screenshot PNG. Each .orig-mode-switch
-    // updates its parent .panel-stack[data-orig-mode], which the CSS uses to
-    // show/hide [data-orig-view="default"] vs [data-orig-view="png"].
-    paneRoot.addEventListener('click', (e) => {
-      const btn = e.target.closest('.orig-mode-switch button[data-orig-mode]');
-      if (!btn) return;
-      const mode = btn.dataset.origMode;
-      const stack = btn.closest('.panel-stack');
-      if (!stack) return;
-      stack.setAttribute('data-orig-mode', mode);
-      btn.parentElement.querySelectorAll('button').forEach(b => {
-        b.setAttribute('aria-selected', b.dataset.origMode === mode ? 'true' : 'false');
-      });
     });
 
     const tabBar = document.getElementById('tabBar');
@@ -9513,7 +9487,10 @@
             if (!isLight) return;
             img.dataset.lightSrc = cur;
             img.dataset.darkSrc = cur
-              .replace('/assets/original/', '/assets/original-dark/');
+              // Match both relative ("assets/original/...") and absolute
+              // ("/assets/original/...") src paths so the dark variant is
+              // computed correctly regardless of how the img was authored.
+              .replace(/assets\/original\//, 'assets/original-dark/');
           }
           img.src = (theme === 'dark') ? img.dataset.darkSrc : img.dataset.lightSrc;
         });
