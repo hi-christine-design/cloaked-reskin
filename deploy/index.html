@@ -81,25 +81,26 @@
       background: rgba(255,255,255,0.1);
       color: #f3f1ed;
     }
-    /* Dark mode chrome — swapped from previous attempt. The card
-       (panel-stack__card) is now the LIGHTER #26241F "tray" sitting
-       inside a DARKER #1B1B18 page. This way the phone's #1B1B18 fill
-       no longer matches the card it sits in:
-         page (.site-main / .panel-stack)  = #1B1B18  ← darker outer
-         card (.panel-stack__card)         = #26241F  ← lighter tray
-         phone (.phone via --ct-bkgd-02)   = #1B1B18  (matches outer, but
-                                                       inside the lighter
-                                                       card frame, so the
-                                                       card defines it) */
+    /* Dark mode chrome — final hierarchy mirrors light mode's phone>page>card
+       brightness ladder. The card is the DARKEST (recessed tray), the phone
+       sits inside as the lightest "popped-out" surface, and the outer page
+       provides medium-tone continuity:
+         page (.site-main / .panel-stack)  = #1B1B18  ← medium-dark outer
+         card (.panel-stack__card)         = #0B0B0A  ← deepest, recessed tray
+         phone (.phone via --ct-bkgd-02)   = #1B1B18  ← lifted out of card
+       The 20px card margin shows a frame of the outer page around the card,
+       same structural pattern as light mode (cream wraps a darker-cream card
+       that holds a white phone). */
     body[data-site-theme="dark"] .site-main {
       background: #1B1B18;
       border-left-color: rgba(255,255,255,0.08);
     }
     body[data-site-theme="dark"] .panel-stack { background: #1B1B18; }
     body[data-site-theme="dark"] .panel-stack + .panel-stack { border-left-color: rgba(255,255,255,0.08); }
-    body[data-site-theme="dark"] .panel-stack__card { background: #26241F; }
-    /* 1px alpha ring around the phone — softer now (0.08) since the card
-       is a lighter tone and the phone naturally reads as darker inside it. */
+    body[data-site-theme="dark"] .panel-stack__card { background: #0B0B0A; }
+    /* 1px alpha ring around the phone — phone is now visibly lighter than
+       the deep card behind it, but the ring still helps define the rounded
+       corners crisply. */
     body[data-site-theme="dark"] .phone {
       box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 12px 32px rgba(0,0,0,0.4);
     }
