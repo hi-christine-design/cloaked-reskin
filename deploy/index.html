@@ -1880,6 +1880,25 @@
     }
     .copy-cta svg { width: 16px; height: 16px; }
 
+    /* Pause CTA — pill button with icon + "Pause" label. Icon alone wasn't
+       clear; the label makes the affordance explicit. */
+    .pause-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--ct-spacing-4);
+      background: var(--ct-cta-primary-container);
+      color: var(--ct-cta-primary-text);
+      padding: var(--ct-spacing-8) var(--ct-spacing-16);
+      border-radius: var(--ct-spacing-24);
+      border: 0;
+      font-family: inherit;
+      font-size: var(--ct-text-body-small-size);
+      letter-spacing: 0.07px;
+      cursor: pointer;
+      height: 40px;
+    }
+    .pause-cta svg { width: 16px; height: 16px; }
+
     /* Segment control — 3 pills, active is filled dark */
     .segment-control {
       display: flex;
@@ -5637,11 +5656,7 @@
           <button class="copy-cta" type="button">${icon('copy')}<span>Copy</span></button>
         </div>
         <div class="section-gap"></div>
-        <div class="segment-control">
-          <span class="seg-item">Messages</span>
-          <span class="seg-item seg-item--active">Calls</span>
-          <span class="seg-item">Spam</span>
-        </div>
+        ${underlineTabs(['Messages', 'Calls', 'Spam'], 1)}
         <div class="date-divider">10 min ago</div>
         ${listRow({ avatar: guardAvatar, title: 'Cloaked Test Call', description: 'Los Angeles, CA', trailing: icon('phone') })}
         ${listRow({ avatar: guardAvatar, title: 'Cloaked Test Call', description: 'This is some tet for transcription of the voicemail that was left for...', trailing: icon('voicemail') })}
@@ -5663,7 +5678,7 @@
           <p class="num">1</p>
           <p class="lbl">Spam calls Blocked</p>
           <p class="meta-bottom">Started 4 days ago</p>
-          <button class="icon-circle-btn action-btn" aria-label="Pause Call Guard">${icon('pause')}</button>
+          <button class="pause-cta" type="button" aria-label="Pause Call Guard">${icon('pause')}<span>Pause</span></button>
         </div>
         <div class="section-gap"></div>
         <div class="section-header-row">
@@ -5858,7 +5873,7 @@
           <span class="title">Hide My Identity</span>
           <span class="brand-action">Edit</span>
         </div>
-        ${underlineTabs(['All', 'Phone', 'Email', 'Card', 'Password', 'Account'], 4)}
+        ${underlineTabs(['All', 'Phone', 'Email', 'Card', 'Password', 'Account'], 0)}
         <div class="list-header-bar">
           <div class="list-search-pill">${icon('search')}<span>Search</span></div>
           <button class="list-sort-btn" aria-label="Sort" type="button">${icon('sort')}</button>
