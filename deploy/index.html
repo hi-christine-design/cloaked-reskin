@@ -61,10 +61,14 @@
     body[data-site-theme="dark"] .site-sidebar { background: #141410; border-right-color: rgba(255,255,255,0.08); }
     body[data-site-theme="dark"] .site-sidebar__brand,
     body[data-site-theme="dark"] .site-sidebar__section-header,
-    body[data-site-theme="dark"] .tab-bar button { color: #f3f1ed; }
-    body[data-site-theme="dark"] .tab-bar button { border-bottom-color: rgba(255,255,255,0.04); }
-    body[data-site-theme="dark"] .tab-bar button:hover { background: rgba(255,255,255,0.04); }
-    body[data-site-theme="dark"] .tab-bar button[aria-selected="true"] {
+    body[data-site-theme="dark"] .tab-bar button,
+    body[data-site-theme="dark"] .token-nav button { color: #f3f1ed; }
+    body[data-site-theme="dark"] .tab-bar button,
+    body[data-site-theme="dark"] .token-nav button { border-bottom-color: rgba(255,255,255,0.04); }
+    body[data-site-theme="dark"] .tab-bar button:hover,
+    body[data-site-theme="dark"] .token-nav button:hover { background: rgba(255,255,255,0.04); }
+    body[data-site-theme="dark"] .tab-bar button[aria-selected="true"],
+    body[data-site-theme="dark"] .token-nav button[aria-selected="true"] {
       background: rgba(255, 85, 12, 0.15);
     }
     body[data-site-theme="dark"] .view-switcher { border-bottom-color: rgba(255,255,255,0.08); }
