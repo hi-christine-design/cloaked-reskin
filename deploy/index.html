@@ -3672,31 +3672,47 @@
 
       <div class="site-sidebar__section-header site-sidebar__section-header--pages">Pages</div>
 
+      <!-- Pages sidebar — buttons grouped by app surface (Home, Identity,
+           Guard, Monitoring) with the rest standalone at the bottom. The
+           data-tab values stay the original slugs so page routing keeps
+           working; only the visible labels change. -->
       <nav class="tab-bar" role="tablist" id="tabBar">
-        <button role="tab" data-tab="homepage" aria-selected="true">Home</button>
-        <button role="tab" data-tab="exposure">Exposure status</button>
-        <button role="tab" data-tab="automations">Automations</button>
-        <button role="tab" data-tab="identity-phone">Identity · Phone</button>
-        <button role="tab" data-tab="identity-email">Identity · Email</button>
-        <button role="tab" data-tab="identity-inbox">Identity · Inbox</button>
-        <button role="tab" data-tab="identity-phone-number">Phone number</button>
-        <button role="tab" data-tab="inbox-call-guard">Call Guard</button>
-        <button role="tab" data-tab="identity-monitoring">ID monitoring</button>
-        <button role="tab" data-tab="id-mon-empty">ID Mon · Empty</button>
-        <button role="tab" data-tab="id-mon-events">ID Mon · Events</button>
-        <button role="tab" data-tab="id-mon-detail">ID Mon · Detail</button>
+        <div class="token-nav__group">
+          <p class="token-nav__group-title">Home</p>
+          <button role="tab" data-tab="homepage" aria-selected="true">Homepage</button>
+          <button role="tab" data-tab="exposure">Exposure cleanup</button>
+          <button role="tab" data-tab="automations">Automations</button>
+          <button role="tab" data-tab="settings">Settings</button>
+          <button role="tab" data-tab="menu">Menu</button>
+        </div>
+        <div class="token-nav__group">
+          <p class="token-nav__group-title">Identity</p>
+          <button role="tab" data-tab="identity-phone">Phone</button>
+          <button role="tab" data-tab="identity-email">Email</button>
+          <button role="tab" data-tab="identity-inbox">Inbox</button>
+          <button role="tab" data-tab="password-manager">Password Manager</button>
+          <button role="tab" data-tab="spotify-identity">Create an identity</button>
+          <button role="tab" data-tab="edit-password-overlay">Edit password overlay</button>
+          <button role="tab" data-tab="edit-password">Edit password</button>
+          <button role="tab" data-tab="esim">Manage eSIM</button>
+        </div>
+        <div class="token-nav__group">
+          <p class="token-nav__group-title">Guard</p>
+          <button role="tab" data-tab="identity-phone-number">Cloaked phone</button>
+          <button role="tab" data-tab="inbox-call-guard">Call Guard</button>
+        </div>
+        <div class="token-nav__group">
+          <p class="token-nav__group-title">Monitoring</p>
+          <button role="tab" data-tab="identity-monitoring">Current</button>
+          <button role="tab" data-tab="id-mon-empty">Empty</button>
+          <button role="tab" data-tab="id-mon-events">Events</button>
+          <button role="tab" data-tab="id-mon-detail">Detail</button>
+        </div>
         <button role="tab" data-tab="vpn">VPN</button>
-        <button role="tab" data-tab="password-manager">Password Manager</button>
-        <button role="tab" data-tab="spotify-identity">Spotify identity</button>
-        <button role="tab" data-tab="edit-password-overlay">Edit password overlay</button>
-        <button role="tab" data-tab="edit-password">Edit password</button>
-        <button role="tab" data-tab="wallet">Wallet</button>
+        <button role="tab" data-tab="wallet">Cloaked Pay</button>
         <button role="tab" data-tab="otp">One-Time Passcode</button>
-        <button role="tab" data-tab="esim">Manage eSIM</button>
-        <button role="tab" data-tab="id-theft">Identity Theft</button>
-        <button role="tab" data-tab="settings">Settings</button>
+        <button role="tab" data-tab="id-theft">Insurance</button>
         <button role="tab" data-tab="messages">Messages</button>
-        <button role="tab" data-tab="menu">Menu</button>
       </nav>
 
       <!-- TOKENS sub-nav — visible only when viewSwitcher is on "Tokens".
@@ -6303,22 +6319,38 @@
       { tab: 'menu', key: 'menu', file: 'Menu.png' },
     ];
 
+    // labelMap matches the renamed sidebar buttons (used for image alt text
+     // and any spot that surfaces a human-readable page label).
     const labelMap = {
-      'homepage': 'Homepage', 'exposure': 'Exposure status', 'automations': 'Automations',
-      'identity-phone': 'Identity · Phone', 'identity-email': 'Identity · Email',
-      'identity-inbox': 'Identity · Inbox', 'identity-phone-number': 'Phone number',
-      'inbox-call-guard': 'Call Guard', 'identity-monitoring': 'Identity monitoring',
-      'id-mon-empty': 'ID Monitoring · Empty',
-      'id-mon-events': 'ID Monitoring · Events',
-      'id-mon-detail': 'ID Monitoring · Event Detail',
-      'vpn': 'VPN', 'password-manager': 'Password manager',
-      'spotify-identity': 'Spotify identity',
+      // Home group
+      'homepage': 'Homepage',
+      'exposure': 'Exposure cleanup',
+      'automations': 'Automations',
+      'settings': 'Settings',
+      'menu': 'Menu',
+      // Identity group
+      'identity-phone': 'Phone',
+      'identity-email': 'Email',
+      'identity-inbox': 'Inbox',
+      'password-manager': 'Password Manager',
+      'spotify-identity': 'Create an identity',
       'edit-password-overlay': 'Edit password overlay',
       'edit-password': 'Edit password',
-      'wallet': 'Wallet',
-      'otp': 'One-time passcode', 'esim': 'Manage eSIM',
-      'id-theft': 'Identity theft protection', 'settings': 'Settings',
-      'messages': 'Messages', 'menu': 'Menu',
+      'esim': 'Manage eSIM',
+      // Guard group
+      'identity-phone-number': 'Cloaked phone',
+      'inbox-call-guard': 'Call Guard',
+      // Monitoring group
+      'identity-monitoring': 'Current',
+      'id-mon-empty': 'Empty',
+      'id-mon-events': 'Events',
+      'id-mon-detail': 'Detail',
+      // Standalone
+      'vpn': 'VPN',
+      'wallet': 'Cloaked Pay',
+      'otp': 'One-Time Passcode',
+      'id-theft': 'Insurance',
+      'messages': 'Messages',
     };
 
     /* Map each tab key to its real screenshot PNG (from cloaked_original
