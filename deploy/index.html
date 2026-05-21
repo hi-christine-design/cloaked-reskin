@@ -426,14 +426,10 @@
       justify-content: center;
       color: #fff;
     }
-    .list-row__avatar--monitor  { background: #5936C1; } /* purple — dark web monitoring */
-    .list-row__avatar--identity { background: #0F8F7C; } /* teal — identity */
-    .list-row__avatar--shield   { background: #E59D2B; } /* amber — guard */
-    .list-row__avatar--wallet   { background: #3F7AEF; } /* blue — wallet/card */
-    .list-row__avatar--phone    { background: #008924; } /* green — phone */
-    .list-row__avatar--email    { background: #FF550C; } /* brand — email */
-    .list-row__avatar--lock     { background: #635EF9; } /* purple alt — password */
-    .list-row__avatar--inbox    { background: #C53535; } /* red — inbox */
+    /* Avatar backgrounds — exact Figma Category_TBD values. */
+    .list-row__avatar--monitor  { background: #5936C1; } /* Monitoring (dark web) */
+    .list-row__avatar--guard    { background: #D78E20; } /* Guard (call/sms/email guard) */
+    .list-row__avatar--identity { background: #379AAD; } /* Identity */
     .list-row__main {
       display: flex;
       flex-direction: column;
@@ -6464,21 +6460,22 @@
 
         colorCategory(
           'Category accents',
-          'Per-surface accent hues — one color per product category (Monitor, Identity, Guard, Wallet, Phone, Email, Lock, Inbox). Used as avatar backgrounds, list-row category badges, and section headers in the dashboard.',
+          'Per-surface accent hues — one base color per product category, each with two darker Container shades for tinted backgrounds. Sourced from the Figma Category_TBD variable collection.',
           'original - none',
           [],
-          'cloaked reskin - 8 categories',
+          'cloaked reskin - 3 categories · 9 tokens',
           [
-            ['#5936C1','--ct-color-monitor'],
-            ['#0F8F7C','--ct-color-identity'],
-            ['#E59D2B','--ct-color-guard'],
-            ['#3F7AEF','--ct-color-wallet'],
-            ['#008924','--ct-color-phone'],
-            ['#FF550C','--ct-color-email'],
-            ['#635EF9','--ct-color-lock'],
-            ['#C53535','--ct-color-inbox'],
+            ['#5936C1','--ct-color-monitoring'],
+            ['#411D50','--ct-color-monitoring-container-01'],
+            ['#291132','--ct-color-monitoring-container-02'],
+            ['#D78E20','--ct-color-guard'],
+            ['#996820','--ct-color-guard-container-01'],
+            ['#5B3B0D','--ct-color-guard-container-02'],
+            ['#379AAD','--ct-color-identity'],
+            ['#193047','--ct-color-identity-container-01'],
+            ['#0E1F31','--ct-color-identity-container-02'],
           ],
-          '8 hues, one per product surface. A few resolve to existing primitives — <code>--ct-color-phone</code> shares its value with <code>--ct-color-green-01</code>, and <code>--ct-color-email</code> shares with <code>--ct-color-brand</code> — so the category palette can evolve without disturbing status or brand semantics. The five truly new hues (Monitor, Identity, Guard, Wallet, Lock) replace the old Purple/Blue decorative tints.'
+          '3 categories — <strong>Monitoring</strong> (dark-web), <strong>Guard</strong> (call/SMS/email guard), <strong>Identity</strong> — each as a base hue plus two progressively darker Container shades for tinted surfaces and section backgrounds. Replaces the old Purple/Blue decorative tints with a semantic, per-surface system. The <em>_TBD</em> suffix in Figma signals the set is still being finalized — more categories will land here as the product surface expands.'
         ),
 
         colorCategory(
@@ -6938,16 +6935,11 @@
          row on every change. */
       const SVG = (path, w) => `<svg viewBox="0 0 24 24" width="${w||20}" height="${w||20}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
       const PG_ICONS = {
-        // Avatar icon variants (white stroke on a 40px colored circle).
-        // Each icon maps to a real Cloaked product category.
-        monitor:  SVG('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>'),               // eye — dark web monitoring
-        identity: SVG('<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>'),                       // person — identity
-        shield:   SVG('<path d="M12 3 5 6v6c0 4.5 3 8.5 7 10 4-1.5 7-5.5 7-10V6l-7-3z"/><path d="m9 12 2 2 4-4"/>'),               // shield+check — guard
-        wallet:   SVG('<rect x="3" y="7" width="18" height="12" rx="2"/><path d="M3 11h18"/><path d="M7 16h3"/>'),                   // card — wallet
-        phone:    SVG('<path d="M21 16.5v2.5a1.8 1.8 0 0 1-2 1.8 17 17 0 0 1-7.4-2.6 16.7 16.7 0 0 1-5.1-5.1A17 17 0 0 1 3.9 5a1.8 1.8 0 0 1 1.8-2h2.5a1.8 1.8 0 0 1 1.8 1.5c.1.9.3 1.7.6 2.5a1.8 1.8 0 0 1-.4 1.9L9 10a13 13 0 0 0 5 5l1.1-1.1a1.8 1.8 0 0 1 1.9-.4c.8.3 1.6.5 2.5.6a1.8 1.8 0 0 1 1.5 1.8z"/>'),  // receiver — phone
-        email:    SVG('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>'),                                  // envelope — email
-        lock:     SVG('<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),                      // padlock — password
-        inbox:    SVG('<path d="M3 13h5l2 3h4l2-3h5"/><path d="M5.5 5h13l2.5 8v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6l2.5-8z"/>'),       // inbox — messages
+        // Avatar icon variants — mirror Figma's Category_TBD set (Monitoring,
+        // Guard, Identity). White stroke on a 40px colored circle.
+        monitor:  SVG('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>'),   // eye — dark web monitoring
+        guard:    SVG('<path d="M12 3 5 6v6c0 4.5 3 8.5 7 10 4-1.5 7-5.5 7-10V6l-7-3z"/><path d="m9 12 2 2 4-4"/>'),     // shield+check — guard
+        identity: SVG('<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>'),             // person — identity
         // Trailing "icon" variants (24px stroke marks)
         chevron:   SVG('<path d="M9 18l6-6-6-6"/>', 24),
         arrow:     SVG('<path d="M5 12h14M13 5l7 7-7 7"/>', 24),
@@ -7081,19 +7073,14 @@
           </div>`;
 
         // icon/Avatar group — only when avatar is showing.
-        // All 8 Cloaked product-category avatars exposed.
+        // Mirrors the Figma Category_TBD variable set exactly.
         const avatarGroup = (s.size !== 'small' && s.showAvatar) ? `
           <div class="playground__controls-section">
             <p class="playground__controls-section-title playground__controls-section-title--group">icon/Avatar</p>
             ${select('avatarVariant', 'Variant', [
-              { value: 'monitor',  label: 'Monitor' },
+              { value: 'monitor',  label: 'Monitoring' },
+              { value: 'guard',    label: 'Guard' },
               { value: 'identity', label: 'Identity' },
-              { value: 'shield',   label: 'Shield' },
-              { value: 'wallet',   label: 'Wallet' },
-              { value: 'phone',    label: 'Phone' },
-              { value: 'email',    label: 'Email' },
-              { value: 'lock',     label: 'Lock' },
-              { value: 'inbox',    label: 'Inbox' },
             ])}
           </div>` : '';
 
