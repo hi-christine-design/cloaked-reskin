@@ -221,6 +221,13 @@
       padding: 64px 24px 96px;
       color: #120f03;
     }
+    /* Inline variant — used when .cover-page is rendered inside another
+       padded surface (e.g. the Components view's #componentsGrid sitting
+       inside .view-pane[data-view="components"] which already pads 32px).
+       Drops the outer vertical padding so the content sits flush. */
+    .cover-page--inline {
+      padding: 16px 0 32px;
+    }
     .cover-page h2 {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
       font-size: 28px;
@@ -4435,7 +4442,8 @@
       <!-- COMPONENTS sub-nav — visible only when viewSwitcher is on "Components" -->
       <div class="site-sidebar__section-header site-sidebar__section-header--components">Components</div>
       <nav class="components-nav" role="tablist" id="componentsNav">
-        <button role="tab" data-components-tab="list-row" aria-selected="true">List row</button>
+        <button role="tab" data-components-tab="overview" aria-selected="true">Overview</button>
+        <button role="tab" data-components-tab="list-row" aria-selected="false">List row</button>
         <button role="tab" data-components-tab="button" aria-selected="false">Button</button>
         <button role="tab" data-components-tab="icon-button" aria-selected="false">Icon button</button>
         <button role="tab" data-components-tab="tab" aria-selected="false">Tab</button>
@@ -8274,7 +8282,71 @@
 
       // Sub-page content map — the sidebar Components nav swaps content
       // into #componentsGrid based on which entry is active.
+      const overviewBlock = `
+        <div class="cover-page cover-page--inline">
+          <h2>Minimum components, maximum impact</h2>
+          <p style="font-size:17px;line-height:1.6;margin:0 0 32px;max-width:640px;">
+            These eight components are the smallest set we need to update to reskin the app.
+            They sound modest — a button here, a divider there — but they repeat across
+            <em>every</em> page. Fixing them once changes how every screen feels.
+          </p>
+
+          <h2>What we're updating</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Where it shows up</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>List row</strong><br><span style="opacity:0.7;font-size:14px;">Avatar + title + meta + trailing action</span></td>
+                <td>Identities, Inbox, Settings, ID Monitoring, Password Manager — the workhorse of every list-based screen</td>
+              </tr>
+              <tr>
+                <td><strong>Button</strong><br><span style="opacity:0.7;font-size:14px;">Primary / Secondary / Tertiary / Link × Default / Small</span></td>
+                <td>Every primary CTA: "Improve your Digital Health", "Save", "Continue", "Block", "Add new"</td>
+              </tr>
+              <tr>
+                <td><strong>Icon button</strong><br><span style="opacity:0.7;font-size:14px;">Primary / Secondary × Default / Small</span></td>
+                <td>Header chrome (menu, back, share), inline actions inside cards and list rows</td>
+              </tr>
+              <tr>
+                <td><strong>Tab</strong><br><span style="opacity:0.7;font-size:14px;">3-tab and 5-tab strips</span></td>
+                <td>Section switchers on Identity, Phone, Inbox, Call Guard, ID Monitoring</td>
+              </tr>
+              <tr>
+                <td><strong>Header</strong><br><span style="opacity:0.7;font-size:14px;">Landing and detail-page layouts</span></td>
+                <td>Top of every screen — brand, large title, back, close, story pagination</td>
+              </tr>
+              <tr>
+                <td><strong>Divider</strong><br><span style="opacity:0.7;font-size:14px;">BKGD_01 / BKGD_02 with optional hairline and secondary text</span></td>
+                <td>Section breaks inside lists (Today / This week / Older), inline form groupings</td>
+              </tr>
+              <tr>
+                <td><strong>Card</strong><br><span style="opacity:0.7;font-size:14px;">Stat / dashboard tile</span></td>
+                <td>Homepage progress, exposure count, ID monitoring summary, dashboard surfaces</td>
+              </tr>
+              <tr>
+                <td><strong>Navigation</strong><br><span style="opacity:0.7;font-size:14px;">Bottom tab bar with 5 destinations</span></td>
+                <td>Persistent at the bottom of every primary screen — Home, Exposure, Guard, Phone, Wallet</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Why this is the right scope</h2>
+          <div class="why">
+            <p><strong>Compounding leverage.</strong> Every page is built from these eight primitives. Reskinning the page-level layout is expensive and one-off; reskinning the components touches every screen at once.</p>
+            <p><strong>Brand at every touch.</strong> The thing users actually see and tap a hundred times a day is the button, the row, the nav. These set the tone of the product more than any single page does.</p>
+            <p><strong>Low coordination cost.</strong> Eight components means eight contained pull requests, eight design reviews, and a finite engineering scope. No "redesign the whole app" undertaking.</p>
+            <p><strong>Token-driven future-proofing.</strong> Once each component is bound to the <code>--ct-*</code> token system, future themes (dark mode, accessibility variants, white-label) become trivial — they ride the same plumbing for free.</p>
+          </div>
+        </div>
+      `;
+
       const componentsContentMap = {
+        overview:   overviewBlock,
         button:     buttonBlock,
         tab:        tabBlock,
         header:     headerBlock,
@@ -9400,7 +9472,7 @@
           setComponentsSub(btn.dataset.componentsTab);
         });
         // Default sub-page
-        setComponentsSub('list-row');
+        setComponentsSub('overview');
       }
     })();
 
