@@ -81,22 +81,25 @@
       background: rgba(255,255,255,0.1);
       color: #f3f1ed;
     }
-    /* Dark mode chrome lifted to #26241F so the reskin phone mockup
-       (.phone bg uses --ct-bkgd-02 = #1B1B18 internally) reads as a
-       distinctly darker surface against the lighter page. Mirrors the
-       light-mode relationship where the white mockup sits on cream
-       #f3f1ee chrome. */
+    /* Dark mode chrome — three-tier brightness ladder that mirrors light
+       mode's page > card > phone hierarchy:
+         page (.site-main / .panel-stack)  = #26241F  ← lifted chrome
+         card (.panel-stack__card)         = #1B1B18  ← recessed tray (grey-04)
+         phone (.phone via --ct-bkgd-02)   = #1B1B18  + 1px alpha ring
+       The 20px margin on .panel-stack__card means the page color shows in
+       a frame around the card, just like light mode where the cream page
+       wraps a darker-cream card holding a white phone. */
     body[data-site-theme="dark"] .site-main {
       background: #26241F;
       border-left-color: rgba(255,255,255,0.08);
     }
     body[data-site-theme="dark"] .panel-stack { background: #26241F; }
     body[data-site-theme="dark"] .panel-stack + .panel-stack { border-left-color: rgba(255,255,255,0.08); }
-    body[data-site-theme="dark"] .panel-stack__card { background: #26241F; }
+    body[data-site-theme="dark"] .panel-stack__card { background: #1B1B18; }
     /* 1px alpha ring around the phone so its rounded edge is always
-       visible — belt-and-suspenders for any future chrome-color tweaks. */
+       visible, even when the card behind it shares the phone's fill. */
     body[data-site-theme="dark"] .phone {
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 12px 32px rgba(0,0,0,0.4);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.12), 0 12px 32px rgba(0,0,0,0.4);
     }
     body[data-site-theme="dark"] .panel-stack > .label { color: #f3f1ed; }
     body[data-site-theme="dark"] .theme-toggle {
