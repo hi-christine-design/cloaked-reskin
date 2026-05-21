@@ -1511,12 +1511,18 @@
        Default (no theme = light) hides the dark variant; dark theme hides
        the light variant. Both images use loading="lazy" so the network
        cost is only paid when the panel scrolls into view. */
+    .orig-fallback,
+    .orig-screenshot {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
     .orig-screenshot--dark,
     .orig-fallback--dark { display: none; }
     body[data-site-theme="dark"] .orig-screenshot--light,
-    body[data-site-theme="dark"] .orig-fallback--light { display: none; }
+    body[data-site-theme="dark"] .orig-fallback--light { display: none !important; }
     body[data-site-theme="dark"] .orig-screenshot--dark,
-    body[data-site-theme="dark"] .orig-fallback--dark  { display: block; }
+    body[data-site-theme="dark"] .orig-fallback--dark  { display: block !important; }
 
     .panel {
       background: transparent;
