@@ -6085,13 +6085,11 @@
       const BUREAU = '"STK Bureau Sans", "Helvetica Neue", sans-serif';
       const MONO = 'ui-monospace, SFMono-Regular, Menlo, monospace';
 
-      const typeRow = (sample, sampleStyle, name, specs, maxRenderSize) => {
-        // Render the sample at its actual style, but cap visual height for very large sizes
-        // so the comparison list doesn't blow out vertically. The spec label still shows true size.
-        const finalStyle = maxRenderSize
-          ? sampleStyle.replace(/font-size:\s*[^;]+/, `font-size:${maxRenderSize}px`)
-                       .replace(/line-height:\s*[^;]+/, `line-height:1`)
-          : sampleStyle;
+      const typeRow = (sample, sampleStyle, name, specs) => {
+        // Render the sample at its TRUE font-size so the hierarchy reads
+        // correctly. line-height is forced to 1 so a 70px sample doesn't
+        // also drag 76px of leading into the row height.
+        const finalStyle = sampleStyle.replace(/line-height:\s*[^;]+/, `line-height:1`);
         return `<div class="token-typo-row">
           <div class="token-typo-row__sample" style="${finalStyle}">${sample}</div>
           <div class="token-typo-row__meta">
@@ -6135,15 +6133,13 @@
         'Sample',
         `font-family:${SANS};font-weight:400;font-size:${t.size}px;line-height:${t.lh}px;letter-spacing:${t.ls}px;`,
         t.name,
-        `${t.size}/${t.lh}${t.ls !== 0 ? ' · ' + (t.ls > 0 ? '+' : '') + t.ls : ''}`,
-        t.visual
+        `${t.size}/${t.lh}${t.ls !== 0 ? ' · ' + (t.ls > 0 ? '+' : '') + t.ls : ''}`
       )).join('');
       const renderReskinScale = () => reskinScale.map(t => typeRow(
         'Sample',
         `font-family:${t.family};font-weight:400;font-size:${t.size}px;line-height:${t.lh};letter-spacing:${t.ls};`,
         t.name,
-        `${t.size}/${typeof t.lh === 'number' && t.lh < 3 ? t.lh : t.lh} · ${t.ls}`,
-        t.visual
+        `${t.size}/${t.lh} · ${t.ls}`
       )).join('');
 
       const renderOrigWeights = () => [
