@@ -149,7 +149,13 @@
       text-transform: uppercase;
       color: #120f03;
       letter-spacing: 0;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      transition: opacity 0.12s ease;
     }
+    .site-sidebar__brand:hover { opacity: 0.6; }
     .site-sidebar__section-header {
       font-family: 'Aeonik Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: 12px;
@@ -201,11 +207,75 @@
     /* Tokens + Components panes get their own cream background; Pages keeps the
        grey panel backdrop from .site-main. */
     .view-pane[data-view="tokens"],
-    .view-pane[data-view="components"] {
+    .view-pane[data-view="components"],
+    .view-pane[data-view="cover"] {
       background: #f3f1ee;
       padding: 32px;
       min-height: 100vh;
     }
+
+    /* ===== Cover view — editorial intro page ===== */
+    .cover-page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 64px 24px 96px;
+      color: #120f03;
+    }
+    .cover-page h2 {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin: 0 0 24px;
+      line-height: 1.2;
+    }
+    .cover-page h2 + h2 { margin-top: 64px; }
+    .cover-page table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 8px;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+    .cover-page thead th {
+      background: #0b0b0a;
+      color: #f3f1ed;
+      text-align: left;
+      padding: 16px 20px;
+      font-weight: 600;
+      font-size: 14px;
+      vertical-align: top;
+      width: 50%;
+    }
+    .cover-page tbody td {
+      padding: 20px;
+      vertical-align: top;
+      width: 50%;
+      border-top: 1px solid transparent;
+    }
+    .cover-page tbody tr:nth-child(even) td { background: #ece9e2; }
+    .cover-page .why p {
+      margin: 0 0 20px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #1f1b0d;
+    }
+    .cover-page .why p strong {
+      font-weight: 700;
+      color: #120f03;
+    }
+
+    /* Cover view dark theme */
+    body[data-site-theme="dark"] .cover-page { color: #f3f1ed; }
+    body[data-site-theme="dark"] .cover-page thead th {
+      background: #f3f1ed;
+      color: #0b0b0a;
+    }
+    body[data-site-theme="dark"] .cover-page tbody tr:nth-child(even) td {
+      background: rgba(255,255,255,0.04);
+    }
+    body[data-site-theme="dark"] .cover-page .why p { color: #d8d4c8; }
+    body[data-site-theme="dark"] .cover-page .why p strong { color: #f3f1ed; }
     /* Tokens + Components view-pane backgrounds match .site-main (#1B1B18)
        so the inner content area shares one tone with the surrounding chrome —
        mirroring the unified #f3f1ee surface in light mode. */
@@ -1755,16 +1825,28 @@
     /* View-driven sidebar visibility: only the active sub-nav shows */
     body[data-view="pages"] .site-sidebar__section-header--tokens,
     body[data-view="pages"] .token-nav,
+    body[data-view="pages"] .site-sidebar__section-header--assets,
+    body[data-view="pages"] #assetsNav,
     body[data-view="pages"] .site-sidebar__section-header--components,
     body[data-view="pages"] .components-nav,
     body[data-view="components"] .site-sidebar__section-header--tokens,
     body[data-view="components"] .token-nav,
+    body[data-view="components"] .site-sidebar__section-header--assets,
+    body[data-view="components"] #assetsNav,
     body[data-view="components"] .site-sidebar__section-header--pages,
     body[data-view="components"] .tab-bar,
     body[data-view="tokens"] .site-sidebar__section-header--pages,
     body[data-view="tokens"] .tab-bar,
     body[data-view="tokens"] .site-sidebar__section-header--components,
-    body[data-view="tokens"] .components-nav { display: none; }
+    body[data-view="tokens"] .components-nav,
+    body[data-view="cover"] .site-sidebar__section-header--pages,
+    body[data-view="cover"] .tab-bar,
+    body[data-view="cover"] .site-sidebar__section-header--tokens,
+    body[data-view="cover"] .token-nav,
+    body[data-view="cover"] .site-sidebar__section-header--assets,
+    body[data-view="cover"] #assetsNav,
+    body[data-view="cover"] .site-sidebar__section-header--components,
+    body[data-view="cover"] .components-nav { display: none; }
 
     /* Components sub-page visibility — only the List row sub-page shows
        the interactive playground; every other sub (Overview, Button, Tab,
@@ -4137,6 +4219,21 @@
       .site-shell { display: block; }
       .pane-row { min-height: auto; flex-direction: column; }
       .panel-stack + .panel-stack { border-left: 0; border-top: 1px solid #b8b8b8; }
+
+      /* Cover view on mobile — scrollable, no bottom arrow bar */
+      body[data-view="cover"] .mobile-bottom-bar { display: none !important; }
+      body[data-view="cover"] { overflow: auto; }
+      body[data-view="cover"] .site-main { overflow: visible; }
+      body[data-view="cover"] .view-pane[data-view="cover"] {
+        padding: 24px 16px 64px;
+        min-height: auto;
+      }
+      body[data-view="cover"] .cover-page {
+        padding: 24px 0 48px;
+      }
+      body[data-view="cover"] .cover-page h2 { font-size: 22px; }
+      body[data-view="cover"] .cover-page thead th,
+      body[data-view="cover"] .cover-page tbody td { padding: 12px 14px; font-size: 14px; }
     }
   </style>
 </head>
@@ -4144,7 +4241,7 @@
   <div class="inspector-tooltip" id="inspectorTooltip" role="tooltip" aria-hidden="true"></div>
 
   <header class="mobile-header">
-    <h1 class="mobile-title">Cloaked Reskin</h1>
+    <h1 class="mobile-title" id="mobileBrandHome" role="button" tabindex="0">Cloaked Reskin</h1>
     <div class="mobile-tabs">
       <button class="mobile-tab active" data-mobile-view="original">Original</button>
       <button class="mobile-tab" data-mobile-view="reskinned">Reskinned</button>
@@ -4154,7 +4251,7 @@
   <div class="site-shell">
     <aside class="site-sidebar">
       <div class="site-sidebar__header">
-        <span class="site-sidebar__brand">Cloaked reskin</span>
+        <button class="site-sidebar__brand" id="brandHome" type="button" aria-label="Go to cover">Cloaked reskin</button>
         <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
           <svg class="theme-toggle__sun" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
           <svg class="theme-toggle__moon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
@@ -4253,7 +4350,47 @@
     </aside>
 
     <main class="site-main">
-      <section class="view-pane" data-view="pages">
+      <section class="view-pane" data-view="cover" hidden>
+        <div class="cover-page">
+          <h2>What's changing visually</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Current (iOS Design System 4.0)</th>
+                <th>Reskin (cloaked-design-md)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Native iOS look (SF Pro, light cream backgrounds, subtle shadows)</td>
+                <td>Editorial: dark / light / dark section layering, Simula serif headlines</td>
+              </tr>
+              <tr>
+                <td>Standard iOS components</td>
+                <td>Orange brand glow, more atmospheric custom surfaces</td>
+              </tr>
+              <tr>
+                <td>High information density per screen</td>
+                <td>Restrained density — minimal competing elements</td>
+              </tr>
+              <tr>
+                <td>Generic — hard to distinguish from other iOS apps</td>
+                <td>Recognizable Cloaked visual language at a glance</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Why this matters</h2>
+          <div class="why">
+            <p><strong>Trust is the product.</strong> Cloaked sells privacy and identity protection. In this category, how the app feels is itself part of the value — users need to take us seriously. Serif headlines, careful typography, and editorial rhythm signal craftsmanship and trustworthiness in a way standard iOS chrome can't.</p>
+            <p><strong>Brand differentiation.</strong> The existing design is well-made but visually indistinguishable from dozens of other iOS apps. The reskin is recognizably Cloaked at a glance — important when competitors (Aura, DeleteMe, etc.) all look similar.</p>
+            <p><strong>Premium positioning.</strong> Privacy is a premium subscription service. The reskin's visual language supports a higher price point and reduces price resistance. A generic iOS look unconsciously anchors users to commodity perception.</p>
+            <p><strong>Marketing / product consistency.</strong> The reskin aligns with Cloaked's marketing site, ads, and brand materials. Right now there's a visual disconnect — marketing looks one way, the app looks another.</p>
+            <p><strong>Better information hierarchy.</strong> Dark hero → light dashboard → dark FAQ creates clear scan zones. Fewer competing UI elements per screen means the important things (digital risk score, actions taken, FAQ) get the attention they deserve.</p>
+          </div>
+        </div>
+      </section>
+      <section class="view-pane" data-view="pages" hidden>
         <div id="paneRoot"></div>
       </section>
       <section class="view-pane" data-view="tokens" hidden>
@@ -9012,7 +9149,16 @@
         if (!btn) return;
         setView(btn.dataset.view);
       });
-      setView('pages');
+      const brandHome = document.getElementById('brandHome');
+      if (brandHome) {
+        brandHome.addEventListener('click', () => setView('cover'));
+      }
+      const mobileBrandHome = document.getElementById('mobileBrandHome');
+      if (mobileBrandHome) {
+        mobileBrandHome.style.cursor = 'pointer';
+        mobileBrandHome.addEventListener('click', () => setView('cover'));
+      }
+      setView('cover');
 
       // Components sub-nav: Overview / List row / Button / Tab / Header /
       // Divider / Card / Navigation. Clicking a sub-nav button swaps the
