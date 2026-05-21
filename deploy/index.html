@@ -1206,6 +1206,52 @@
       opacity: var(--ct-opacity-disabled);
     }
 
+    /* ===========================================================
+       Navigation — Nav_Bottom Bar (Figma 20238:20042)
+       Static port: Figma has no variant set on this instance (single
+       "Nav_Bottom Bar" with first nav item selected, others at
+       --ct-opacity-disabled). Five nav items: Home (active, filled),
+       Progress, Protection, Guard, Identity.
+       Figma vars reported "없음" by user — but the inspector still
+       surfaces 7 (Spacing/12/16/24, Opacity disabled, White, Divider,
+       Text Primary). All map to existing --ct-* tokens; using semantic
+       --ct-bkgd-02 for the surface so dark mode flips automatically
+       (Figma's literal #ffffff stays white-only).
+       Icons are the exact SVG paths used by the existing `icon()`
+       function for `nav-home/-progress/-protection/-guard/-identity` —
+       same source-of-truth glyphs as the in-app phone mockups.
+       =========================================================== */
+    .pg-nav {
+      width: 393px;
+      box-sizing: border-box;
+      background: var(--ct-bkgd-02);
+      border-top: 1px solid var(--ct-divider);
+      padding: var(--ct-spacing-16) var(--ct-spacing-24) var(--ct-spacing-24);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .pg-nav__row {
+      width: 345px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .pg-nav__item {
+      display: inline-flex;
+      align-items: center;
+      padding: var(--ct-spacing-12);
+      color: var(--ct-text-primary);
+    }
+    .pg-nav__item--inactive {
+      opacity: var(--ct-opacity-disabled);
+    }
+    .pg-nav__item svg {
+      width: var(--ct-spacing-24);
+      height: var(--ct-spacing-24);
+      display: block;
+    }
+
     /* Token documentation surface — flat layout on the cream page background.
        Each category block: large title + description + two-col side-by-side.
        Narrow column keeps the two compare columns visually close. */
@@ -1902,19 +1948,22 @@
     body[data-components-sub] #iconButtonPlaygroundRoot,
     body[data-components-sub] #dividerPlaygroundRoot,
     body[data-components-sub] #headerPlaygroundRoot,
-    body[data-components-sub] #tabPlaygroundRoot { display: none; }
-    body[data-components-sub="list-row"]    #playgroundRoot           { display: block; }
-    body[data-components-sub="button"]      #buttonPlaygroundRoot     { display: block; }
-    body[data-components-sub="icon-button"] #iconButtonPlaygroundRoot { display: block; }
-    body[data-components-sub="divider"]     #dividerPlaygroundRoot    { display: block; }
-    body[data-components-sub="header"]      #headerPlaygroundRoot     { display: block; }
-    body[data-components-sub="tab"]         #tabPlaygroundRoot        { display: block; }
+    body[data-components-sub] #tabPlaygroundRoot,
+    body[data-components-sub] #navigationPlaygroundRoot { display: none; }
+    body[data-components-sub="list-row"]    #playgroundRoot              { display: block; }
+    body[data-components-sub="button"]      #buttonPlaygroundRoot        { display: block; }
+    body[data-components-sub="icon-button"] #iconButtonPlaygroundRoot    { display: block; }
+    body[data-components-sub="divider"]     #dividerPlaygroundRoot       { display: block; }
+    body[data-components-sub="header"]      #headerPlaygroundRoot        { display: block; }
+    body[data-components-sub="tab"]         #tabPlaygroundRoot           { display: block; }
+    body[data-components-sub="navigation"]  #navigationPlaygroundRoot    { display: block; }
     body[data-components-sub="list-row"]    #componentsGrid,
     body[data-components-sub="button"]      #componentsGrid,
     body[data-components-sub="icon-button"] #componentsGrid,
     body[data-components-sub="divider"]     #componentsGrid,
     body[data-components-sub="header"]      #componentsGrid,
-    body[data-components-sub="tab"]         #componentsGrid { display: none; }
+    body[data-components-sub="tab"]         #componentsGrid,
+    body[data-components-sub="navigation"]  #componentsGrid { display: none; }
 
     /* Main scroll container & pane row */
     main { padding: 0; }
@@ -4447,6 +4496,7 @@
         <div id="dividerPlaygroundRoot"></div>
         <div id="headerPlaygroundRoot"></div>
         <div id="tabPlaygroundRoot"></div>
+        <div id="navigationPlaygroundRoot"></div>
       </section>
     </main>
 
@@ -9273,6 +9323,56 @@
         rerenderControls();
       }
       mountTabPlayground();
+
+      /* ----------- COMPONENT PLAYGROUND · Navigation (STATIC) -----------
+         Faithful port of the Figma Nav_Bottom Bar (node 20238:20042).
+         Figma instance has no variant set — single static rendering with
+         Home selected and the other four nav items at opacity-disabled.
+         No interactive controls; the controls panel just labels the
+         component for parity with the rest of the Components view.
+         Icons come from the existing `icon()` function (nav-home /
+         -progress / -protection / -guard / -identity) — those are the
+         exact SVG paths used in the in-app reskin bottom nav, sourced
+         from the same Figma. */
+      function renderNavigation() {
+        const items = [
+          { key: 'home',      iconKey: 'nav-home',       active: true  },
+          { key: 'progress',  iconKey: 'nav-progress',   active: false },
+          { key: 'protection',iconKey: 'nav-protection', active: false },
+          { key: 'guard',     iconKey: 'nav-guard',      active: false },
+          { key: 'identity',  iconKey: 'nav-identity',   active: false },
+        ];
+        const itemsHTML = items.map(it =>
+          `<span class="pg-nav__item ${it.active ? '' : 'pg-nav__item--inactive'}">${icon(it.iconKey)}</span>`
+        ).join('');
+        return `<div class="pg-nav"><div class="pg-nav__row">${itemsHTML}</div></div>`;
+      }
+
+      function mountNavigationPlayground() {
+        const root = document.getElementById('navigationPlaygroundRoot');
+        if (!root) return;
+        const currentTheme = document.body.getAttribute('data-site-theme') || 'light';
+        root.innerHTML = `
+          <section class="component-playground">
+            <h3 class="audit-block__title">Navigation · Static</h3>
+            <p class="audit-block__subtitle">Single Figma instance — no variants. Mirrors node 20238:20042 ("Nav_Bottom Bar"). Icons reuse the project's existing nav-* SVGs.</p>
+            <div class="playground">
+              <div class="playground__canvas pg-themed" id="navigationPreview" data-theme="${currentTheme}"></div>
+              <aside class="playground__controls" id="navigationControls">
+                <div class="playground__controls-section">
+                  <p class="playground__controls-section-title">Component</p>
+                  <p class="playground__control-label" style="opacity:0.7;">Nav_Bottom Bar — no variants</p>
+                </div>
+                <div class="playground__controls-section">
+                  <p class="playground__controls-section-title playground__controls-section-title--group">Items</p>
+                  <p class="playground__control-label" style="opacity:0.7;">Home (selected), Progress, Protection, Guard, Identity (all at --ct-opacity-disabled)</p>
+                </div>
+              </aside>
+            </div>
+          </section>`;
+        document.getElementById('navigationPreview').innerHTML = renderNavigation();
+      }
+      mountNavigationPlayground();
 
       const switcher = document.getElementById('viewSwitcher');
       const panes = document.querySelectorAll('.view-pane');
