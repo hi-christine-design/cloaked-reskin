@@ -8327,64 +8327,27 @@
       // into #componentsGrid based on which entry is active.
       const overviewBlock = `
         <div class="cover-page cover-page--inline">
-          <h2>Minimum components, maximum impact</h2>
-          <p>
-            These eight components are the smallest set we need to update to reskin the app.
-            They sound modest — a button here, a divider there — but they repeat across
-            <em>every</em> page. Fixing them once changes how every screen feels.
-          </p>
+          <h2>Components in scope</h2>
+          <p>Eight components, used repeatedly across every page.</p>
 
-          <h2>What we're updating</h2>
           <table>
             <thead>
               <tr>
                 <th>Component</th>
-                <th>Where it shows up</th>
+                <th>Where it appears</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td><strong>List row</strong><br><span class="cover-page__meta">Avatar + title + meta + trailing action</span></td>
-                <td>Identities, Inbox, Settings, ID Monitoring, Password Manager — the workhorse of every list-based screen</td>
-              </tr>
-              <tr>
-                <td><strong>Button</strong><br><span class="cover-page__meta">Primary / Secondary / Tertiary / Link × Default / Small</span></td>
-                <td>Every primary CTA: "Improve your Digital Health", "Save", "Continue", "Block", "Add new"</td>
-              </tr>
-              <tr>
-                <td><strong>Icon button</strong><br><span class="cover-page__meta">Primary / Secondary × Default / Small</span></td>
-                <td>Header chrome (menu, back, share), inline actions inside cards and list rows</td>
-              </tr>
-              <tr>
-                <td><strong>Tab</strong><br><span class="cover-page__meta">3-tab and 5-tab strips</span></td>
-                <td>Section switchers on Identity, Phone, Inbox, Call Guard, ID Monitoring</td>
-              </tr>
-              <tr>
-                <td><strong>Header</strong><br><span class="cover-page__meta">Landing and detail-page layouts</span></td>
-                <td>Top of every screen — brand, large title, back, close, story pagination</td>
-              </tr>
-              <tr>
-                <td><strong>Divider</strong><br><span class="cover-page__meta">BKGD_01 / BKGD_02 with optional hairline and secondary text</span></td>
-                <td>Section breaks inside lists (Today / This week / Older), inline form groupings</td>
-              </tr>
-              <tr>
-                <td><strong>Card</strong><br><span class="cover-page__meta">Stat / dashboard tile</span></td>
-                <td>Homepage progress, exposure count, ID monitoring summary, dashboard surfaces</td>
-              </tr>
-              <tr>
-                <td><strong>Navigation</strong><br><span class="cover-page__meta">Bottom tab bar with 5 destinations</span></td>
-                <td>Persistent at the bottom of every primary screen — Home, Exposure, Guard, Phone, Wallet</td>
-              </tr>
+              <tr><td>List row</td>    <td>Identities, Inbox, Settings, ID Monitoring, Password Manager</td></tr>
+              <tr><td>Button</td>      <td>Primary CTAs across every page</td></tr>
+              <tr><td>Icon button</td> <td>Header chrome, inline actions</td></tr>
+              <tr><td>Tab</td>         <td>Section switchers on Identity, Phone, Inbox, Call Guard, ID Monitoring</td></tr>
+              <tr><td>Header</td>      <td>Top of every screen</td></tr>
+              <tr><td>Divider</td>     <td>Section breaks within lists</td></tr>
+              <tr><td>Card</td>        <td>Dashboard tiles, status cards</td></tr>
+              <tr><td>Navigation</td>  <td>Persistent bottom tab bar</td></tr>
             </tbody>
           </table>
-
-          <h2>Why this is the right scope</h2>
-          <div class="why">
-            <p><strong>Compounding leverage.</strong> Every page is built from these eight primitives. Reskinning the page-level layout is expensive and one-off; reskinning the components touches every screen at once.</p>
-            <p><strong>Brand at every touch.</strong> The thing users actually see and tap a hundred times a day is the button, the row, the nav. These set the tone of the product more than any single page does.</p>
-            <p><strong>Low coordination cost.</strong> Eight components means eight contained pull requests, eight design reviews, and a finite engineering scope. No "redesign the whole app" undertaking.</p>
-            <p><strong>Token-driven future-proofing.</strong> Once each component is bound to the <code>--ct-*</code> token system, future themes (dark mode, accessibility variants, white-label) become trivial — they ride the same plumbing for free.</p>
-          </div>
         </div>
       `;
 
