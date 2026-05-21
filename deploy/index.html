@@ -230,13 +230,6 @@
       color: #120f03;
       font-family: var(--ct-text-body-family);
     }
-    /* Inline variant — used when .cover-page is rendered inside another
-       padded surface (e.g. the Components view's #componentsGrid sitting
-       inside .view-pane[data-view="components"] which already pads 32px).
-       Drops the outer vertical padding so the content sits flush. */
-    .cover-page--inline {
-      padding: 16px 0 32px;
-    }
     .cover-page h2 {
       font-family: var(--ct-text-h1-serif-family);
       font-weight: var(--ct-text-h1-serif-weight);
@@ -4501,6 +4494,7 @@
       <section class="view-pane" data-view="cover" hidden>
         <div class="cover-page">
           <h2>What's changing visually</h2>
+          <p>This is the reskin — what we're proposing to replace the current native iOS treatment with. The new visual language leans editorial: Simula serif headlines, layered dark/light sections, and the cloaked-design-md token system.</p>
           <table>
             <thead>
               <tr>
@@ -8326,7 +8320,7 @@
       // Sub-page content map — the sidebar Components nav swaps content
       // into #componentsGrid based on which entry is active.
       const overviewBlock = `
-        <div class="cover-page cover-page--inline">
+        <div class="cover-page">
           <h2>Components in scope</h2>
           <p>There are more components in the design system than these. We're starting with the eight below — they're the most-used parts of the UI and they appear on every page. The rest will follow.</p>
 
