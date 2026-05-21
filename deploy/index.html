@@ -658,7 +658,9 @@
       background: transparent;
       border: 0;
     }
-    .tab-bar { overflow-y: auto; flex: 1 1 auto; }
+    /* min-height:0 is required so the flex item can shrink below its
+       intrinsic content height and let overflow-y:auto actually scroll. */
+    .tab-bar { overflow-y: auto; flex: 1 1 auto; min-height: 0; }
     .tab-bar button,
     .token-nav button {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
@@ -672,7 +674,7 @@
       border-bottom: 1px solid rgba(0,0,0,0.02);
       padding: 0 16px;
       margin: 0;
-      height: 40px;
+      height: 48px;
       width: 100%;
       cursor: pointer;
       text-align: left;
