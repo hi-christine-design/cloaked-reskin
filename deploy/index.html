@@ -387,10 +387,13 @@
       cursor: pointer;
     }
 
-    /* List row component — translated from the Figma node 19941:868.
-       Locked at Figma's 393px (iPhone width). flex-shrink:0 keeps it from
-       collapsing inside the flex canvas; the canvas can scroll if needed. */
-    .list-row {
+    /* Playground row component — translated from the Figma node 19941:868.
+       Renamed from .list-row to .pg-row so it doesn't collide with the
+       real reskin phone mockup's .list-row (which is full-width and would
+       otherwise win the cascade and stretch this preview out). Locked at
+       Figma's 393px (iPhone width); flex-shrink:0 keeps it from collapsing
+       inside the flex canvas. */
+    .pg-row {
       background: #ffffff;
       width: 393px;
       flex-shrink: 0;
@@ -402,7 +405,7 @@
       position: relative;
       box-sizing: border-box;
     }
-    .list-row::after {
+    .pg-row::after {
       content: '';
       position: absolute;
       left: 0; right: 0; bottom: 0;
@@ -1043,8 +1046,8 @@
       border-color: rgba(255,255,255,0.15);
       color: #F3F1ED;
     }
-    body[data-site-theme="dark"] .list-row { background: #0B0B0A; }
-    body[data-site-theme="dark"] .list-row::after { background: rgba(255,255,255,0.15); }
+    body[data-site-theme="dark"] .pg-row { background: #0B0B0A; }
+    body[data-site-theme="dark"] .pg-row::after { background: rgba(255,255,255,0.15); }
     body[data-site-theme="dark"] .list-row__title,
     body[data-site-theme="dark"] .list-row__trailing-title { color: #F3F1ED; }
     body[data-site-theme="dark"] .list-row__description,
@@ -7021,7 +7024,7 @@
         const trailing = s.showTrailing ? renderTrailing(s) : '';
         const progress = s.showProgress ? renderProgress(s) : '';
         return `
-          <div class="list-row">
+          <div class="pg-row">
             <div class="list-row__content">
               ${avatar}
               <div class="list-row__main">
