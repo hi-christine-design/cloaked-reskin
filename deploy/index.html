@@ -429,10 +429,40 @@
       justify-content: center;
       color: #fff;
     }
-    /* Avatar backgrounds — exact Figma Category_TBD values. */
-    .list-row__avatar--monitor  { background: #5936C1; } /* Monitoring (dark web) */
-    .list-row__avatar--guard    { background: #D78E20; } /* Guard (call/sms/email guard) */
-    .list-row__avatar--identity { background: #379AAD; } /* Identity */
+    /* Avatar variants — every option Figma's instance-swap panel exposes
+       for the Avatar property. Icon types use a colored circle + white
+       stroke mark; text types use a letter or number; image types use
+       inline content (logo/flag/photo). */
+    .list-row__avatar--monitor     { background: #5936C1; } /* icon/Monitor — dark-web */
+    .list-row__avatar--identity    { background: #379AAD; } /* icon/Identity */
+    .list-row__avatar--guard       { background: #D78E20; } /* icon/Guard */
+    .list-row__avatar--neutral     { background: #141410; } /* icon/Neutral — generic */
+    .list-row__avatar--celebration { background: #008924; } /* numeric badge */
+    .list-row__avatar--initial     { background: #5B9AAB; } /* user initial */
+    .list-row__avatar--brandlogo {
+      background: #ffffff;
+      color: #141410;
+      box-shadow: inset 0 0 0 1px rgba(11,11,10,0.12);
+    }
+    .list-row__avatar--card     { background: #0071CE; }   /* payment card */
+    .list-row__avatar--flag     { background: #ffffff; padding: 0; overflow: hidden; }
+    .list-row__avatar--photo    { background: linear-gradient(135deg,#C89E70,#5B3B22); padding: 0; overflow: hidden; }
+    /* Text/letter avatars share one inner style */
+    .list-row__avatar-text {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      color: #ffffff;
+      line-height: 1;
+    }
+    .list-row__avatar--brandlogo .list-row__avatar-text { color: #141410; font-weight: 600; }
+    .list-row__avatar img,
+    .list-row__avatar svg.list-row__avatar-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
     /* Layout dimensions copied verbatim from the Figma List Item spec
        (node 19941:868): main is flex-col gap-12 items-start justify-center;
        text-trail is h-38 gap-16 items-center; text inside is h-38 with
@@ -1048,6 +1078,16 @@
     }
     body[data-site-theme="dark"] .pg-row { background: #0B0B0A; }
     body[data-site-theme="dark"] .pg-row::after { background: rgba(255,255,255,0.15); }
+    /* Brandlogo flips to charcoal in dark mode so the H stays legible */
+    body[data-site-theme="dark"] .list-row__avatar--brandlogo {
+      background: #1B1B18;
+      color: #F3F1ED;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+    }
+    body[data-site-theme="dark"] .list-row__avatar--brandlogo .list-row__avatar-text { color: #F3F1ED; }
+    /* Neutral inverts so it stays visible on the dark row surface */
+    body[data-site-theme="dark"] .list-row__avatar--neutral { background: #F3F1ED; color: #141410; }
+    body[data-site-theme="dark"] .list-row__avatar--neutral svg { stroke: #141410; }
     body[data-site-theme="dark"] .list-row__title,
     body[data-site-theme="dark"] .list-row__trailing-title { color: #F3F1ED; }
     body[data-site-theme="dark"] .list-row__description,
@@ -6943,11 +6983,13 @@
          row on every change. */
       const SVG = (path, w) => `<svg viewBox="0 0 24 24" width="${w||20}" height="${w||20}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
       const PG_ICONS = {
-        // Avatar icon variants — mirror Figma's Category_TBD set (Monitoring,
-        // Guard, Identity). White stroke on a 40px colored circle.
-        monitor:  SVG('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>'),   // eye — dark web monitoring
-        guard:    SVG('<path d="M12 3 5 6v6c0 4.5 3 8.5 7 10 4-1.5 7-5.5 7-10V6l-7-3z"/><path d="m9 12 2 2 4-4"/>'),     // shield+check — guard
-        identity: SVG('<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>'),             // person — identity
+        // Avatar icon variants — white stroke on a 40px colored circle.
+        // Set matches the Avatar instance-swap options exposed by Figma.
+        monitor:  SVG('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>'),                       // eye — dark web monitoring
+        identity: SVG('<rect x="3" y="6" width="18" height="12" rx="1.5"/><circle cx="8" cy="11.5" r="2"/><path d="M13 10h6M13 13.5h4M13 16h5"/>'),  // id card — identity
+        guard:    SVG('<path d="M12 3 5 6v6c0 4.5 3 8.5 7 10 4-1.5 7-5.5 7-10V6l-7-3z"/><path d="m9 12 2 2 4-4"/>'),                       // shield+check — guard
+        neutral:  SVG('<circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/><path d="M3 4h2l2.5 12.5a2 2 0 0 0 2 1.5h8a2 2 0 0 0 2-1.5L21 8H6"/>'),  // shopping cart — neutral
+        card:     SVG('<path d="M12 4l1.6 4.8L18.5 9l-3.7 2.7 1.4 4.8L12 13.8 7.8 16.5l1.4-4.8L5.5 9l4.9-.2L12 4z"/>'),                     // sparkle/star — payment card
         // Trailing "icon" variants (24px stroke marks)
         chevron:   SVG('<path d="M9 18l6-6-6-6"/>', 24),
         arrow:     SVG('<path d="M5 12h14M13 5l7 7-7 7"/>', 24),
@@ -6956,6 +6998,34 @@
         // Checkbox checked state — small checkmark
         checkmark: SVG('<path d="M20 6 9 17l-5-5"/>', 18),
       };
+
+      // Avatar inner-content renderer. Returns whatever sits inside the
+      // 40×40 colored circle for the chosen variant — could be an SVG
+      // icon, a letter/number, or an image.
+      function renderAvatarContent(variant) {
+        switch (variant) {
+          case 'monitor':
+          case 'identity':
+          case 'guard':
+          case 'neutral':
+          case 'card':
+            return PG_ICONS[variant];
+          case 'celebration':  return '<span class="list-row__avatar-text">1</span>';
+          case 'initial':      return '<span class="list-row__avatar-text">U</span>';
+          case 'brandlogo':    return '<span class="list-row__avatar-text" style="font-family:\'Aeonik Mono\',ui-monospace,monospace;font-size:18px;">H</span>';
+          case 'flag':
+            // Tiny US flag SVG, fills the 40×40 avatar
+            return `<svg class="list-row__avatar-image" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                <rect width="60" height="40" fill="#fff"/>
+                <g fill="#B22234"><rect y="0" width="60" height="3.1"/><rect y="6.2" width="60" height="3.1"/><rect y="12.3" width="60" height="3.1"/><rect y="18.5" width="60" height="3.1"/><rect y="24.6" width="60" height="3.1"/><rect y="30.8" width="60" height="3.1"/><rect y="36.9" width="60" height="3.1"/></g>
+                <rect width="24" height="21.5" fill="#3C3B6E"/>
+              </svg>`;
+          case 'photo':
+            return `<img alt="" src="https://i.pravatar.cc/80?img=47" />`;
+          default:
+            return '';
+        }
+      }
 
       const pgState = {
         showAvatar: true,
@@ -7016,7 +7086,7 @@
 
       function renderListRow(s) {
         const avatar = s.showAvatar
-          ? `<div class="list-row__avatar list-row__avatar--${s.avatarVariant}">${PG_ICONS[s.avatarVariant] || ''}</div>`
+          ? `<div class="list-row__avatar list-row__avatar--${s.avatarVariant}">${renderAvatarContent(s.avatarVariant)}</div>`
           : '';
         const description = s.showDescription
           ? `<p class="list-row__description">Description</p>`
@@ -7073,15 +7143,22 @@
             ${toggle('showProgress', 'Show _Progress')}
           </div>`;
 
-        // icon/Avatar group — only when avatar is showing.
-        // Mirrors the Figma Category_TBD variable set exactly.
+        // Avatar group — every instance-swap option Figma exposes for the
+        // Avatar property: 4 icons + 2 text + 4 image variants.
         const avatarGroup = s.showAvatar ? `
           <div class="playground__controls-section">
-            <p class="playground__controls-section-title playground__controls-section-title--group">icon/Avatar</p>
+            <p class="playground__controls-section-title playground__controls-section-title--group">Avatar</p>
             ${select('avatarVariant', 'Variant', [
-              { value: 'monitor',  label: 'Monitoring' },
-              { value: 'guard',    label: 'Guard' },
-              { value: 'identity', label: 'Identity' },
+              { value: 'monitor',     label: 'icon/Monitor' },
+              { value: 'identity',    label: 'icon/Identity' },
+              { value: 'guard',       label: 'icon/Guard' },
+              { value: 'neutral',     label: 'icon/Neutral' },
+              { value: 'celebration', label: 'celebration' },
+              { value: 'initial',     label: 'Initial' },
+              { value: 'brandlogo',   label: 'image/brandlogo' },
+              { value: 'card',        label: 'image/card' },
+              { value: 'flag',        label: 'image/flag' },
+              { value: 'photo',       label: 'image/photo' },
             ])}
           </div>` : '';
 
