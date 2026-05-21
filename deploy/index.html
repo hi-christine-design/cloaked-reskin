@@ -6437,7 +6437,7 @@
           ],
           'cloaked reskin - 0 tokens',
           [],
-          'Purple and Blue dropped entirely. They never had a consistent semantic role across the app — they were used as decorative tints, but the new system uses <strong>category accents</strong> (Guard amber, Identity teal, Monitoring purple) defined per-theme instead of in the primitive palette.'
+          'Purple and Blue dropped entirely as standalone primitives. They never had a consistent semantic role — they were used as decorative tints. The reskin replaces them with <strong>category accents</strong> (see below): one hue per product surface, used for avatars and badges instead of arbitrary purple/blue fills.'
         ),
 
         colorCategory(
@@ -6460,6 +6460,25 @@
             ['#B831001A','--ct-color-red-02 (10%)'],
           ],
           'Each color collapsed from a 3-shade ramp to a <strong>solid + 10% overlay</strong> pair — solid for icons and CTAs, overlay for tinted backgrounds. The bright 200 mid-tones (<code>#62C081</code>, <code>#F36669</code>) were never used in practice and are gone. New green is deeper, new red is more burnt — both read as serious rather than playful.'
+        ),
+
+        colorCategory(
+          'Category accents',
+          'Per-surface accent hues — one color per product category (Monitor, Identity, Guard, Wallet, Phone, Email, Lock, Inbox). Used as avatar backgrounds, list-row category badges, and section headers in the dashboard.',
+          'original - none',
+          [],
+          'cloaked reskin - 8 categories',
+          [
+            ['#5936C1','--ct-color-monitor'],
+            ['#0F8F7C','--ct-color-identity'],
+            ['#E59D2B','--ct-color-guard'],
+            ['#3F7AEF','--ct-color-wallet'],
+            ['#008924','--ct-color-phone'],
+            ['#FF550C','--ct-color-email'],
+            ['#635EF9','--ct-color-lock'],
+            ['#C53535','--ct-color-inbox'],
+          ],
+          '8 hues, one per product surface. A few resolve to existing primitives — <code>--ct-color-phone</code> shares its value with <code>--ct-color-green-01</code>, and <code>--ct-color-email</code> shares with <code>--ct-color-brand</code> — so the category palette can evolve without disturbing status or brand semantics. The five truly new hues (Monitor, Identity, Guard, Wallet, Lock) replace the old Purple/Blue decorative tints.'
         ),
 
         colorCategory(
