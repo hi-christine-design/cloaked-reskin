@@ -1022,6 +1022,54 @@
       margin-bottom: 24px;
     }
     .token-semantic-group:last-child { margin-bottom: 0; }
+
+    /* Dual-mode semantic row — token name on top, then Light/Dark sub-rows
+       stacked below. Used by Colors > Semantics in the reskin column to
+       show each token's Light and Dark resolution side-by-side. */
+    .token-semantic-row.token-semantic-row--dual {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 12px 0;
+    }
+    .token-mode-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .token-mode-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
+      font-size: 13px;
+    }
+    .token-mode-row__chip {
+      width: 20px;
+      height: 20px;
+      border-radius: 2px;
+      border: 1px solid rgba(11,11,10,0.08);
+      flex-shrink: 0;
+    }
+    .token-mode-row__label {
+      font-family: 'Aeonik Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 10px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      color: rgba(20,20,16,0.4);
+      width: 36px;
+      flex-shrink: 0;
+    }
+    .token-mode-row__resolves { color: #84827E; }
+    body[data-site-theme="dark"] .token-mode-row__chip {
+      border-color: rgba(255,255,255,0.12);
+    }
+    body[data-site-theme="dark"] .token-mode-row__label {
+      color: rgba(243,241,237,0.4);
+    }
+    body[data-site-theme="dark"] .token-mode-row__resolves {
+      color: rgba(243,241,237,0.5);
+    }
     .token-semantic-group__title {
       font-family: 'Aeonik Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: 12px;
@@ -1282,6 +1330,25 @@
       background: rgba(255, 85, 12, 0.1);
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
       font-weight: 500;
+    }
+
+    /* Token-nav group — parent label (e.g. "Colors") with indented children
+       buttons below. The label itself is non-clickable; only the buttons
+       receive hover / selected states. */
+    .token-nav__group { display: flex; flex-direction: column; }
+    .token-nav__group-title {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0;
+      text-transform: none;
+      color: rgba(20,20,16,0.45);
+      padding: 14px 16px 4px;
+      margin: 0;
+      user-select: none;
+    }
+    .token-nav__group > button { padding-left: 32px; }
+    body[data-site-theme="dark"] .token-nav__group-title {
+      color: rgba(243,241,237,0.45);
     }
 
     /* View-driven sidebar visibility: only the active sub-nav shows */
@@ -3603,13 +3670,28 @@
         <button role="tab" data-tab="menu">Menu</button>
       </nav>
 
-      <!-- TOKENS sub-nav — visible only when viewSwitcher is on "Tokens" -->
+      <!-- TOKENS sub-nav — visible only when viewSwitcher is on "Tokens".
+           Two parent groups (Colors, Typography) each split into Primitives
+           and Semantics. Spacing stays a standalone item. -->
       <div class="site-sidebar__section-header site-sidebar__section-header--tokens">Tokens</div>
       <nav class="token-nav" role="tablist" id="tokenNav">
-        <button role="tab" data-token-tab="colors" aria-selected="true">Colors</button>
-        <button role="tab" data-token-tab="themes">Themes</button>
-        <button role="tab" data-token-tab="typography">Typography</button>
+        <div class="token-nav__group">
+          <p class="token-nav__group-title">Colors</p>
+          <button role="tab" data-token-tab="colors-primitives" aria-selected="true">Primitives</button>
+          <button role="tab" data-token-tab="colors-semantics">Semantics</button>
+        </div>
+        <div class="token-nav__group">
+          <p class="token-nav__group-title">Typography</p>
+          <button role="tab" data-token-tab="typography-primitives">Primitives</button>
+          <button role="tab" data-token-tab="typography-semantics">Semantics</button>
+        </div>
         <button role="tab" data-token-tab="spacing">Spacing</button>
+      </nav>
+
+      <!-- ASSETS sub-nav — also visible only on Tokens view; sits below the
+           Tokens nav as a separate section. Icons moved out of Tokens. -->
+      <div class="site-sidebar__section-header site-sidebar__section-header--tokens">Assets</div>
+      <nav class="token-nav" role="tablist" id="assetsNav">
         <button role="tab" data-token-tab="icons">Icons</button>
       </nav>
 
@@ -6662,7 +6744,7 @@
       const colorCategory = (title, subtitle, origLabel, origRows, newLabel, newRows, reason) =>
         categoryBlock(title, subtitle, origLabel, renderSwatches(origRows), newLabel, renderSwatches(newRows), reason);
 
-      const colorsContent = [
+      const colorsPrimitivesContent = [
         colorCategory(
           'Neutrals',
           'Greyscale stack — used for text, surfaces, dividers, and backgrounds.',
@@ -6965,7 +7047,9 @@
         <p style="margin:8px 0 0;font-family:${SANS};font-size:13px;color:#84827E;line-height:1.5;">CSS handles responsive scaling at the application layer (<code style="font-family:${MONO};font-size:11px;background:rgba(11,11,10,0.06);padding:1px 4px;border-radius:3px;">rem</code>, <code style="font-family:${MONO};font-size:11px;background:rgba(11,11,10,0.06);padding:1px 4px;border-radius:3px;">clamp()</code>) rather than freezing 9 mode-specific token sets.</p>
       </div>`;
 
-      const typographyContent = [
+      /* Typography split — Primitives (raw font choices: families + weights)
+         vs Semantics (named text styles + responsive behavior). */
+      const typographyPrimitivesContent = [
         categoryBlock(
           'Font families',
           'Typeface roles for app, marketing, and dashboard surfaces.',
@@ -6980,6 +7064,9 @@
           'cloaked reskin - 1 weight', renderReskinWeights(),
           'Weight ladder collapsed to a single <strong>Regular (400)</strong>. Contrast now comes from <em>size</em> and <em>family</em> (Simula serif vs SF Pro sans), not weight. Removes the "should this be Medium or Semibold?" decision and prevents the bold-creep that plagued the original.'
         ),
+      ].join('');
+
+      const typographySemanticsContent = [
         categoryBlock(
           'Type scale',
           'Named text styles with size, line-height, and letter-spacing.',
@@ -6996,9 +7083,8 @@
         ),
       ].join('');
 
-      /* ----------- TOKENS · Themes ----------- */
-      // Each row: color chip + token name + "resolves to" label. The resolves
-      // string is passed in verbatim — callers add their own prefix (e.g. "→").
+      /* ----------- TOKENS · Colors / Semantics ----------- */
+      // Single-mode row (used by origRoleTokens — original had no theme layer).
       const semanticRow = (color, name, resolves) => `
         <div class="token-semantic-row">
           <span class="token-semantic-row__chip" style="background:${color};"></span>
@@ -7007,10 +7093,34 @@
             ${resolves ? `<span class="token-semantic-row__resolves">${resolves}</span>` : ''}
           </div>
         </div>`;
+      // Dual-mode row — shows Light AND Dark chips/resolutions stacked for
+      // a single semantic token. Matches the design system intent: token
+      // name stays the same, value swaps per mode.
+      const semanticRowDual = (lightHex, darkHex, name, lightRes, darkRes) => `
+        <div class="token-semantic-row token-semantic-row--dual">
+          <span class="token-semantic-row__name">${name}</span>
+          <div class="token-mode-stack">
+            <div class="token-mode-row">
+              <span class="token-mode-row__chip" style="background:${lightHex};"></span>
+              <span class="token-mode-row__label">Light</span>
+              <span class="token-mode-row__resolves">${lightRes}</span>
+            </div>
+            <div class="token-mode-row">
+              <span class="token-mode-row__chip" style="background:${darkHex};"></span>
+              <span class="token-mode-row__label">Dark</span>
+              <span class="token-mode-row__resolves">${darkRes}</span>
+            </div>
+          </div>
+        </div>`;
       const semanticGroup = (title, rows) => `
         <div class="token-semantic-group">
           <p class="token-semantic-group__title">${title}</p>
           ${rows.map(r => semanticRow(...r)).join('')}
+        </div>`;
+      const semanticGroupDual = (title, rows) => `
+        <div class="token-semantic-group">
+          <p class="token-semantic-group__title">${title}</p>
+          ${rows.map(r => semanticRowDual(...r)).join('')}
         </div>`;
 
       // Original role tokens (single mode — Light only).
@@ -7044,58 +7154,59 @@
         ]),
       ].join('');
 
-      // Reskin semantic tokens grouped — each row carries the resolved Light-mode
-      // hex on the chip, the semantic token name, and the primitive it resolves to.
+      // Reskin semantic tokens — each row carries BOTH the Light and Dark
+      // resolutions. Row format: [lightHex, darkHex, name, lightResolves, darkResolves].
+      // Source: deploy/tokens/themes.css [data-theme=light] and [data-theme=dark].
       const reskinThemes = [
-        semanticGroup('Background', [
-          ['#F3F1ED', '--ct-bkgd-01', '→ grey-01'],
-          ['#FFFFFF', '--ct-bkgd-02', '→ white'],
+        semanticGroupDual('Background', [
+          ['#F3F1ED', '#141410', '--ct-bkgd-01', '→ grey-01', '→ grey-05'],
+          ['#FFFFFF', '#1B1B18', '--ct-bkgd-02', '→ white',   '→ grey-04'],
         ]),
-        semanticGroup('Text', [
-          ['#141410', '--ct-text-primary',   '→ grey-05'],
-          ['#84827E', '--ct-text-secondary', '→ grey-03'],
+        semanticGroupDual('Text', [
+          ['#141410', '#F3F1ED', '--ct-text-primary',   '→ grey-05', '→ grey-01'],
+          ['#84827E', '#84827E', '--ct-text-secondary', '→ grey-03', '→ grey-03'],
         ]),
-        semanticGroup('Divider', [
-          ['#0B0B0A26', '--ct-divider', '→ black-15 (15%)'],
+        semanticGroupDual('Divider', [
+          ['#0B0B0A26', '#FFFFFF26', '--ct-divider', '→ black-15 (15%)', '→ white-15 (15%)'],
         ]),
-        semanticGroup('CTA · Primary', [
-          ['#FFFFFF', '--ct-cta-primary-text',      '→ white'],
-          ['#0B0B0A', '--ct-cta-primary-container', '→ black'],
+        semanticGroupDual('CTA · Primary', [
+          ['#FFFFFF', '#141410', '--ct-cta-primary-text',      '→ white', '→ grey-05'],
+          ['#0B0B0A', '#F3F1ED', '--ct-cta-primary-container', '→ black', '→ grey-01'],
         ]),
-        semanticGroup('CTA · Secondary', [
-          ['#141410',   '--ct-cta-secondary-text',      '→ grey-05'],
-          ['#0B0B0A26', '--ct-cta-secondary-container', '→ black-15 (15%)'],
+        semanticGroupDual('CTA · Secondary', [
+          ['#141410',   '#F3F1ED',   '--ct-cta-secondary-text',      '→ grey-05',         '→ grey-01'],
+          ['#0B0B0A26', '#FFFFFF26', '--ct-cta-secondary-container', '→ black-15 (15%)',  '→ white-15 (15%)'],
         ]),
-        semanticGroup('Status', [
-          ['#008924',   '--ct-status-success-solid',  '→ green-01'],
-          ['#0089241A', '--ct-status-success-subtle', '→ green-02 (10%)'],
-          ['#B83100',   '--ct-status-fail-solid',     '→ red-01'],
-          ['#B831001A', '--ct-status-fail-subtle',    '→ red-02 (10%)'],
+        semanticGroupDual('Status', [
+          ['#008924',   '#008924',   '--ct-status-success-solid',  '→ green-01',       '→ green-01'],
+          ['#0089241A', '#0089241A', '--ct-status-success-subtle', '→ green-02 (10%)', '→ green-02 (10%)'],
+          ['#B83100',   '#B83100',   '--ct-status-fail-solid',     '→ red-01',         '→ red-01'],
+          ['#B831001A', '#B831001A', '--ct-status-fail-subtle',    '→ red-02 (10%)',   '→ red-02 (10%)'],
         ]),
-        semanticGroup('AI', [
-          ['#F3F1ED', '--ct-text-ai-primary',   '→ grey-01'],
-          ['#DCD8CF', '--ct-text-ai-secondary', '→ grey-02'],
-          ['#0B0B0A', '--ct-bkgd-ai-input',     '→ black'],
+        semanticGroupDual('AI', [
+          ['#F3F1ED', '#F3F1ED', '--ct-text-ai-primary',   '→ grey-01', '→ grey-01'],
+          ['#DCD8CF', '#DCD8CF', '--ct-text-ai-secondary', '→ grey-02', '→ grey-02'],
+          ['#0B0B0A', '#0B0B0A', '--ct-bkgd-ai-input',     '→ black',   '→ black'],
         ]),
-        semanticGroup('Banner', [
-          ['#141410', '--ct-banner-text-primary',   '→ grey-05'],
-          ['#84827E', '--ct-banner-text-secondary', '→ grey-03'],
-          ['#DCD8CF', '--ct-banner-container',      '→ grey-02'],
+        semanticGroupDual('Banner', [
+          ['#141410', '#F3F1ED', '--ct-banner-text-primary',   '→ grey-05', '→ grey-01'],
+          ['#84827E', '#DCD8CF', '--ct-banner-text-secondary', '→ grey-03', '→ grey-02'],
+          ['#DCD8CF', '#141410', '--ct-banner-container',      '→ grey-02', '→ grey-05'],
         ]),
-        semanticGroup('Category accents', [
-          ['#5936C1', '--ct-monitoring', '→ monitoring (purple)'],
-          ['#D78E20', '--ct-guard',      '→ guard (amber)'],
-          ['#379AAD', '--ct-identity',   '→ identity (teal)'],
+        semanticGroupDual('Category accents', [
+          ['#5936C1', '#5936C1', '--ct-monitoring', '→ monitoring (purple)', '→ monitoring (purple)'],
+          ['#D78E20', '#D78E20', '--ct-guard',      '→ guard (amber)',       '→ guard (amber)'],
+          ['#379AAD', '#379AAD', '--ct-identity',   '→ identity (teal)',     '→ identity (teal)'],
         ]),
-        semanticGroup('Other', [
-          ['#FF550C',   '--ct-brand',            '→ brand'],
-          ['#0B0B0A0D', '--ct-graph-background', '→ black-05 (5%)'],
+        semanticGroupDual('Other', [
+          ['#FF550C',   '#FF550C',   '--ct-brand',            '→ brand',         '→ brand'],
+          ['#0B0B0A0D', '#FFFFFF0D', '--ct-graph-background', '→ black-05 (5%)', '→ white-05 (5%)'],
         ]),
       ].join('');
 
-      const themesContent = categoryBlock(
-        'Themes',
-        'Semantic role tokens — and the theme layer that makes dark mode possible.',
+      const colorsSemanticsContent = categoryBlock(
+        'Semantics',
+        'Role-named color tokens. Each name (e.g. <code>--ct-bkgd-01</code>) resolves to a different primitive in Light and Dark modes — same name, different value.',
         'original - 18 role tokens · single mode', origRoleTokens,
         'cloaked reskin - 28 role tokens · Light + Dark', reskinThemes,
         'Both systems have a semantic role layer — Cloaked\'s original called them <strong>role tokens</strong> (Surfaces, Foreground, Borders, State). What the reskin adds is the <strong>theme layer</strong>: each token resolves to a different primitive in Light vs Dark mode, but the name and role stay the same. Components ask for <code>--ct-bkgd-01</code>, not <code>#F3F1ED</code>, so flipping one attribute on <code>&lt;html data-theme&gt;</code> re-skins the entire app. The reskin also reorganizes around <em>component intent</em> (CTA Primary, AI, Banner, Category accents) instead of generic CSS-property roles (bg / fg / border) — so the token name tells you which component uses it.'
@@ -7271,37 +7382,47 @@
           <p class="token-category__subtitle" style="margin:0;">Coming soon — analysis in progress.</p>
         </div>`;
 
-      /* Token sub-page state — synced with the sidebar #tokenNav buttons.
-         The sub-page tabs (Colors / Themes / Typography / Spacing) live in the
-         sidebar; clicking one re-renders the main content area. */
+      /* Token sub-page state — synced with the sidebar #tokenNav and
+         #assetsNav buttons. Keys are compound (group-section): Colors and
+         Typography split into Primitives/Semantics; Spacing is standalone;
+         Icons lives under the new Assets nav (separate <nav>). */
       const tokenContentMap = {
-        colors: colorsContent,
-        themes: themesContent,
-        typography: typographyContent,
-        spacing: spacingContent,
-        icons: iconsContent,
+        'colors-primitives':     colorsPrimitivesContent,
+        'colors-semantics':      colorsSemanticsContent,
+        'typography-primitives': typographyPrimitivesContent,
+        'typography-semantics':  typographySemanticsContent,
+        'spacing':               spacingContent,
+        'icons':                 iconsContent,
       };
       const tokensDoc = document.getElementById('tokensDoc');
-      const tokenNav = document.getElementById('tokenNav');
+      const tokenNav  = document.getElementById('tokenNav');
+      const assetsNav = document.getElementById('assetsNav');
       function renderTokenPanel(key) {
         if (tokensDoc) tokensDoc.innerHTML = tokenContentMap[key] || placeholderPanel(key);
       }
       function setTokenTab(key) {
-        if (!tokenNav) return;
-        tokenNav.querySelectorAll('button').forEach(b => {
-          b.setAttribute('aria-selected', b.dataset.tokenTab === key ? 'true' : 'false');
+        // Sync aria-selected across BOTH navs so selection always shows on
+        // exactly one button (the active one), no matter which nav owns it.
+        [tokenNav, assetsNav].forEach(nav => {
+          if (!nav) return;
+          nav.querySelectorAll('button[data-token-tab]').forEach(b => {
+            b.setAttribute('aria-selected', b.dataset.tokenTab === key ? 'true' : 'false');
+          });
         });
         renderTokenPanel(key);
         document.body.setAttribute('data-token-tab', key);
       }
-      if (tokenNav) {
-        tokenNav.addEventListener('click', (e) => {
+      const wireNav = (nav) => {
+        if (!nav) return;
+        nav.addEventListener('click', (e) => {
           const btn = e.target.closest('button[data-token-tab]');
           if (!btn) return;
           setTokenTab(btn.dataset.tokenTab);
         });
-        setTokenTab('colors');
-      }
+      };
+      wireNav(tokenNav);
+      wireNav(assetsNav);
+      setTokenTab('colors-primitives');
 
       /* ----------- COMPONENTS -----------
          Each comparison block is its own named variable so sub-pages can
