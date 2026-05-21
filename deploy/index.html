@@ -379,21 +379,18 @@
       letter-spacing: 0;
     }
 
-    /* Type sample row — sample on top, name + specs row below.
-       Sample preserves the token's real type size; meta uses the Colors
-       row rhythm (12px padding, 14px SF Pro). */
+    /* Type sample row — sample on top at the token's real font-size,
+       name + specs row below. No overflow clipping, no line-height cap:
+       the sample must render at its true spec so the size hierarchy reads. */
     .token-typo-row {
       padding: 12px 0;
       border-bottom: 1px solid rgba(11,11,10,0.06);
-      overflow: hidden;
     }
     .token-typo-row:last-child { border-bottom: 0; }
     .token-typo-row__sample {
+      display: block;
       color: #141410;
       margin-bottom: 8px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
     }
     .token-typo-row__meta {
       display: flex;
@@ -6086,12 +6083,10 @@
       const MONO = 'ui-monospace, SFMono-Regular, Menlo, monospace';
 
       const typeRow = (sample, sampleStyle, name, specs) => {
-        // Render the sample at its TRUE font-size so the hierarchy reads
-        // correctly. line-height is forced to 1 so a 70px sample doesn't
-        // also drag 76px of leading into the row height.
-        const finalStyle = sampleStyle.replace(/line-height:\s*[^;]+/, `line-height:1`);
+        // Render the sample at its TRUE spec — no font-size cap, no
+        // line-height override. The hierarchy must read at real sizes.
         return `<div class="token-typo-row">
-          <div class="token-typo-row__sample" style="${finalStyle}">${sample}</div>
+          <div class="token-typo-row__sample" style="${sampleStyle}">${sample}</div>
           <div class="token-typo-row__meta">
             <span class="token-typo-row__name">${name}</span>
             <span class="token-typo-row__specs">${specs}</span>
