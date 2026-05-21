@@ -2904,6 +2904,16 @@
        colors using the Cloaked Color JSON's light↔dark mapping, exactly
        as the design system intends. This gives semantically accurate
        dark mode instead of a blunt filter inversion. */
+
+    /* Pages without a hand-coded HTML original fall back to a
+       light-mode PNG (assets/reskin/*.png). In dark mode, invert it so
+       it visually matches the rest of the dark UI. Only the direct <img>
+       child of [data-orig-view="default"] is targeted — the two new
+       light/dark .orig-screenshot images (which already have their own
+       dark variant) are excluded. */
+    body[data-site-theme="dark"] [data-orig-view="default"] > img:not(.orig-screenshot) {
+      filter: invert(0.94) hue-rotate(180deg);
+    }
     .og-statusbar {
       display: flex;
       justify-content: space-between;
