@@ -1410,6 +1410,13 @@
       width: 100%;
       height: auto;
     }
+    /* Light/dark variants of the same screenshot — toggle via site theme.
+       Default (no theme = light) hides the dark variant; dark theme hides
+       the light variant. Both images use loading="lazy" so the network
+       cost is only paid when the panel scrolls into view. */
+    .orig-screenshot--dark { display: none; }
+    body[data-site-theme="dark"] .orig-screenshot--light { display: none; }
+    body[data-site-theme="dark"] .orig-screenshot--dark  { display: block; }
 
     .panel {
       background: transparent;
@@ -6229,8 +6236,11 @@
         ? `<div class="original">${originalHTML}</div>`
         : `<img loading="lazy" src="assets/reskin/${entry.file}" alt="${labelMap[entry.tab]} — original" />`;
       const screenshotFile = originalScreenshots[entry.tab];
+      // Light + dark versions share the same filename across the two
+      // folders; CSS swaps visibility based on body[data-site-theme].
       const screenshotInner = screenshotFile
-        ? `<img loading="lazy" src="assets/original/${encodeURIComponent(screenshotFile)}" alt="${labelMap[entry.tab]} — original screenshot" />`
+        ? `<img loading="lazy" class="orig-screenshot orig-screenshot--light" src="assets/original/${encodeURIComponent(screenshotFile)}" alt="${labelMap[entry.tab]} — original screenshot (light)" />
+           <img loading="lazy" class="orig-screenshot orig-screenshot--dark"  src="assets/original-dark/${encodeURIComponent(screenshotFile)}" alt="${labelMap[entry.tab]} — original screenshot (dark)" />`
         : '';
       // Each panel-stack carries its own data-orig-mode so toggles are per-page.
       const origSwitch = screenshotFile ? `
