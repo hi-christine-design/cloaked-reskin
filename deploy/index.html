@@ -1507,10 +1507,11 @@
       width: 100%;
       height: auto;
     }
-    /* Light/dark variants of the same screenshot — toggle via site theme.
-       Default (no theme = light) hides the dark variant; dark theme hides
-       the light variant. Both images use loading="lazy" so the network
-       cost is only paid when the panel scrolls into view. */
+    /* PNG originals — only the .orig-*--light <img> stays in the DOM and
+       has its src swapped between assets/original/ and assets/original-dark/
+       by JS on theme change. The .orig-*--dark sibling is hidden outright
+       (it's there as a redundancy from earlier; safe to keep but never
+       displayed). */
     .orig-fallback,
     .orig-screenshot {
       display: block;
@@ -1518,11 +1519,7 @@
       height: auto;
     }
     .orig-screenshot--dark,
-    .orig-fallback--dark { display: none; }
-    body[data-site-theme="dark"] .orig-screenshot--light,
-    body[data-site-theme="dark"] .orig-fallback--light { display: none !important; }
-    body[data-site-theme="dark"] .orig-screenshot--dark,
-    body[data-site-theme="dark"] .orig-fallback--dark  { display: block !important; }
+    .orig-fallback--dark { display: none !important; }
 
     .panel {
       background: transparent;
@@ -8080,6 +8077,31 @@
         });
       }
 
+      // Direct src swap on every original-side PNG element. The previous
+      // CSS-based show/hide of two parallel <img> tags wasn't reliably
+      // winning the cascade for some panes, so this swaps the src on a
+      // single img and persists the original light src on data-light-src
+      // for round-tripping.
+      function applyOriginalImgTheme(theme) {
+        document.querySelectorAll('img.orig-fallback, img.orig-screenshot').forEach(img => {
+          // First touch: cache the light src; compute the dark src
+          // by swapping the folder name in the URL.
+          if (!img.dataset.lightSrc) {
+            const cur = img.getAttribute('src') || '';
+            const isLight = img.classList.contains('orig-fallback--light')
+                          || img.classList.contains('orig-screenshot--light');
+            // If this is the dark sibling that the CSS would have hidden,
+            // skip — only operate on the "light" branch and let it carry
+            // both srcs. (We'll hide the dark sibling outright below.)
+            if (!isLight) return;
+            img.dataset.lightSrc = cur;
+            img.dataset.darkSrc = cur
+              .replace('/assets/original/', '/assets/original-dark/');
+          }
+          img.src = (theme === 'dark') ? img.dataset.darkSrc : img.dataset.lightSrc;
+        });
+      }
+
       function applyTheme(theme) {
         document.body.setAttribute('data-site-theme', theme);
         btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
@@ -8091,6 +8113,9 @@
         // Swap inline hex colors on hand-coded original mockups using the
         // Cloaked Color JSON light↔dark mapping.
         applyOriginalColorTheme(theme);
+        // Swap PNG <img> sources between assets/original/ and
+        // assets/original-dark/ — JS-driven so it always wins.
+        applyOriginalImgTheme(theme);
       }
       // Restore saved preference (defaults to dark if none)
       const saved = (() => {
