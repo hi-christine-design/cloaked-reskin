@@ -379,32 +379,34 @@
       letter-spacing: 0;
     }
 
-    /* Type sample row — sample on top, name + specs in mono caps below */
+    /* Type sample row — sample on top, name + specs row below.
+       Sample preserves the token's real type size; meta uses the Colors
+       row rhythm (12px padding, 14px SF Pro). */
     .token-typo-row {
       padding: 12px 0;
-      border-bottom: 1px solid rgba(11,11,10,0.04);
+      border-bottom: 1px solid rgba(11,11,10,0.06);
       overflow: hidden;
     }
     .token-typo-row:last-child { border-bottom: 0; }
     .token-typo-row__sample {
       color: #141410;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
     }
     .token-typo-row__meta {
       display: flex;
-      gap: 12px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 10px;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
+      gap: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
+      font-size: 14px;
+      letter-spacing: 0;
+      text-transform: none;
       color: #84827E;
       align-items: baseline;
     }
     .token-typo-row__name {
-      color: #141410;
+      color: #120f03;
       flex: 1 1 auto;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -416,19 +418,19 @@
     .token-dt-ladder {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
     }
     .token-dt-row {
       display: grid;
-      grid-template-columns: 56px 1fr;
+      grid-template-columns: 72px 1fr;
       align-items: baseline;
-      gap: 16px;
+      gap: 24px;
     }
     .token-dt-row__label {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 10px;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
+      font-size: 14px;
+      letter-spacing: 0;
+      text-transform: none;
       color: #84827E;
     }
     .token-dt-row__sample { color: #141410; line-height: 1; }
@@ -471,70 +473,75 @@
     }
 
     /* Semantic-token row — used by the Themes panel.
-       swatch + token name + "→ resolves to" primitive */
+       Matches the Colors swatch-row rhythm: 40px chip, 24px gap, 12px padding,
+       14px SF Pro labels. */
     .token-semantic-row {
       display: grid;
-      grid-template-columns: 28px 1fr;
-      gap: 10px;
+      grid-template-columns: 40px 1fr;
+      gap: 24px;
       align-items: center;
-      padding: 7px 0;
-      border-bottom: 1px solid rgba(11,11,10,0.04);
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(11,11,10,0.06);
     }
     .token-semantic-row:last-child { border-bottom: 0; }
     .token-semantic-row__chip {
-      width: 28px; height: 28px;
+      width: 40px; height: 40px;
       border-radius: 2px;
       border: 1px solid rgba(11,11,10,0.08);
     }
     .token-semantic-row__meta {
       display: flex;
       flex-direction: column;
-      gap: 1px;
+      gap: 2px;
       min-width: 0;
     }
     .token-semantic-row__name {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 11px;
-      color: #141410;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
+      font-size: 14px;
+      color: #120f03;
+      letter-spacing: 0;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
     .token-semantic-row__resolves {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 10px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
+      font-size: 14px;
       color: #84827E;
+      letter-spacing: 0;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
     .token-semantic-group {
-      margin-bottom: 14px;
+      margin-bottom: 24px;
     }
     .token-semantic-group:last-child { margin-bottom: 0; }
     .token-semantic-group__title {
       font-family: 'Aeonik Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 10px;
+      font-size: 12px;
       letter-spacing: 0.3px;
       text-transform: uppercase;
       color: #FF550C;
-      margin: 0 0 6px;
+      margin: 0 0 16px;
     }
 
-    /* Spacing ruler — visual bar showing each token's size */
+    /* Spacing ruler — visual bar showing each token's size.
+       Same row rhythm as Colors: 12px padding, 24px gap, 14px SF Pro labels. */
     .token-spacing-row {
       display: grid;
-      grid-template-columns: 64px 1fr 56px;
-      gap: 12px;
+      grid-template-columns: 96px 1fr 64px;
+      gap: 24px;
       align-items: center;
-      padding: 5px 0;
-      border-bottom: 1px solid rgba(11,11,10,0.04);
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(11,11,10,0.06);
     }
     .token-spacing-row:last-child { border-bottom: 0; }
     .token-spacing-row__name {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 10px;
-      color: #141410;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
+      font-size: 14px;
+      color: #120f03;
+      letter-spacing: 0;
     }
     .token-spacing-row__bar {
       height: 14px;
@@ -542,9 +549,10 @@
       border-radius: 1px;
     }
     .token-spacing-row__px {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 10px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
+      font-size: 14px;
       color: #84827E;
+      letter-spacing: 0;
       text-align: right;
     }
 
@@ -581,7 +589,7 @@
     body[data-site-theme="dark"] .token-swatch-row__name { color: #F3F1ED; }
     body[data-site-theme="dark"] .token-swatch-row__hex { color: rgba(243,241,237,0.5); }
     body[data-site-theme="dark"] .token-typo-row {
-      border-bottom-color: rgba(255,255,255,0.04);
+      border-bottom-color: rgba(255,255,255,0.06);
     }
     body[data-site-theme="dark"] .token-typo-row__sample { color: #F3F1ED; }
     body[data-site-theme="dark"] .token-typo-row__name { color: #F3F1ED; }
@@ -597,14 +605,14 @@
     body[data-site-theme="dark"] .token-empty__label { color: rgba(243,241,237,0.5); }
     body[data-site-theme="dark"] .token-empty__desc { color: rgba(243,241,237,0.5); }
     body[data-site-theme="dark"] .token-semantic-row {
-      border-bottom-color: rgba(255,255,255,0.04);
+      border-bottom-color: rgba(255,255,255,0.06);
     }
     body[data-site-theme="dark"] .token-semantic-row__chip { border-color: rgba(255,255,255,0.12); }
     body[data-site-theme="dark"] .token-semantic-row__name { color: #F3F1ED; }
     body[data-site-theme="dark"] .token-semantic-row__resolves { color: rgba(243,241,237,0.5); }
     body[data-site-theme="dark"] .token-semantic-group__title { color: #FF8A5C; }
     body[data-site-theme="dark"] .token-spacing-row {
-      border-bottom-color: rgba(255,255,255,0.04);
+      border-bottom-color: rgba(255,255,255,0.06);
     }
     body[data-site-theme="dark"] .token-spacing-row__name { color: #F3F1ED; }
     body[data-site-theme="dark"] .token-spacing-row__bar { background: #F3F1ED; }
