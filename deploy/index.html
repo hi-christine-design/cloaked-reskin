@@ -718,6 +718,77 @@
       flex-direction: column;
       gap: 64px;
     }
+
+    /* Cloaked icon — renders a single-color SVG file as a colored shape.
+       Uses CSS mask-image so the icon picks up currentColor, so any element
+       it's nested inside (light row → dark icon, dark avatar → white icon)
+       just works. SVGs have #141410 fill baked in, but mask-image only
+       reads the SHAPE (alpha channel), not the fill — so the bg-color wins. */
+    .cloaked-icon {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      background-color: currentColor;
+      -webkit-mask-image: var(--icon-url);
+              mask-image: var(--icon-url);
+      -webkit-mask-size: contain;
+              mask-size: contain;
+      -webkit-mask-repeat: no-repeat;
+              mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+              mask-position: center;
+      flex-shrink: 0;
+    }
+
+    /* Icons sub-page — grid of all icons, grouped by category folder. */
+    .icon-group { display: flex; flex-direction: column; gap: 16px; }
+    .icon-group + .icon-group { margin-top: 40px; }
+    .icon-group__title {
+      font-family: 'Aeonik Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      color: #FF550C;
+      margin: 0;
+    }
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .icon-grid--brand { grid-template-columns: repeat(4, 1fr); }
+    .icon-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 8px;
+      background: #ffffff;
+      border-radius: 4px;
+      border: 1px solid rgba(11,11,10,0.06);
+      min-height: 88px;
+      color: #141410;
+    }
+    .icon-tile__label {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
+      font-size: 11px;
+      color: #84827E;
+      text-align: center;
+      word-break: break-word;
+      line-height: 1.2;
+    }
+    .icon-tile img {
+      width: 24px;
+      height: 24px;
+      display: block;
+    }
+    .icon-tile--brand img {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      object-fit: cover;
+    }
     .token-category {
       background: transparent;
       padding: 0;
@@ -990,6 +1061,13 @@
       background: transparent;
       border-color: rgba(255,255,255,0.08);
     }
+    body[data-site-theme="dark"] .icon-tile {
+      background: #141410;
+      border-color: rgba(255,255,255,0.06);
+      color: #F3F1ED;
+    }
+    body[data-site-theme="dark"] .icon-tile__label { color: rgba(243,241,237,0.5); }
+    body[data-site-theme="dark"] .icon-group__title { color: #FF8A5C; }
     body[data-site-theme="dark"] .token-doc__panel { background: #0B0B0A; }
     body[data-site-theme="dark"] .token-category { background: transparent; }
     body[data-site-theme="dark"] .token-category__title { color: #F3F1ED; }
@@ -3444,6 +3522,7 @@
         <button role="tab" data-token-tab="themes">Themes</button>
         <button role="tab" data-token-tab="typography">Typography</button>
         <button role="tab" data-token-tab="spacing">Spacing</button>
+        <button role="tab" data-token-tab="icons">Icons</button>
       </nav>
 
       <!-- COMPONENTS sub-nav — visible only when viewSwitcher is on "Components" -->
@@ -6897,6 +6976,137 @@
         'Locked the system to a discrete <strong>4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 48 / 56 / 64 / 72 / 80 / 96 / 120 / 240</strong> scale (<code>--ct-spacing-*</code>). Roughly an 8-point grid with 4 as the smallest step. Anything not on the scale is a <em>decision</em>, not a default — which catches the in-between values that used to creep in. Plus one opacity token: <code>--ct-opacity-disabled (0.3)</code> — the only opacity value the system blesses for inactive states.'
       );
 
+      /* ----------- TOKENS · Icons -----------
+         Renders a visual grid of every icon shipped in the reskin set.
+         Single-color icons use .cloaked-icon (mask-image so currentColor
+         drives the fill); brand logos and image-fill icons use plain <img>.
+         The two icon-rendering helpers ICON() and IMG() and the manifests
+         below are reused by the Components playground further down. */
+      const ICON_BASE = 'assets/icons';
+      const ICONS = {
+        Communication: [
+          ['call',      'Size=24-1.svg'],
+          ['voicemail', 'Size=24-2.svg'],
+          ['sms',       'Size=24-3.svg'],
+          ['email',     'Size=24-4.svg'],
+          ['send',      'Size=24-5.svg'],
+          ['missed',    'Size=24.svg'],
+        ],
+        Feature: [
+          ['feature-1', 'size=24.svg'],
+          ['feature-2', 'size=24-1.svg'],
+          ['feature-3', 'size=24-2.svg'],
+          ['feature-4', 'size=24-3.svg'],
+          ['feature-5', 'size=24-4.svg'],
+        ],
+        Object: [
+          ['object-1', 'Size=24.svg'],
+          ['object-2', 'Size=24-1.svg'],
+          ['object-3', 'Size=24-2.svg'],
+          ['object-4', 'Size=24-3.svg'],
+          ['object-5', 'Size=24-4.svg'],
+          ['object-6', 'Size=24-5.svg'],
+        ],
+        Security: [
+          ['security-1', 'Size=24.svg'],
+          ['security-2', 'Size=24-1.svg'],
+          ['security-3', 'Size=24-2.svg'],
+          ['security-4', 'Size=24-3.svg'],
+        ],
+        Status: [
+          ['status-1', 'Size=24.svg'],
+          ['status-2', 'Size=24-1.svg'],
+          ['status-3', 'Size=24-2.svg'],
+        ],
+        action: [
+          ['arrow-down',  'Status=Down, size=24.svg'],
+          ['arrow-left',  'Status=Left, size=24.svg'],
+          ['arrow-right', 'Status=Right, size=24.svg'],
+          ['arrow-up',    'Status=Up, size=24.svg'],
+          ['action-1', 'size=24.svg'],
+          ['action-2', 'size=24-1.svg'],
+          ['action-3', 'size=24-2.svg'],
+          ['action-4', 'size=24-3.svg'],
+          ['action-5', 'size=24-4.svg'],
+          ['action-6', 'size=24-5.svg'],
+          ['action-7', 'size=24-6.svg'],
+        ],
+        flag: [
+          ['America', 'America.svg'],
+          ['Brazil',  'Brazil.svg'],
+        ],
+        CloakedPay: [
+          ['Amazon',   'Amazon.svg'],
+          ['Identity', 'Identity.svg'],
+          ['Walmart',  'Walmart.svg'],
+        ],
+        'Brand Logo': [
+          ['Adecco','Adecco.svg'],['Airbnb','Airbnb.svg'],['Amazon','Amazon.svg'],
+          ['Coresignal','Coresignal.svg'],['DHL','DHL.svg'],['Disney','Disney.svg'],
+          ['Ebay','Ebay.svg'],['Edenbrownsynergy','Edenbrownsynergy.com.svg'],['Facebook','Facebook.svg'],
+          ['Google','Google.svg'],['HBO','HBO.svg'],['Instagram','Instagram.svg'],
+          ['Lexilexi','Lexilexi.svg'],['Linkedin','Linkedin.svg'],['Lululemon','Lululemon.svg'],
+          ['Lyft','Lyft.svg'],['Onetrust','Onetrust.svg'],['Reddit','Reddit.svg'],
+          ['Redfin','Redfin.svg'],['Spokeo','Spokeo.com.svg'],['Spotify','Spotify.svg'],
+          ['TKC','TKC.svg'],['Target','Target.svg'],['Truepeoplesearch','Truepeoplesearch.svg'],
+          ['TruthFinder','TruthFinder.com.svg'],['Twitch','Twitch.svg'],['Walmart','Walmart.svg'],
+          ['Zillow','Zillow.svg'],['aerofcu','aerofcu.org.svg'],['ikea','ikea.svg'],
+          ['infotracer','infotracer.svg'],['mcdonald','mcdonald.svg'],
+        ],
+      };
+      // Build the URL path for an icon file in a given category folder.
+      // Encodes spaces and special chars so filenames like
+      // "Status=Right, size=24.svg" and folders like "Brand Logo" resolve.
+      const encPath = (s) => encodeURIComponent(s).replace(/'/g, "\\'");
+      const iconUrl = (cat, file) => `${ICON_BASE}/${encPath(cat)}/${encPath(file)}`;
+      // <span> using mask-image — picks up currentColor
+      const ICON = (cat, file) => `<span class="cloaked-icon" style="--icon-url:url('${iconUrl(cat, file)}')"></span>`;
+      // Plain <img> — preserves embedded colors (brand logos, flags, etc.)
+      const IMG = (cat, file, alt) => `<img src="${iconUrl(cat, file)}" alt="${alt || ''}" />`;
+
+      // Categories rendered with mask-image (single-color icons)
+      const STROKE_CATS = ['Communication','Feature','Object','Security','Status','action'];
+      // Categories rendered as <img> (have embedded colors / patterns)
+      const IMAGE_CATS  = ['flag','CloakedPay','Brand Logo'];
+
+      const renderIconGroup = (cat) => {
+        const entries = ICONS[cat] || [];
+        const isImg = IMAGE_CATS.includes(cat);
+        const tiles = entries.map(([label, file]) => `
+          <div class="icon-tile${isImg ? ' icon-tile--brand' : ''}">
+            ${isImg ? IMG(cat, file, label) : ICON(cat, file)}
+            <span class="icon-tile__label">${label}</span>
+          </div>`).join('');
+        return `<div class="icon-group">
+          <p class="icon-group__title">${cat} · ${entries.length}</p>
+          <div class="icon-grid${isImg ? ' icon-grid--brand' : ''}">${tiles}</div>
+        </div>`;
+      };
+
+      const iconsGrid = Object.keys(ICONS).map(renderIconGroup).join('');
+      const iconTotal = Object.values(ICONS).reduce((s, a) => s + a.length, 0);
+      // Icons sub-page uses a custom layout — the 2-col compare from
+      // categoryBlock would squeeze the grid into a 360px column, so we
+      // keep the before/after framing as a header but render the actual
+      // icon grid full-width below.
+      const iconsContent = `
+        <div class="token-category">
+          <h4 class="token-category__title">Icons</h4>
+          <p class="token-category__subtitle">A first-class icon library — single-color stroke marks for product UI, brand logos for partner content, flags and payment marks for editorial slots. All sized at 24px on a consistent stroke weight.</p>
+          <div class="token-category__compare" style="margin-bottom:40px;">
+            <div>
+              <p class="token-category__col-label">original - per-platform</p>
+              <p class="token-category__subtitle" style="margin:0;">Icons were sourced ad-hoc from iOS SF Symbols, Material, and one-off SVGs per surface. No unified set, no consistent stroke weight, no naming convention.</p>
+            </div>
+            <div>
+              <p class="token-category__col-label">cloaked reskin - ${iconTotal} icons</p>
+              <p class="token-category__subtitle" style="margin:0;">One unified library across 9 categories. Stroke marks recolor with <code>currentColor</code>; brand logos ship full-color.</p>
+            </div>
+          </div>
+          ${iconsGrid}
+          <p class="token-category__reason" style="margin-top:40px;">Stroke-mark icons (<strong>Communication / Feature / Object / Security / Status / action</strong>) use <code>currentColor</code>, so they recolor cleanly across light/dark and across the colored avatar circles in List row. <strong>Brand Logo / flag / CloakedPay</strong> render as full-color images because they carry external identity.</p>
+        </div>`;
+
       const placeholderPanel = (label) => `
         <div class="token-category" style="text-align:center;padding:48px 24px;">
           <h4 class="token-category__title" style="margin-bottom:8px;">${label}</h4>
@@ -6911,6 +7121,7 @@
         themes: themesContent,
         typography: typographyContent,
         spacing: spacingContent,
+        icons: iconsContent,
       };
       const tokensDoc = document.getElementById('tokensDoc');
       const tokenNav = document.getElementById('tokenNav');
@@ -7071,6 +7282,27 @@
         progressValue: 47,        // linear: 0..100
       };
 
+      // Maps trailingIcon state values to real cloaked-icon SVG files where
+      // they exist; falls back to my hand-drawn SVG for icons not in the
+      // source library (chevrons, X, abstract status icons).
+      const REAL_TRAIL_ICONS = {
+        missed:    ['Communication', 'Size=24.svg'],
+        voicemail: ['Communication', 'Size=24-2.svg'],
+        call:      ['Communication', 'Size=24-1.svg'],
+        sms:       ['Communication', 'Size=24-3.svg'],
+        email:     ['Communication', 'Size=24-4.svg'],
+        send:      ['Communication', 'Size=24-5.svg'],
+        'arrow-right': ['action', 'Status=Right, size=24.svg'],
+        'arrow-left':  ['action', 'Status=Left, size=24.svg'],
+        'arrow-down':  ['action', 'Status=Down, size=24.svg'],
+        'arrow-up':    ['action', 'Status=Up, size=24.svg'],
+      };
+      function trailingIconSVG(name) {
+        const real = REAL_TRAIL_ICONS[name];
+        if (real) return ICON(real[0], real[1]);
+        return PG_ICONS[name] || '';
+      }
+
       // Renders the trailing block based on type. Each branch matches the
       // Figma _Trailing variant set (Tag / CTA / Text block / Label / checkbox / icon).
       function renderTrailing(s) {
@@ -7084,7 +7316,7 @@
           case 'checkbox':
             return `<span class="list-row__trail-checkbox${s.trailingChecked ? ' list-row__trail-checkbox--checked' : ''}">${s.trailingChecked ? PG_ICONS.checkmark : ''}</span>`;
           case 'icon':
-            return `<span class="list-row__trail-icon">${PG_ICONS[s.trailingIcon] || ''}</span>`;
+            return `<span class="list-row__trail-icon">${trailingIconSVG(s.trailingIcon)}</span>`;
           case 'text-block':
           default:
             return `<div class="list-row__trailing">
@@ -7214,11 +7446,14 @@
                 ${iconOption('call',      'Call')}
                 ${iconOption('sms',       'SMS')}
                 ${iconOption('email',     'Email')}
+                ${iconOption('send',      'Send')}
               </optgroup>
               <optgroup label="Action">
                 ${iconOption('copy',           'Copy')}
                 ${iconOption('arrow-right',    'Arrow Right')}
                 ${iconOption('arrow-left',     'Arrow Left')}
+                ${iconOption('arrow-up',       'Arrow Up')}
+                ${iconOption('arrow-down',     'Arrow Down')}
                 ${iconOption('chevron-right',  'Chevron Right')}
                 ${iconOption('chevron-left',   'Chevron Left')}
                 ${iconOption('chevron-up',     'Chevron Up')}
