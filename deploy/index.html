@@ -62,13 +62,17 @@
     body[data-site-theme="dark"] .site-sidebar__brand,
     body[data-site-theme="dark"] .site-sidebar__section-header,
     body[data-site-theme="dark"] .tab-bar button,
-    body[data-site-theme="dark"] .token-nav button { color: #f3f1ed; }
+    body[data-site-theme="dark"] .token-nav button,
+    body[data-site-theme="dark"] .components-nav button { color: #f3f1ed; }
     body[data-site-theme="dark"] .tab-bar button,
-    body[data-site-theme="dark"] .token-nav button { border-bottom-color: rgba(255,255,255,0.04); }
+    body[data-site-theme="dark"] .token-nav button,
+    body[data-site-theme="dark"] .components-nav button { border-bottom-color: rgba(255,255,255,0.04); }
     body[data-site-theme="dark"] .tab-bar button:hover,
-    body[data-site-theme="dark"] .token-nav button:hover { background: rgba(255,255,255,0.04); }
+    body[data-site-theme="dark"] .token-nav button:hover,
+    body[data-site-theme="dark"] .components-nav button:hover { background: rgba(255,255,255,0.04); }
     body[data-site-theme="dark"] .tab-bar button[aria-selected="true"],
-    body[data-site-theme="dark"] .token-nav button[aria-selected="true"] {
+    body[data-site-theme="dark"] .token-nav button[aria-selected="true"],
+    body[data-site-theme="dark"] .components-nav button[aria-selected="true"] {
       background: rgba(255, 85, 12, 0.15);
     }
     body[data-site-theme="dark"] .view-switcher { border-bottom-color: rgba(255,255,255,0.08); }
@@ -383,11 +387,13 @@
       cursor: pointer;
     }
 
-    /* List row component — translated from the Figma node 19941:868. */
+    /* List row component — translated from the Figma node 19941:868.
+       Locked at Figma's 393px (iPhone width). flex-shrink:0 keeps it from
+       collapsing inside the flex canvas; the canvas can scroll if needed. */
     .list-row {
       background: #ffffff;
       width: 393px;
-      max-width: 100%;
+      flex-shrink: 0;
       padding: 20px;
       display: flex;
       align-items: center;
@@ -420,9 +426,14 @@
       justify-content: center;
       color: #fff;
     }
-    .list-row__avatar--monitor  { background: #5936C1; }
-    .list-row__avatar--identity { background: #E59D2B; }
-    .list-row__avatar--wallet   { background: #0F8F7C; }
+    .list-row__avatar--monitor  { background: #5936C1; } /* purple — dark web monitoring */
+    .list-row__avatar--identity { background: #0F8F7C; } /* teal — identity */
+    .list-row__avatar--shield   { background: #E59D2B; } /* amber — guard */
+    .list-row__avatar--wallet   { background: #3F7AEF; } /* blue — wallet/card */
+    .list-row__avatar--phone    { background: #008924; } /* green — phone */
+    .list-row__avatar--email    { background: #FF550C; } /* brand — email */
+    .list-row__avatar--lock     { background: #635EF9; } /* purple alt — password */
+    .list-row__avatar--inbox    { background: #C53535; } /* red — inbox */
     .list-row__main {
       display: flex;
       flex-direction: column;
@@ -1087,9 +1098,10 @@
       color: #141410;
       letter-spacing: 0.5px;
     }
-    /* Sidebar list (Pages / Tokens) — vertical link list (Figma 20149:5178) */
+    /* Sidebar list (Pages / Tokens / Components) — vertical link list */
     .tab-bar,
-    .token-nav {
+    .token-nav,
+    .components-nav {
       display: flex;
       flex-direction: column;
       width: 100%;
@@ -1102,7 +1114,8 @@
        intrinsic content height and let overflow-y:auto actually scroll. */
     .tab-bar { overflow-y: auto; flex: 1 1 auto; min-height: 0; }
     .tab-bar button,
-    .token-nav button {
+    .token-nav button,
+    .components-nav button {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
       font-size: 12px;
       font-weight: 400;
@@ -1122,10 +1135,12 @@
       transition: background 0.12s ease, color 0.12s ease;
     }
     .tab-bar button:hover,
-    .token-nav button:hover { background: rgba(0,0,0,0.03); }
+    .token-nav button:hover,
+    .components-nav button:hover { background: rgba(0,0,0,0.03); }
     /* Active row — soft brand-orange tint (Figma 20154:5288) */
     .tab-bar button[aria-selected="true"],
-    .token-nav button[aria-selected="true"] {
+    .token-nav button[aria-selected="true"],
+    .components-nav button[aria-selected="true"] {
       background: rgba(255, 85, 12, 0.1);
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
       font-weight: 500;
@@ -1134,12 +1149,21 @@
     /* View-driven sidebar visibility: only the active sub-nav shows */
     body[data-view="pages"] .site-sidebar__section-header--tokens,
     body[data-view="pages"] .token-nav,
+    body[data-view="pages"] .site-sidebar__section-header--components,
+    body[data-view="pages"] .components-nav,
     body[data-view="components"] .site-sidebar__section-header--tokens,
     body[data-view="components"] .token-nav,
     body[data-view="components"] .site-sidebar__section-header--pages,
-    body[data-view="components"] .tab-bar { display: none; }
+    body[data-view="components"] .tab-bar,
     body[data-view="tokens"] .site-sidebar__section-header--pages,
-    body[data-view="tokens"] .tab-bar { display: none; }
+    body[data-view="tokens"] .tab-bar,
+    body[data-view="tokens"] .site-sidebar__section-header--components,
+    body[data-view="tokens"] .components-nav { display: none; }
+
+    /* Components sub-page visibility — Overview shows the audit grid,
+       List row shows the interactive playground. */
+    body[data-components-sub="overview"] #playgroundRoot { display: none; }
+    body[data-components-sub="list-row"] #componentsGrid { display: none; }
 
     /* Main scroll container & pane row */
     main { padding: 0; }
@@ -3372,6 +3396,13 @@
         <button role="tab" data-token-tab="themes">Themes</button>
         <button role="tab" data-token-tab="typography">Typography</button>
         <button role="tab" data-token-tab="spacing">Spacing</button>
+      </nav>
+
+      <!-- COMPONENTS sub-nav — visible only when viewSwitcher is on "Components" -->
+      <div class="site-sidebar__section-header site-sidebar__section-header--components">Components</div>
+      <nav class="components-nav" role="tablist" id="componentsNav">
+        <button role="tab" data-components-tab="overview" aria-selected="true">Overview</button>
+        <button role="tab" data-components-tab="list-row" aria-selected="false">List row</button>
       </nav>
     </aside>
 
@@ -6886,21 +6917,25 @@
          (node 19941:868) and its variant set. All props the Figma panel
          exposes are wired to a single pgState object that re-renders the
          row on every change. */
-      const SVG = (path, w) => `<svg viewBox="0 0 24 24" width="${w||20}" height="${w||20}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
+      const SVG = (path, w) => `<svg viewBox="0 0 24 24" width="${w||20}" height="${w||20}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
       const PG_ICONS = {
-        // Avatar icon variants (centered inside a 40px colored circle)
-        monitor:  SVG('<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>'),
-        identity: SVG('<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>'),
-        wallet:   SVG('<path d="M3 7a2 2 0 0 1 2-2h13v4H5a2 2 0 0 1-2-2z"/><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7H5a2 2 0 0 1-2-2"/><circle cx="17" cy="13" r="1.2" fill="currentColor"/>'),
-        phone:    SVG('<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/>'),
-        shield:   SVG('<path d="M12 2 4 5v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/>'),
-        // Trailing "icon" variants (24px, stroke marks on transparent)
-        chevron:  SVG('<path d="M9 18l6-6-6-6"/>', 24),
-        arrow:    SVG('<path d="M5 12h14M13 5l7 7-7 7"/>', 24),
-        check:    SVG('<path d="M20 6 9 17l-5-5"/>', 24),
-        x:        SVG('<path d="M18 6 6 18M6 6l12 12"/>', 24),
-        // Checkbox checked state
-        checkmark: SVG('<path d="M20 6 9 17l-5-5"/>', 20),
+        // Avatar icon variants (white stroke on a 40px colored circle).
+        // Each icon maps to a real Cloaked product category.
+        monitor:  SVG('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>'),               // eye — dark web monitoring
+        identity: SVG('<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>'),                       // person — identity
+        shield:   SVG('<path d="M12 3 5 6v6c0 4.5 3 8.5 7 10 4-1.5 7-5.5 7-10V6l-7-3z"/><path d="m9 12 2 2 4-4"/>'),               // shield+check — guard
+        wallet:   SVG('<rect x="3" y="7" width="18" height="12" rx="2"/><path d="M3 11h18"/><path d="M7 16h3"/>'),                   // card — wallet
+        phone:    SVG('<path d="M21 16.5v2.5a1.8 1.8 0 0 1-2 1.8 17 17 0 0 1-7.4-2.6 16.7 16.7 0 0 1-5.1-5.1A17 17 0 0 1 3.9 5a1.8 1.8 0 0 1 1.8-2h2.5a1.8 1.8 0 0 1 1.8 1.5c.1.9.3 1.7.6 2.5a1.8 1.8 0 0 1-.4 1.9L9 10a13 13 0 0 0 5 5l1.1-1.1a1.8 1.8 0 0 1 1.9-.4c.8.3 1.6.5 2.5.6a1.8 1.8 0 0 1 1.5 1.8z"/>'),  // receiver — phone
+        email:    SVG('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>'),                                  // envelope — email
+        lock:     SVG('<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),                      // padlock — password
+        inbox:    SVG('<path d="M3 13h5l2 3h4l2-3h5"/><path d="M5.5 5h13l2.5 8v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6l2.5-8z"/>'),       // inbox — messages
+        // Trailing "icon" variants (24px stroke marks)
+        chevron:   SVG('<path d="M9 18l6-6-6-6"/>', 24),
+        arrow:     SVG('<path d="M5 12h14M13 5l7 7-7 7"/>', 24),
+        check:     SVG('<path d="M20 6 9 17l-5-5"/>', 24),
+        x:         SVG('<path d="M18 6 6 18M6 6l12 12"/>', 24),
+        // Checkbox checked state — small checkmark
+        checkmark: SVG('<path d="M20 6 9 17l-5-5"/>', 18),
       };
 
       const pgState = {
@@ -7026,16 +7061,20 @@
             ${s.size !== 'small' ? toggle('showProgress', 'Show _Progress') : ''}
           </div>`;
 
-        // icon/Monitor group — only when avatar is showing
+        // icon/Avatar group — only when avatar is showing.
+        // All 8 Cloaked product-category avatars exposed.
         const avatarGroup = (s.size !== 'small' && s.showAvatar) ? `
           <div class="playground__controls-section">
             <p class="playground__controls-section-title playground__controls-section-title--group">icon/Avatar</p>
             ${select('avatarVariant', 'Variant', [
               { value: 'monitor',  label: 'Monitor' },
               { value: 'identity', label: 'Identity' },
+              { value: 'shield',   label: 'Shield' },
               { value: 'wallet',   label: 'Wallet' },
               { value: 'phone',    label: 'Phone' },
-              { value: 'shield',   label: 'Shield' },
+              { value: 'email',    label: 'Email' },
+              { value: 'lock',     label: 'Lock' },
+              { value: 'inbox',    label: 'Inbox' },
             ])}
           </div>` : '';
 
@@ -7158,6 +7197,22 @@
         setView(btn.dataset.view);
       });
       setView('pages');
+
+      // Components sub-nav: Overview / List row.
+      const componentsNav = document.getElementById('componentsNav');
+      if (componentsNav) {
+        componentsNav.addEventListener('click', (e) => {
+          const btn = e.target.closest('button[data-components-tab]');
+          if (!btn) return;
+          const tab = btn.dataset.componentsTab;
+          componentsNav.querySelectorAll('button').forEach(b => {
+            b.setAttribute('aria-selected', b.dataset.componentsTab === tab ? 'true' : 'false');
+          });
+          document.body.setAttribute('data-components-sub', tab);
+        });
+        // Default sub-page
+        document.body.setAttribute('data-components-sub', 'overview');
+      }
     })();
 
     /* ===========================================================
