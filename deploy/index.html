@@ -720,6 +720,377 @@
       flex-shrink: 0;
     }
 
+    /* ===========================================================
+       Button (Figma 18759:7017)
+       Variants: Style (Primary / Secondary / Tertiary / Link) × Size (Default / Small)
+       Optional: showLeadingIcon, showTrailingIcon
+       All colors via --ct-cta-* semantic tokens — flip with [data-theme].
+       Spacing literal `10px` (Figma gap-[10px]) intentionally kept; not on
+       the --ct-spacing scale, flagged in verify-component report.
+       =========================================================== */
+    .pg-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 0;
+      cursor: pointer;
+      font-family: var(--ct-text-body-family);
+      font-weight: var(--ct-text-body-weight);
+      font-size: var(--ct-text-body-size);
+      line-height: var(--ct-text-body-line-height);
+      letter-spacing: var(--ct-text-body-letter-spacing);
+      text-align: center;
+      white-space: nowrap;
+      box-sizing: border-box;
+    }
+    .pg-btn--default {
+      height: var(--ct-spacing-56);
+      padding: 0 var(--ct-spacing-16);
+    }
+    .pg-btn--small {
+      height: var(--ct-spacing-40);
+      padding: var(--ct-spacing-8) var(--ct-spacing-24);
+      font-size: var(--ct-text-body-small-size);
+      line-height: var(--ct-text-body-small-line-height);
+      letter-spacing: var(--ct-text-body-small-letter-spacing);
+    }
+    .pg-btn--primary {
+      background: var(--ct-cta-primary-container);
+      color: var(--ct-cta-primary-text);
+    }
+    .pg-btn--primary.pg-btn--default { border-radius: var(--ct-spacing-40); }
+    .pg-btn--primary.pg-btn--small   { border-radius: var(--ct-spacing-24); }
+    .pg-btn--secondary {
+      background: transparent;
+      color: var(--ct-cta-secondary-text);
+      border: 1px solid var(--ct-cta-secondary-container);
+    }
+    .pg-btn--secondary.pg-btn--default { border-radius: var(--ct-spacing-56); }
+    .pg-btn--secondary.pg-btn--small   { border-radius: var(--ct-spacing-24); }
+    .pg-btn--tertiary {
+      background: var(--ct-cta-secondary-container);
+      color: var(--ct-cta-secondary-text);
+    }
+    .pg-btn--tertiary.pg-btn--default { border-radius: var(--ct-spacing-56); }
+    .pg-btn--tertiary.pg-btn--small   { border-radius: var(--ct-spacing-24); }
+    .pg-btn--link {
+      background: transparent;
+      color: var(--ct-cta-secondary-text);
+      height: auto;
+      padding: 0;
+      border-radius: 0;
+    }
+    .pg-btn__icon {
+      width: var(--ct-spacing-16);
+      height: var(--ct-spacing-16);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .pg-btn__icon svg { width: 100%; height: 100%; display: block; }
+
+    /* ===========================================================
+       Icon Button (Figma 16960:10476)
+       Variants: Style (Primary / Secondary) × Size (Default / Small)
+       Primary uses CTA primary tokens (black filled), Secondary uses
+       CTA secondary container (15% black). Border-radius from spacing
+       scale — Figma uses --spacing-24 corner on Primary Default (which
+       clamps to a circle at 40×40), 12 on Primary Small, and a full
+       ellipse on Secondary (999px circle).
+       =========================================================== */
+    .pg-iconbtn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      cursor: pointer;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+    .pg-iconbtn--default {
+      width: var(--ct-spacing-40);
+      height: var(--ct-spacing-40);
+      padding: var(--ct-spacing-8);
+    }
+    .pg-iconbtn--default .pg-iconbtn__icon {
+      width: var(--ct-spacing-24);
+      height: var(--ct-spacing-24);
+    }
+    .pg-iconbtn--small {
+      width: var(--ct-spacing-24);
+      height: var(--ct-spacing-24);
+      padding: var(--ct-spacing-4);
+    }
+    .pg-iconbtn--small .pg-iconbtn__icon {
+      width: var(--ct-spacing-16);
+      height: var(--ct-spacing-16);
+    }
+    .pg-iconbtn--primary {
+      background: var(--ct-cta-primary-container);
+      color: var(--ct-cta-primary-text);
+    }
+    .pg-iconbtn--primary.pg-iconbtn--default { border-radius: var(--ct-spacing-24); }
+    .pg-iconbtn--primary.pg-iconbtn--small   { border-radius: var(--ct-spacing-12); }
+    .pg-iconbtn--secondary {
+      background: var(--ct-cta-secondary-container);
+      color: var(--ct-cta-secondary-text);
+      border-radius: 999px;
+    }
+    .pg-iconbtn__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pg-iconbtn__icon svg { width: 100%; height: 100%; display: block; }
+
+    /* ===========================================================
+       Divider (Figma 18685:6445)
+       Variants: Color (BKGD_01 / BKGD_02)
+       Booleans: divider (BKGD_02 only — adds bottom hairline), showSecondaryInfo
+       BKGD_01 lays out the label absolutely (left 20, secondary right 16).
+       BKGD_02 uses flex row with 20/8 padding and a flex secondary on the right.
+       Height 28 is off the --ct-spacing scale (Figma component height); kept
+       as literal per the gotcha catalogued in verify-component SKILL.md.
+       Inter-column gap `10px` (Figma gap-[10px]) is also off-scale, same gotcha.
+       Typography uses the Link text style tokens (12 / 1.3 / 0.005em).
+       =========================================================== */
+    .pg-divider {
+      position: relative;
+      width: 393px;
+      height: 28px;
+      box-sizing: border-box;
+      overflow: hidden;
+      font-family: var(--ct-text-link-family);
+      font-size: var(--ct-text-link-size);
+      font-weight: var(--ct-text-link-weight);
+      line-height: var(--ct-text-link-line-height);
+      letter-spacing: var(--ct-text-link-letter-spacing);
+      color: var(--ct-text-primary);
+    }
+    .pg-divider--bkgd01 { background: var(--ct-bkgd-01); }
+    .pg-divider--bkgd02 {
+      background: var(--ct-bkgd-02);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: var(--ct-spacing-8) var(--ct-spacing-20);
+    }
+    .pg-divider__label { margin: 0; }
+    .pg-divider--bkgd01 .pg-divider__label {
+      position: absolute;
+      left: var(--ct-spacing-20);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .pg-divider--bkgd02 .pg-divider__label {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    .pg-divider__secondary {
+      margin: 0;
+      text-align: right;
+    }
+    .pg-divider--bkgd01 .pg-divider__secondary {
+      position: absolute;
+      right: var(--ct-spacing-16);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .pg-divider--bkgd02 .pg-divider__secondary {
+      flex-shrink: 0;
+    }
+    /* Bottom hairline — Figma only renders this on BKGD_02 when divider=true */
+    .pg-divider--bkgd02.pg-divider--has-line::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background: var(--ct-divider);
+    }
+
+    /* ===========================================================
+       Header — SYNTHESIZED component (Figma 20238:20024 + 20238:20025)
+       Source: Figma does not expose Header as a single component with
+       properties. Instead, six separate instances live under
+       `Header_landing page` (Brand, Title, Title_Close, Back, Close,
+       StoryPagination) and two under `Header_detail page` (Settings,
+       New Identity). This playground decomposes them into composable
+       atomic props on a single component:
+         - type: Landing | Detail
+         - landingVariant: one of the 6 Figma landing instances
+         - editable titleText and trailingText
+         - detailTitle + showLeading + showTrailing for detail
+       Layout values lifted verbatim from each Figma instance
+       (Spacing tokens 4 / 16 / 20 / 24 / 80 / 96, Serif/H2 24pt for
+       big titles, Body 16pt for nav text).
+       =========================================================== */
+    .pg-header {
+      position: relative;
+      width: 393px;
+      box-sizing: border-box;
+      font-family: var(--ct-text-body-family);
+      color: var(--ct-text-primary);
+      background: var(--ct-bkgd-01);
+    }
+    .pg-header--landing { height: 140px; }
+    .pg-header--detail {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: var(--ct-spacing-80) var(--ct-spacing-20) var(--ct-spacing-12);
+    }
+
+    /* ---- Landing layouts ----------------------------------- */
+    /* Brand: cloaked wordmark on left, menu icon-button on right (pt-88 top of right pill, logo at top-99 left-20 per Figma) */
+    .pg-header__landing-brand {
+      position: absolute;
+      inset: 0;
+    }
+    .pg-header__brand-logo {
+      position: absolute;
+      left: var(--ct-spacing-20);
+      bottom: var(--ct-spacing-24);
+      font-family: var(--ct-text-h2-serif-family);
+      font-size: var(--ct-text-body-size);
+      line-height: 1;
+      color: var(--ct-text-primary);
+    }
+    .pg-header__brand-menu {
+      position: absolute;
+      right: var(--ct-spacing-20);
+      bottom: var(--ct-spacing-12);
+      width: var(--ct-spacing-40);
+      height: var(--ct-spacing-40);
+      border-radius: 999px;
+      background: var(--ct-cta-secondary-container);
+      color: var(--ct-cta-secondary-text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      cursor: pointer;
+    }
+    .pg-header__brand-menu svg { width: var(--ct-spacing-24); height: var(--ct-spacing-24); }
+
+    /* Title / Title_Close / Close: flex row, pt-96 pb-24 px-20, items-end justify-between */
+    .pg-header__landing-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: var(--ct-spacing-96) var(--ct-spacing-20) var(--ct-spacing-24);
+      height: 100%;
+      box-sizing: border-box;
+    }
+    .pg-header__title-serif {
+      margin: 0;
+      font-family: var(--ct-text-h2-serif-family);
+      font-weight: var(--ct-text-h2-serif-weight);
+      font-size: var(--ct-text-h2-serif-size);
+      line-height: var(--ct-text-h2-serif-line-height);
+      letter-spacing: var(--ct-text-h2-serif-letter-spacing);
+      color: var(--ct-text-primary);
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .pg-header__trail-text {
+      margin: 0;
+      font-family: var(--ct-text-body-family);
+      font-weight: var(--ct-text-body-weight);
+      font-size: var(--ct-text-body-size);
+      line-height: var(--ct-text-body-line-height);
+      letter-spacing: var(--ct-text-body-letter-spacing);
+      color: var(--ct-text-primary);
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* Back: arrow pill on the left only, items-end justify-start with pt-96 pb-24 px-20 */
+    .pg-header__landing-back {
+      display: flex;
+      align-items: flex-end;
+      padding: var(--ct-spacing-96) var(--ct-spacing-20) var(--ct-spacing-24);
+      height: 100%;
+      box-sizing: border-box;
+    }
+    .pg-header__back-pill {
+      width: var(--ct-spacing-40);
+      height: var(--ct-spacing-40);
+      border-radius: 999px;
+      background: var(--ct-cta-secondary-container);
+      color: var(--ct-cta-secondary-text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      cursor: pointer;
+    }
+    .pg-header__back-pill svg { width: var(--ct-spacing-24); height: var(--ct-spacing-24); }
+
+    /* Story pagination: 7-segment progress bar + Close on right, pt-96 pb-24 px-16 */
+    .pg-header__landing-story {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--ct-spacing-16);
+      padding: var(--ct-spacing-96) var(--ct-spacing-16) var(--ct-spacing-24);
+      height: 100%;
+      box-sizing: border-box;
+    }
+    .pg-header__story-track {
+      display: flex;
+      flex: 1 1 0;
+      gap: var(--ct-spacing-4);
+      align-items: center;
+      min-width: 0;
+    }
+    .pg-header__story-seg {
+      flex: 1 1 0;
+      min-width: 0;
+      height: var(--ct-spacing-4);
+      background: var(--ct-graph-background);
+    }
+    .pg-header__story-seg--filled { background: var(--ct-text-primary); }
+
+    /* ---- Detail layout ------------------------------------- */
+    /* Detail: inline flex row, pt-80 pb-12 px-20; inner row has extra px-20 */
+    .pg-header__detail-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--ct-spacing-20);
+      width: 393px;
+      box-sizing: border-box;
+    }
+    .pg-header__detail-slot {
+      width: var(--ct-spacing-24);
+      height: var(--ct-spacing-24);
+      padding: 0;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ct-text-primary);
+      flex-shrink: 0;
+    }
+    .pg-header__detail-slot svg { width: var(--ct-spacing-24); height: var(--ct-spacing-24); }
+    .pg-header__detail-slot--empty { visibility: hidden; }
+    .pg-header__detail-title {
+      margin: 0;
+      font-family: var(--ct-text-body-family);
+      font-weight: var(--ct-text-body-weight);
+      font-size: var(--ct-text-body-size);
+      line-height: var(--ct-text-body-line-height);
+      letter-spacing: var(--ct-text-body-letter-spacing);
+      color: var(--ct-text-primary);
+      text-align: center;
+    }
+
     /* Token documentation surface — flat layout on the cream page background.
        Each category block: large title + description + two-col side-by-side.
        Narrow column keeps the two compare columns visually close. */
@@ -1399,9 +1770,21 @@
        the interactive playground; every other sub (Overview, Button, Tab,
        Header, Divider, Card, Navigation) shows the audit grid only, with
        content swapped in by JS. */
-    body[data-components-sub] #playgroundRoot { display: none; }
-    body[data-components-sub="list-row"] #playgroundRoot { display: block; }
-    body[data-components-sub="list-row"] #componentsGrid { display: none; }
+    body[data-components-sub] #playgroundRoot,
+    body[data-components-sub] #buttonPlaygroundRoot,
+    body[data-components-sub] #iconButtonPlaygroundRoot,
+    body[data-components-sub] #dividerPlaygroundRoot,
+    body[data-components-sub] #headerPlaygroundRoot { display: none; }
+    body[data-components-sub="list-row"]    #playgroundRoot           { display: block; }
+    body[data-components-sub="button"]      #buttonPlaygroundRoot     { display: block; }
+    body[data-components-sub="icon-button"] #iconButtonPlaygroundRoot { display: block; }
+    body[data-components-sub="divider"]     #dividerPlaygroundRoot    { display: block; }
+    body[data-components-sub="header"]      #headerPlaygroundRoot     { display: block; }
+    body[data-components-sub="list-row"]    #componentsGrid,
+    body[data-components-sub="button"]      #componentsGrid,
+    body[data-components-sub="icon-button"] #componentsGrid,
+    body[data-components-sub="divider"]     #componentsGrid,
+    body[data-components-sub="header"]      #componentsGrid { display: none; }
 
     /* Main scroll container & pane row */
     main { padding: 0; }
@@ -3860,6 +4243,7 @@
         <button role="tab" data-components-tab="overview" aria-selected="true">Overview</button>
         <button role="tab" data-components-tab="list-row" aria-selected="false">List row</button>
         <button role="tab" data-components-tab="button" aria-selected="false">Button</button>
+        <button role="tab" data-components-tab="icon-button" aria-selected="false">Icon button</button>
         <button role="tab" data-components-tab="tab" aria-selected="false">Tab</button>
         <button role="tab" data-components-tab="header" aria-selected="false">Header</button>
         <button role="tab" data-components-tab="divider" aria-selected="false">Divider</button>
@@ -3878,6 +4262,10 @@
       <section class="view-pane" data-view="components" hidden>
         <div class="audit-grid" id="componentsGrid"></div>
         <div id="playgroundRoot"></div>
+        <div id="buttonPlaygroundRoot"></div>
+        <div id="iconButtonPlaygroundRoot"></div>
+        <div id="dividerPlaygroundRoot"></div>
+        <div id="headerPlaygroundRoot"></div>
       </section>
     </main>
 
@@ -8059,6 +8447,554 @@
       }
       mountPlayground();
 
+      /* ----------- COMPONENT PLAYGROUND · Button -----------
+         Faithful translation of the Figma Button component (node 18759:7017).
+         Variants: Style (Primary / Secondary / Tertiary / Link) × Size
+         (Default / Small) plus showLeadingIcon / showTrailingIcon toggles
+         and an editable label. Every prop on the Figma instance panel is
+         wired to btnState. */
+      const BTN_ICONS = {
+        // action/add — Figma uses a plus glyph on the "leading" slot.
+        'action/add': `<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>`,
+        // action/arrow_Right — Figma uses a right arrow on the "trailing" slot.
+        'action/arrow_Right': `<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M2.667 8h10.666M9.333 3.333 13.333 8l-4 4.667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`,
+      };
+
+      const btnState = {
+        style: 'Primary',         // Primary | Secondary | Tertiary | Link
+        size: 'Default',          // Default | Small
+        showLeadingIcon: false,
+        showTrailingIcon: false,
+        leadingIcon: 'action/add',
+        trailingIcon: 'action/arrow_Right',
+        label: 'Disconnect',
+      };
+
+      function renderButton(s) {
+        const styleMod = s.style.toLowerCase();           // primary | secondary | tertiary | link
+        const sizeMod  = s.size.toLowerCase();            // default | small
+        const leading  = s.showLeadingIcon  ? `<span class="pg-btn__icon">${BTN_ICONS[s.leadingIcon] || ''}</span>` : '';
+        const trailing = s.showTrailingIcon ? `<span class="pg-btn__icon">${BTN_ICONS[s.trailingIcon] || ''}</span>` : '';
+        return `<button type="button" class="pg-btn pg-btn--${styleMod} pg-btn--${sizeMod}">${leading}<span>${s.label}</span>${trailing}</button>`;
+      }
+
+      function renderButtonControls() {
+        const select = (key, label, options) => `
+          <div class="playground__control-row">
+            <label class="playground__control-label" for="btn-${key}">${label}</label>
+            <select id="btn-${key}" class="playground__select" data-btn-select="${key}">
+              ${options.map(o => `<option value="${o}" ${btnState[key] === o ? 'selected' : ''}>${o}</option>`).join('')}
+            </select>
+          </div>`;
+        const toggle = (key, label) => `
+          <div class="playground__control-row">
+            <span class="playground__control-label">${label}</span>
+            <button type="button" class="playground__toggle" role="switch"
+              aria-checked="${btnState[key] ? 'true' : 'false'}" data-btn-toggle="${key}"></button>
+          </div>`;
+        const text = (key, label) => `
+          <div class="playground__control-row">
+            <label class="playground__control-label" for="btn-${key}">${label}</label>
+            <input id="btn-${key}" type="text" class="playground__select" data-btn-text="${key}"
+              value="${btnState[key].replace(/"/g, '&quot;')}" style="min-width:120px;" />
+          </div>`;
+
+        return `
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title">Variants</p>
+            ${select('style', 'Style', ['Primary', 'Secondary', 'Tertiary', 'Link'])}
+            ${select('size',  'Size',  ['Default', 'Small'])}
+          </div>
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title playground__controls-section-title--group">Leading icon</p>
+            ${toggle('showLeadingIcon', 'Show')}
+            ${btnState.showLeadingIcon ? select('leadingIcon', 'Icon', Object.keys(BTN_ICONS)) : ''}
+          </div>
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title playground__controls-section-title--group">Trailing icon</p>
+            ${toggle('showTrailingIcon', 'Show')}
+            ${btnState.showTrailingIcon ? select('trailingIcon', 'Icon', Object.keys(BTN_ICONS)) : ''}
+          </div>
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title">Label</p>
+            ${text('label', 'Text')}
+          </div>`;
+      }
+
+      function mountButtonPlayground() {
+        const root = document.getElementById('buttonPlaygroundRoot');
+        if (!root) return;
+        const currentTheme = document.body.getAttribute('data-site-theme') || 'light';
+        root.innerHTML = `
+          <section class="component-playground">
+            <h3 class="audit-block__title">Button · Interactive</h3>
+            <p class="audit-block__subtitle">All Figma variants exposed. Mirrors node 18759:7017.</p>
+            <div class="playground">
+              <div class="playground__canvas pg-themed" id="buttonPreview" data-theme="${currentTheme}"></div>
+              <aside class="playground__controls" id="buttonControls"></aside>
+            </div>
+          </section>`;
+
+        function updatePreview() {
+          document.getElementById('buttonPreview').innerHTML = renderButton(btnState);
+        }
+        function rerenderControls() {
+          const r = document.getElementById('buttonControls');
+          r.innerHTML = renderButtonControls();
+          r.querySelectorAll('[data-btn-toggle]').forEach(b => {
+            b.addEventListener('click', () => {
+              btnState[b.dataset.btnToggle] = !btnState[b.dataset.btnToggle];
+              updatePreview(); rerenderControls();
+            });
+          });
+          r.querySelectorAll('[data-btn-select]').forEach(sel => {
+            sel.addEventListener('change', () => {
+              btnState[sel.dataset.btnSelect] = sel.value;
+              updatePreview(); rerenderControls();
+            });
+          });
+          r.querySelectorAll('[data-btn-text]').forEach(inp => {
+            inp.addEventListener('input', () => {
+              btnState[inp.dataset.btnText] = inp.value;
+              updatePreview();
+            });
+          });
+        }
+        updatePreview();
+        rerenderControls();
+      }
+      mountButtonPlayground();
+
+      /* ----------- COMPONENT PLAYGROUND · Icon Button -----------
+         Faithful translation of the Figma Icon Button component (node
+         16960:10476). Variants: Style (Primary / Secondary) × Size
+         (Default / Small). Icon swap exposed for symmetry with Figma's
+         instance-swap on the inner action/* node. */
+      const ICONBTN_ICONS = {
+        // action/expand — Figma's Primary default icon. 4 arrows pointing outward.
+        'action/expand': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`,
+        // action/arrow_Right — Figma's Secondary default icon.
+        'action/arrow_Right': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M4 12h16M14 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`,
+        // action/add — common alternate
+        'action/add': `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>`,
+      };
+
+      const iconBtnState = {
+        style: 'Primary',          // Primary | Secondary
+        size: 'Default',           // Default | Small
+        icon: 'action/expand',
+      };
+
+      function renderIconButton(s) {
+        const styleMod = s.style.toLowerCase();
+        const sizeMod  = s.size.toLowerCase();
+        return `<button type="button" class="pg-iconbtn pg-iconbtn--${styleMod} pg-iconbtn--${sizeMod}" aria-label="${s.icon}">
+          <span class="pg-iconbtn__icon">${ICONBTN_ICONS[s.icon] || ''}</span>
+        </button>`;
+      }
+
+      function renderIconButtonControls() {
+        const select = (key, label, options) => `
+          <div class="playground__control-row">
+            <label class="playground__control-label" for="iconbtn-${key}">${label}</label>
+            <select id="iconbtn-${key}" class="playground__select" data-iconbtn-select="${key}">
+              ${options.map(o => `<option value="${o}" ${iconBtnState[key] === o ? 'selected' : ''}>${o}</option>`).join('')}
+            </select>
+          </div>`;
+        return `
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title">Variants</p>
+            ${select('style', 'Style', ['Primary', 'Secondary'])}
+            ${select('size',  'Size',  ['Default', 'Small'])}
+          </div>
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title playground__controls-section-title--group">Icon</p>
+            ${select('icon', 'Glyph', Object.keys(ICONBTN_ICONS))}
+          </div>`;
+      }
+
+      function mountIconButtonPlayground() {
+        const root = document.getElementById('iconButtonPlaygroundRoot');
+        if (!root) return;
+        const currentTheme = document.body.getAttribute('data-site-theme') || 'light';
+        root.innerHTML = `
+          <section class="component-playground">
+            <h3 class="audit-block__title">Icon Button · Interactive</h3>
+            <p class="audit-block__subtitle">All Figma variants exposed. Mirrors node 16960:10476.</p>
+            <div class="playground">
+              <div class="playground__canvas pg-themed" id="iconButtonPreview" data-theme="${currentTheme}"></div>
+              <aside class="playground__controls" id="iconButtonControls"></aside>
+            </div>
+          </section>`;
+
+        function updatePreview() {
+          document.getElementById('iconButtonPreview').innerHTML = renderIconButton(iconBtnState);
+        }
+        function rerenderControls() {
+          const r = document.getElementById('iconButtonControls');
+          r.innerHTML = renderIconButtonControls();
+          r.querySelectorAll('[data-iconbtn-select]').forEach(sel => {
+            sel.addEventListener('change', () => {
+              iconBtnState[sel.dataset.iconbtnSelect] = sel.value;
+              updatePreview(); rerenderControls();
+            });
+          });
+        }
+        updatePreview();
+        rerenderControls();
+      }
+      mountIconButtonPlayground();
+
+      /* ----------- COMPONENT PLAYGROUND · Divider -----------
+         Faithful translation of the Figma Divider component (node 18685:6445).
+         Variant: Color (BKGD_01 = cream | BKGD_02 = white).
+         Booleans: `divider` (BKGD_02 only — renders a 1px bottom hairline),
+         `showSecondaryInfo` (renders a right-aligned secondary label).
+         Label + secondary text exposed as editable strings to match the
+         Figma instance panel exactly. */
+      const dividerState = {
+        color: 'BKGD_01',           // BKGD_01 | BKGD_02
+        divider: true,
+        showSecondaryInfo: false,
+        label: 'Today',
+        secondary: '1/3',
+      };
+
+      function renderDivider(s) {
+        const colorMod = s.color === 'BKGD_02' ? 'bkgd02' : 'bkgd01';
+        // Figma: divider line only appears on BKGD_02 variant
+        const hasLine = s.color === 'BKGD_02' && s.divider;
+        const secondary = s.showSecondaryInfo
+          ? `<p class="pg-divider__secondary">${s.secondary}</p>`
+          : '';
+        return `<div class="pg-divider pg-divider--${colorMod}${hasLine ? ' pg-divider--has-line' : ''}">
+          <p class="pg-divider__label">${s.label}</p>
+          ${secondary}
+        </div>`;
+      }
+
+      function renderDividerControls() {
+        const select = (key, label, options) => `
+          <div class="playground__control-row">
+            <label class="playground__control-label" for="divider-${key}">${label}</label>
+            <select id="divider-${key}" class="playground__select" data-divider-select="${key}">
+              ${options.map(o => `<option value="${o}" ${dividerState[key] === o ? 'selected' : ''}>${o}</option>`).join('')}
+            </select>
+          </div>`;
+        const toggle = (key, label, disabled) => `
+          <div class="playground__control-row">
+            <span class="playground__control-label">${label}</span>
+            <button type="button" class="playground__toggle" role="switch"
+              aria-checked="${dividerState[key] ? 'true' : 'false'}"
+              data-divider-toggle="${key}"
+              ${disabled ? 'disabled aria-disabled="true" style="opacity:0.4;cursor:not-allowed;"' : ''}></button>
+          </div>`;
+        const text = (key, label) => `
+          <div class="playground__control-row">
+            <label class="playground__control-label" for="divider-${key}">${label}</label>
+            <input id="divider-${key}" type="text" class="playground__select" data-divider-text="${key}"
+              value="${(dividerState[key] || '').replace(/"/g, '&quot;')}" style="min-width:120px;" />
+          </div>`;
+
+        // The divider hairline is only meaningful on BKGD_02 (per Figma spec),
+        // so disable the toggle on BKGD_01 to make the constraint visible.
+        const isBkgd01 = dividerState.color === 'BKGD_01';
+        return `
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title">Variant</p>
+            ${select('color', 'Color', ['BKGD_01', 'BKGD_02'])}
+          </div>
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title playground__controls-section-title--group">Booleans</p>
+            ${toggle('divider', 'Divider line', isBkgd01)}
+            ${toggle('showSecondaryInfo', 'Secondary info', false)}
+          </div>
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title">Text</p>
+            ${text('label', 'Label')}
+            ${dividerState.showSecondaryInfo ? text('secondary', 'Secondary') : ''}
+          </div>`;
+      }
+
+      function mountDividerPlayground() {
+        const root = document.getElementById('dividerPlaygroundRoot');
+        if (!root) return;
+        const currentTheme = document.body.getAttribute('data-site-theme') || 'light';
+        root.innerHTML = `
+          <section class="component-playground">
+            <h3 class="audit-block__title">Divider · Interactive</h3>
+            <p class="audit-block__subtitle">All Figma variants exposed. Mirrors node 18685:6445.</p>
+            <div class="playground">
+              <div class="playground__canvas pg-themed" id="dividerPreview" data-theme="${currentTheme}"></div>
+              <aside class="playground__controls" id="dividerControls"></aside>
+            </div>
+          </section>`;
+
+        function updatePreview() {
+          document.getElementById('dividerPreview').innerHTML = renderDivider(dividerState);
+        }
+        function rerenderControls() {
+          const r = document.getElementById('dividerControls');
+          r.innerHTML = renderDividerControls();
+          r.querySelectorAll('[data-divider-toggle]').forEach(b => {
+            if (b.hasAttribute('disabled')) return;
+            b.addEventListener('click', () => {
+              dividerState[b.dataset.dividerToggle] = !dividerState[b.dataset.dividerToggle];
+              updatePreview(); rerenderControls();
+            });
+          });
+          r.querySelectorAll('[data-divider-select]').forEach(sel => {
+            sel.addEventListener('change', () => {
+              dividerState[sel.dataset.dividerSelect] = sel.value;
+              updatePreview(); rerenderControls();
+            });
+          });
+          r.querySelectorAll('[data-divider-text]').forEach(inp => {
+            inp.addEventListener('input', () => {
+              dividerState[inp.dataset.dividerText] = inp.value;
+              updatePreview();
+            });
+          });
+        }
+        updatePreview();
+        rerenderControls();
+      }
+      mountDividerPlayground();
+
+      /* ----------- COMPONENT PLAYGROUND · Header (SYNTHESIZED) -----------
+         Source: Figma Header_landing page (20238:20024) — 6 instances
+         (Brand, Title, Title_Close, Back, Close, StoryPagination); and
+         Figma Header_detail page (20238:20025) — Settings + New Identity
+         instances. No single Figma component exposes these as variants,
+         so this playground synthesizes them under two top-level types
+         (Landing / Detail) with composable atomic props. */
+      const HEADER_ICONS = {
+        // hamburger menu — three horizontal lines
+        menu: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M5 8h14M5 16h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>`,
+        // back arrow — left chevron
+        arrowLeft: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M20 12H4M11 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`,
+        // link / share — chain icon
+        link: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 1 0-7-7l-1 1M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 1 0 7 7l1-1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`,
+      };
+
+      const headerState = {
+        type: 'Landing',                // Landing | Detail
+        landingVariant: 'Brand',        // Brand | Title | Title_Close | Back | Close | StoryPagination
+        titleText: 'Activities',
+        trailingText: 'Close',
+        storyStep: 1,                   // 1..7 — which pip is filled when landingVariant=StoryPagination
+        detailTitle: 'Settings',
+        showLeading: true,
+        showTrailing: true,
+      };
+
+      function renderHeaderLanding(s) {
+        switch (s.landingVariant) {
+          case 'Brand':
+            return `<div class="pg-header pg-header--landing">
+              <div class="pg-header__landing-brand">
+                <span class="pg-header__brand-logo">cloaked</span>
+                <button type="button" class="pg-header__brand-menu" aria-label="Menu">${HEADER_ICONS.menu}</button>
+              </div>
+            </div>`;
+          case 'Title':
+            return `<div class="pg-header pg-header--landing">
+              <div class="pg-header__landing-row">
+                <h2 class="pg-header__title-serif">${s.titleText}</h2>
+              </div>
+            </div>`;
+          case 'Title_Close':
+            return `<div class="pg-header pg-header--landing">
+              <div class="pg-header__landing-row">
+                <h2 class="pg-header__title-serif">${s.titleText}</h2>
+                <p class="pg-header__trail-text">${s.trailingText}</p>
+              </div>
+            </div>`;
+          case 'Back':
+            return `<div class="pg-header pg-header--landing">
+              <div class="pg-header__landing-back">
+                <button type="button" class="pg-header__back-pill" aria-label="Back">${HEADER_ICONS.arrowLeft}</button>
+              </div>
+            </div>`;
+          case 'Close':
+            return `<div class="pg-header pg-header--landing">
+              <div class="pg-header__landing-row" style="justify-content:flex-end;">
+                <p class="pg-header__trail-text">${s.trailingText}</p>
+              </div>
+            </div>`;
+          case 'StoryPagination':
+            const segCount = 7;
+            const segs = Array.from({ length: segCount }, (_, i) =>
+              `<span class="pg-header__story-seg${i < s.storyStep ? ' pg-header__story-seg--filled' : ''}"></span>`
+            ).join('');
+            return `<div class="pg-header pg-header--landing">
+              <div class="pg-header__landing-story">
+                <div class="pg-header__story-track">${segs}</div>
+                <p class="pg-header__trail-text">${s.trailingText}</p>
+              </div>
+            </div>`;
+          default:
+            return '';
+        }
+      }
+
+      function renderHeaderDetail(s) {
+        const leading = s.showLeading
+          ? `<button type="button" class="pg-header__detail-slot" aria-label="Back">${HEADER_ICONS.arrowLeft}</button>`
+          : `<span class="pg-header__detail-slot pg-header__detail-slot--empty">${HEADER_ICONS.arrowLeft}</span>`;
+        const trailing = s.showTrailing
+          ? `<button type="button" class="pg-header__detail-slot" aria-label="Share link">${HEADER_ICONS.link}</button>`
+          : `<span class="pg-header__detail-slot pg-header__detail-slot--empty">${HEADER_ICONS.link}</span>`;
+        return `<div class="pg-header pg-header--detail">
+          <div class="pg-header__detail-row">
+            ${leading}
+            <h2 class="pg-header__detail-title">${s.detailTitle}</h2>
+            ${trailing}
+          </div>
+        </div>`;
+      }
+
+      function renderHeader(s) {
+        return s.type === 'Detail' ? renderHeaderDetail(s) : renderHeaderLanding(s);
+      }
+
+      function renderHeaderControls() {
+        const select = (key, label, options) => `
+          <div class="playground__control-row">
+            <label class="playground__control-label" for="header-${key}">${label}</label>
+            <select id="header-${key}" class="playground__select" data-header-select="${key}">
+              ${options.map(o => `<option value="${o}" ${headerState[key] === o ? 'selected' : ''}>${o}</option>`).join('')}
+            </select>
+          </div>`;
+        const toggle = (key, label) => `
+          <div class="playground__control-row">
+            <span class="playground__control-label">${label}</span>
+            <button type="button" class="playground__toggle" role="switch"
+              aria-checked="${headerState[key] ? 'true' : 'false'}" data-header-toggle="${key}"></button>
+          </div>`;
+        const text = (key, label) => `
+          <div class="playground__control-row">
+            <label class="playground__control-label" for="header-${key}">${label}</label>
+            <input id="header-${key}" type="text" class="playground__select" data-header-text="${key}"
+              value="${(headerState[key] || '').replace(/"/g, '&quot;')}" style="min-width:120px;" />
+          </div>`;
+        const number = (key, label, min, max) => `
+          <div class="playground__control-row">
+            <label class="playground__control-label" for="header-${key}">${label}</label>
+            <input id="header-${key}" type="number" class="playground__select" data-header-number="${key}"
+              value="${headerState[key]}" min="${min}" max="${max}" style="min-width:60px;" />
+          </div>`;
+
+        // Decide which sub-controls to expose based on top-level type.
+        if (headerState.type === 'Detail') {
+          return `
+            <div class="playground__controls-section">
+              <p class="playground__controls-section-title">Type</p>
+              ${select('type', 'Type', ['Landing', 'Detail'])}
+            </div>
+            <div class="playground__controls-section">
+              <p class="playground__controls-section-title playground__controls-section-title--group">Slots</p>
+              ${toggle('showLeading',  'Leading icon (back)')}
+              ${toggle('showTrailing', 'Trailing icon (link)')}
+            </div>
+            <div class="playground__controls-section">
+              <p class="playground__controls-section-title">Text</p>
+              ${text('detailTitle', 'Title')}
+            </div>`;
+        }
+
+        // Landing — variant select + contextual sub-controls
+        const v = headerState.landingVariant;
+        const showsTitleText    = v === 'Title' || v === 'Title_Close';
+        const showsTrailingText = v === 'Title_Close' || v === 'Close' || v === 'StoryPagination';
+        const showsStorySlider  = v === 'StoryPagination';
+        return `
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title">Type</p>
+            ${select('type', 'Type', ['Landing', 'Detail'])}
+          </div>
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title playground__controls-section-title--group">Landing variant</p>
+            ${select('landingVariant', 'Layout', ['Brand', 'Title', 'Title_Close', 'Back', 'Close', 'StoryPagination'])}
+          </div>
+          ${showsTitleText || showsTrailingText || showsStorySlider ? `
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title">Text &amp; data</p>
+            ${showsTitleText    ? text('titleText',    'Title')         : ''}
+            ${showsTrailingText ? text('trailingText', 'Trailing text') : ''}
+            ${showsStorySlider  ? number('storyStep',  'Story step', 0, 7) : ''}
+          </div>` : ''}`;
+      }
+
+      function mountHeaderPlayground() {
+        const root = document.getElementById('headerPlaygroundRoot');
+        if (!root) return;
+        const currentTheme = document.body.getAttribute('data-site-theme') || 'light';
+        root.innerHTML = `
+          <section class="component-playground">
+            <h3 class="audit-block__title">Header · Interactive (synthesized)</h3>
+            <p class="audit-block__subtitle">Figma has no single Header component with properties — this playground composes the 6 landing instances (20238:20024) and the detail layout (20238:20025) under one synthesized prop set.</p>
+            <div class="playground">
+              <div class="playground__canvas pg-themed" id="headerPreview" data-theme="${currentTheme}"></div>
+              <aside class="playground__controls" id="headerControls"></aside>
+            </div>
+          </section>`;
+
+        function updatePreview() {
+          document.getElementById('headerPreview').innerHTML = renderHeader(headerState);
+        }
+        function rerenderControls() {
+          const r = document.getElementById('headerControls');
+          r.innerHTML = renderHeaderControls();
+          r.querySelectorAll('[data-header-toggle]').forEach(b => {
+            b.addEventListener('click', () => {
+              headerState[b.dataset.headerToggle] = !headerState[b.dataset.headerToggle];
+              updatePreview(); rerenderControls();
+            });
+          });
+          r.querySelectorAll('[data-header-select]').forEach(sel => {
+            sel.addEventListener('change', () => {
+              headerState[sel.dataset.headerSelect] = sel.value;
+              updatePreview(); rerenderControls();
+            });
+          });
+          r.querySelectorAll('[data-header-text]').forEach(inp => {
+            inp.addEventListener('input', () => {
+              headerState[inp.dataset.headerText] = inp.value;
+              updatePreview();
+            });
+          });
+          r.querySelectorAll('[data-header-number]').forEach(inp => {
+            inp.addEventListener('input', () => {
+              const v = Number(inp.value);
+              if (!Number.isNaN(v)) {
+                headerState[inp.dataset.headerNumber] = v;
+                updatePreview();
+              }
+            });
+          });
+        }
+        updatePreview();
+        rerenderControls();
+      }
+      mountHeaderPlayground();
+
       const switcher = document.getElementById('viewSwitcher');
       const panes = document.querySelectorAll('.view-pane');
       function setView(view) {
@@ -8201,7 +9137,7 @@
            design-system tokens (--ct-bkgd-01, --ct-text-primary, ...) resolve to
            their dark or light values. The html element keeps data-theme="light"
            as a fallback for any --ct-* usage outside the phone subtrees. */
-        document.querySelectorAll('.reskin').forEach(el => el.setAttribute('data-theme', theme));
+        document.querySelectorAll('.reskin, .pg-themed').forEach(el => el.setAttribute('data-theme', theme));
         // Swap inline hex colors on hand-coded original mockups using the
         // Cloaked Color JSON light↔dark mapping.
         applyOriginalColorTheme(theme);
