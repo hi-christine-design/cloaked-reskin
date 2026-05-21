@@ -81,11 +81,15 @@
       background: rgba(255,255,255,0.1);
       color: #f3f1ed;
     }
+    /* Dark mode chrome lifted to #1B1B18 so the reskin phone mockup
+       (which uses --ct-bkgd-01 = #141410 internally) reads as a slightly
+       darker surface against the lighter page. Mirrors the light-mode
+       relationship where the white mockup sits on cream #f3f1ee chrome. */
     body[data-site-theme="dark"] .site-main {
-      background: #141410;
+      background: #1B1B18;
       border-left-color: rgba(255,255,255,0.08);
     }
-    body[data-site-theme="dark"] .panel-stack { background: #141410; }
+    body[data-site-theme="dark"] .panel-stack { background: #1B1B18; }
     body[data-site-theme="dark"] .panel-stack + .panel-stack { border-left-color: rgba(255,255,255,0.08); }
     body[data-site-theme="dark"] .panel-stack__card { background: #1B1B18; }
     body[data-site-theme="dark"] .panel-stack > .label { color: #f3f1ed; }
@@ -190,12 +194,12 @@
       padding: 32px;
       min-height: 100vh;
     }
-    /* Tokens + Components view-pane backgrounds match .site-main (#141410)
+    /* Tokens + Components view-pane backgrounds match .site-main (#1B1B18)
        so the inner content area shares one tone with the surrounding chrome —
        mirroring the unified #f3f1ee surface in light mode. */
     body[data-site-theme="dark"] .view-pane[data-view="tokens"],
     body[data-site-theme="dark"] .view-pane[data-view="components"] {
-      background: #141410;
+      background: #1B1B18;
     }
 
     /* Main area — pane container. Cream backdrop matches the sidebar so the whole
@@ -983,7 +987,7 @@
        sample contents (which represent actual app UI) stay as-is — only the
        *comparison surfaces* and the chrome that wraps them flip. */
     body[data-site-theme="dark"] .token-doc {
-      background: #141410;
+      background: transparent;
       border-color: rgba(255,255,255,0.08);
     }
     body[data-site-theme="dark"] .token-doc__panel { background: #0B0B0A; }
@@ -1041,7 +1045,7 @@
     body[data-site-theme="dark"] .audit-block__subtitle { color: rgba(243,241,237,0.6); }
     body[data-site-theme="dark"] .audit-block__col-label { color: rgba(243,241,237,0.5); }
     body[data-site-theme="dark"] .audit-block__col {
-      background: #1B1B18;
+      background: #141410;
       color: #F3F1ED;
     }
     body[data-site-theme="dark"] .audit-block__reason { color: rgba(243,241,237,0.7); }
