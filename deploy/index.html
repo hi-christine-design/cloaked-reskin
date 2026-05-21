@@ -1161,6 +1161,51 @@
       text-align: center;
     }
 
+    /* ===========================================================
+       Tab (Figma 20112:14309 — "tab_menu without carousel")
+       Variants: Taps = 3 | 5  (Figma's "5" variant actually renders
+       6 tab items with the 6th overflowing the 393px frame.)
+       The active tab gets an --ct-cta-primary-container bottom border
+       that visually overlays the container's full-width --ct-divider
+       hairline. Inactive tabs use --ct-opacity-disabled (0.3).
+       Synthesized: a clickable `active` index so the playground feels
+       alive — Figma's component locks the active to the first tab.
+       =========================================================== */
+    .pg-tabs {
+      width: 393px;
+      display: flex;
+      align-items: center;
+      padding: var(--ct-spacing-48) var(--ct-spacing-16) 0 0;
+      border-bottom: 1px solid var(--ct-divider);
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .pg-tabs__item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--ct-spacing-20);
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid transparent;
+      margin-bottom: -1px; /* overlap the container's bottom hairline */
+      cursor: pointer;
+      font-family: var(--ct-text-body-family);
+      font-weight: var(--ct-text-body-weight);
+      font-size: var(--ct-text-body-size);
+      line-height: var(--ct-text-body-line-height);
+      letter-spacing: var(--ct-text-body-letter-spacing);
+      color: var(--ct-text-primary);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .pg-tabs__item--active {
+      border-bottom-color: var(--ct-cta-primary-container);
+    }
+    .pg-tabs__item--inactive {
+      opacity: var(--ct-opacity-disabled);
+    }
+
     /* Token documentation surface — flat layout on the cream page background.
        Each category block: large title + description + two-col side-by-side.
        Narrow column keeps the two compare columns visually close. */
@@ -1856,17 +1901,20 @@
     body[data-components-sub] #buttonPlaygroundRoot,
     body[data-components-sub] #iconButtonPlaygroundRoot,
     body[data-components-sub] #dividerPlaygroundRoot,
-    body[data-components-sub] #headerPlaygroundRoot { display: none; }
+    body[data-components-sub] #headerPlaygroundRoot,
+    body[data-components-sub] #tabPlaygroundRoot { display: none; }
     body[data-components-sub="list-row"]    #playgroundRoot           { display: block; }
     body[data-components-sub="button"]      #buttonPlaygroundRoot     { display: block; }
     body[data-components-sub="icon-button"] #iconButtonPlaygroundRoot { display: block; }
     body[data-components-sub="divider"]     #dividerPlaygroundRoot    { display: block; }
     body[data-components-sub="header"]      #headerPlaygroundRoot     { display: block; }
+    body[data-components-sub="tab"]         #tabPlaygroundRoot        { display: block; }
     body[data-components-sub="list-row"]    #componentsGrid,
     body[data-components-sub="button"]      #componentsGrid,
     body[data-components-sub="icon-button"] #componentsGrid,
     body[data-components-sub="divider"]     #componentsGrid,
-    body[data-components-sub="header"]      #componentsGrid { display: none; }
+    body[data-components-sub="header"]      #componentsGrid,
+    body[data-components-sub="tab"]         #componentsGrid { display: none; }
 
     /* Main scroll container & pane row */
     main { padding: 0; }
@@ -4398,6 +4446,7 @@
         <div id="iconButtonPlaygroundRoot"></div>
         <div id="dividerPlaygroundRoot"></div>
         <div id="headerPlaygroundRoot"></div>
+        <div id="tabPlaygroundRoot"></div>
       </section>
     </main>
 
@@ -9124,6 +9173,106 @@
         rerenderControls();
       }
       mountHeaderPlayground();
+
+      /* ----------- COMPONENT PLAYGROUND · Tab -----------
+         Faithful translation of the Figma "tab_menu without carousel"
+         component (node 20112:14309). Figma's two symbol variants:
+           Taps=3  → 3 tab items (1st active)
+           Taps=5  → 6 tab items (1st active, 6th overflows the 393w frame)
+         Figma exposes the boolean "active" only on the inner TabItem and
+         hard-codes the first tab as active in both symbol variants —
+         the playground extends this with a clickable `active` index so
+         users can flip the highlight around without leaving Figma's
+         visual rules. */
+      const tabState = {
+        taps: '3',     // '3' | '5' — Figma variant
+        active: 0,     // 0-based active index (synthesized — Figma locks to 0)
+      };
+      const tabCounts = { '3': 3, '5': 6 };
+
+      function renderTab(s) {
+        const count = tabCounts[s.taps] || 3;
+        const items = Array.from({ length: count }, (_, i) => {
+          const isActive = i === s.active;
+          return `<button type="button"
+            class="pg-tabs__item ${isActive ? 'pg-tabs__item--active' : 'pg-tabs__item--inactive'}"
+            data-tab-index="${i}">Tap ${i + 1}</button>`;
+        }).join('');
+        return `<div class="pg-tabs">${items}</div>`;
+      }
+
+      function renderTabControls() {
+        const select = (key, label, options) => `
+          <div class="playground__control-row">
+            <label class="playground__control-label" for="tab-${key}">${label}</label>
+            <select id="tab-${key}" class="playground__select" data-tab-select="${key}">
+              ${options.map(o => `<option value="${o}" ${tabState[key] === o ? 'selected' : ''}>${o}</option>`).join('')}
+            </select>
+          </div>`;
+        const count = tabCounts[tabState.taps] || 3;
+        const activeOptions = Array.from({ length: count }, (_, i) => String(i));
+        return `
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title">Variant</p>
+            ${select('taps', 'Taps', ['3', '5'])}
+          </div>
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title playground__controls-section-title--group">Active tab (synthesized)</p>
+            <div class="playground__control-row">
+              <label class="playground__control-label" for="tab-active">Index</label>
+              <select id="tab-active" class="playground__select" data-tab-select="active">
+                ${activeOptions.map(o => `<option value="${o}" ${String(tabState.active) === o ? 'selected' : ''}>${o} (Tap ${Number(o) + 1})</option>`).join('')}
+              </select>
+            </div>
+          </div>`;
+      }
+
+      function mountTabPlayground() {
+        const root = document.getElementById('tabPlaygroundRoot');
+        if (!root) return;
+        const currentTheme = document.body.getAttribute('data-site-theme') || 'light';
+        root.innerHTML = `
+          <section class="component-playground">
+            <h3 class="audit-block__title">Tab · Interactive</h3>
+            <p class="audit-block__subtitle">All Figma variants exposed. Mirrors node 20112:14309 ("tab_menu without carousel").</p>
+            <div class="playground">
+              <div class="playground__canvas pg-themed" id="tabPreview" data-theme="${currentTheme}"></div>
+              <aside class="playground__controls" id="tabControls"></aside>
+            </div>
+          </section>`;
+
+        function updatePreview() {
+          const preview = document.getElementById('tabPreview');
+          preview.innerHTML = renderTab(tabState);
+          // Wire up clicks on tab items so the canvas itself is interactive.
+          preview.querySelectorAll('[data-tab-index]').forEach(btn => {
+            btn.addEventListener('click', () => {
+              tabState.active = Number(btn.dataset.tabIndex);
+              updatePreview();
+              rerenderControls();
+            });
+          });
+        }
+        function rerenderControls() {
+          const r = document.getElementById('tabControls');
+          r.innerHTML = renderTabControls();
+          r.querySelectorAll('[data-tab-select]').forEach(sel => {
+            sel.addEventListener('change', () => {
+              const key = sel.dataset.tabSelect;
+              const v = key === 'active' ? Number(sel.value) : sel.value;
+              tabState[key] = v;
+              // Clamp active index if user shrinks tab count to fewer items.
+              const max = (tabCounts[tabState.taps] || 3) - 1;
+              if (tabState.active > max) tabState.active = max;
+              updatePreview();
+              rerenderControls();
+            });
+          });
+        }
+        updatePreview();
+        rerenderControls();
+      }
+      mountTabPlayground();
 
       const switcher = document.getElementById('viewSwitcher');
       const panes = document.querySelectorAll('.view-pane');
