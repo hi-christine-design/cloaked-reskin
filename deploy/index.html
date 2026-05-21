@@ -6075,12 +6075,16 @@
         ),
       ].join('');
 
-      /* ----------- TOKENS · Typography ----------- */
-      const SANS = '-apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif';
-      const SERIF = 'Simula, Georgia, serif';
-      const ROBOTO = 'Roboto, "Helvetica Neue", sans-serif';
-      const BUREAU = '"STK Bureau Sans", "Helvetica Neue", sans-serif';
-      const MONO = 'ui-monospace, SFMono-Regular, Menlo, monospace';
+      /* ----------- TOKENS · Typography -----------
+         IMPORTANT: these strings are interpolated into inline style="..."
+         attributes. Any double-quoted family name (e.g. "SF Pro") would
+         terminate the style attribute and silently break every following
+         declaration — including font-size. Single quotes only. */
+      const SANS = "-apple-system, BlinkMacSystemFont, 'SF Pro', system-ui, sans-serif";
+      const SERIF = "Simula, Georgia, serif";
+      const ROBOTO = "Roboto, 'Helvetica Neue', sans-serif";
+      const BUREAU = "'STK Bureau Sans', 'Helvetica Neue', sans-serif";
+      const MONO = "ui-monospace, SFMono-Regular, Menlo, monospace";
 
       const typeRow = (sample, sampleStyle, name, specs) => {
         // Render the sample at its TRUE spec — no font-size cap, no
