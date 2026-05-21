@@ -1399,11 +1399,15 @@
     /* Hide/show the two original-side views based on the panel-stack mode. */
     .panel-stack[data-orig-mode="default"] [data-orig-view="png"] { display: none; }
     .panel-stack[data-orig-mode="png"]     [data-orig-view="default"] { display: none; }
-    /* The PNG view fills the .phone-scroll container at top-aligned crop. */
-    [data-orig-view="png"] {
+    /* Both original-side views fill the .phone-scroll container so the
+       inner .original / .reskin layouts (which set min-height:100%) can
+       resolve against the 852px phone height. Without this, the wrapper
+       div collapses to its content size and the inner mockup floats up. */
+    [data-orig-view] {
       width: 100%;
       min-height: 100%;
-      display: block;
+      display: flex;
+      flex-direction: column;
     }
     [data-orig-view="png"] img {
       display: block;
