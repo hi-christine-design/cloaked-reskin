@@ -81,25 +81,27 @@
       background: rgba(255,255,255,0.1);
       color: #f3f1ed;
     }
-    /* Dark mode chrome — three-tier brightness ladder that mirrors light
-       mode's page > card > phone hierarchy:
-         page (.site-main / .panel-stack)  = #26241F  ← lifted chrome
-         card (.panel-stack__card)         = #1B1B18  ← recessed tray (grey-04)
-         phone (.phone via --ct-bkgd-02)   = #1B1B18  + 1px alpha ring
-       The 20px margin on .panel-stack__card means the page color shows in
-       a frame around the card, just like light mode where the cream page
-       wraps a darker-cream card holding a white phone. */
+    /* Dark mode chrome — swapped from previous attempt. The card
+       (panel-stack__card) is now the LIGHTER #26241F "tray" sitting
+       inside a DARKER #1B1B18 page. This way the phone's #1B1B18 fill
+       no longer matches the card it sits in:
+         page (.site-main / .panel-stack)  = #1B1B18  ← darker outer
+         card (.panel-stack__card)         = #26241F  ← lighter tray
+         phone (.phone via --ct-bkgd-02)   = #1B1B18  (matches outer, but
+                                                       inside the lighter
+                                                       card frame, so the
+                                                       card defines it) */
     body[data-site-theme="dark"] .site-main {
-      background: #26241F;
+      background: #1B1B18;
       border-left-color: rgba(255,255,255,0.08);
     }
-    body[data-site-theme="dark"] .panel-stack { background: #26241F; }
+    body[data-site-theme="dark"] .panel-stack { background: #1B1B18; }
     body[data-site-theme="dark"] .panel-stack + .panel-stack { border-left-color: rgba(255,255,255,0.08); }
-    body[data-site-theme="dark"] .panel-stack__card { background: #1B1B18; }
-    /* 1px alpha ring around the phone so its rounded edge is always
-       visible, even when the card behind it shares the phone's fill. */
+    body[data-site-theme="dark"] .panel-stack__card { background: #26241F; }
+    /* 1px alpha ring around the phone — softer now (0.08) since the card
+       is a lighter tone and the phone naturally reads as darker inside it. */
     body[data-site-theme="dark"] .phone {
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.12), 0 12px 32px rgba(0,0,0,0.4);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 12px 32px rgba(0,0,0,0.4);
     }
     body[data-site-theme="dark"] .panel-stack > .label { color: #f3f1ed; }
     body[data-site-theme="dark"] .theme-toggle {
@@ -203,12 +205,12 @@
       padding: 32px;
       min-height: 100vh;
     }
-    /* Tokens + Components view-pane backgrounds match .site-main (#26241F)
+    /* Tokens + Components view-pane backgrounds match .site-main (#1B1B18)
        so the inner content area shares one tone with the surrounding chrome —
        mirroring the unified #f3f1ee surface in light mode. */
     body[data-site-theme="dark"] .view-pane[data-view="tokens"],
     body[data-site-theme="dark"] .view-pane[data-view="components"] {
-      background: #26241F;
+      background: #1B1B18;
     }
 
     /* Main area — pane container. Cream backdrop matches the sidebar so the whole
