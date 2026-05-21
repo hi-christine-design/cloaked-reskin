@@ -283,6 +283,241 @@
       color: #FF550C;
     }
 
+    /* ===== Component playground — interactive list row demo =====
+       Mirrors the Figma component panel: canvas on the left, property
+       controls (toggles + selects) on the right. */
+    .component-playground {
+      margin-top: 64px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(20,20,16,0.08);
+    }
+    .playground {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 24px;
+      margin-top: 24px;
+      align-items: start;
+    }
+    .playground__canvas {
+      background: #e7e4df;
+      border-radius: 2px;
+      padding: 40px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 240px;
+    }
+    .playground__controls {
+      background: #ffffff;
+      border: 1px solid rgba(20,20,16,0.08);
+      border-radius: 4px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    }
+    .playground__controls-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .playground__controls-section + .playground__controls-section {
+      padding-top: 16px;
+      border-top: 1px solid rgba(20,20,16,0.06);
+    }
+    .playground__controls-section-title {
+      font-family: 'Aeonik Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      color: rgba(20,20,16,0.5);
+      margin: 0 0 4px;
+    }
+    .playground__control-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 24px;
+    }
+    .playground__control-label {
+      font-family: inherit;
+      font-size: 13px;
+      color: #141410;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .playground__toggle {
+      position: relative;
+      width: 32px;
+      height: 18px;
+      background: #DBD9D6;
+      border-radius: 9px;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      flex-shrink: 0;
+    }
+    .playground__toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 14px; height: 14px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.15s ease;
+    }
+    .playground__toggle[aria-checked="true"] { background: #FF550C; }
+    .playground__toggle[aria-checked="true"]::after { transform: translateX(14px); }
+    .playground__select {
+      font-family: inherit;
+      font-size: 13px;
+      background: #f3f1ee;
+      border: 1px solid #DBD9D6;
+      border-radius: 4px;
+      padding: 4px 8px;
+      color: #141410;
+      min-width: 100px;
+      cursor: pointer;
+    }
+
+    /* List row component — translated from the Figma node 19941:868. */
+    .list-row {
+      background: #ffffff;
+      width: 393px;
+      max-width: 100%;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      position: relative;
+      box-sizing: border-box;
+    }
+    .list-row::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 1px;
+      background: rgba(11,11,10,0.15);
+    }
+    .list-row__content {
+      display: flex;
+      flex: 1 1 0;
+      gap: 12px;
+      align-items: flex-start;
+      min-width: 0;
+    }
+    .list-row__avatar {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .list-row__avatar--monitor  { background: #5936C1; }
+    .list-row__avatar--identity { background: #E59D2B; }
+    .list-row__avatar--wallet   { background: #0F8F7C; }
+    .list-row__main {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 0;
+      gap: 12px;
+      min-width: 0;
+    }
+    .list-row__text-trail {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+    }
+    .list-row__text {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 0;
+      min-width: 0;
+      gap: 2px;
+    }
+    .list-row__title {
+      font-size: 16px;
+      color: #141410;
+      margin: 0;
+      line-height: 1.3;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .list-row__description {
+      font-size: 14px;
+      color: #84827E;
+      letter-spacing: 0.07px;
+      margin: 0;
+      line-height: 1.2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .list-row__trailing {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+      text-align: right;
+      flex-shrink: 0;
+      gap: 2px;
+    }
+    .list-row__trailing-title {
+      font-size: 16px;
+      color: #141410;
+      line-height: 1.3;
+      margin: 0;
+    }
+    .list-row__trailing-caption {
+      font-size: 14px;
+      color: #84827E;
+      letter-spacing: 0.07px;
+      line-height: 1.2;
+      margin: 0;
+    }
+    .list-row__progress {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      gap: 0;
+    }
+    .list-row__progress-segment {
+      display: flex;
+      align-items: center;
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    .list-row__progress-segment:last-child { flex: 0 0 auto; }
+    .list-row__progress-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      z-index: 2;
+    }
+    .list-row__progress-dot--filled { background: #FF550C; }
+    .list-row__progress-dot--empty {
+      background: #ffffff;
+      box-shadow: inset 0 0 0 1px #FF550C;
+    }
+    .list-row__progress-line {
+      flex: 1 1 0;
+      height: 2px;
+      margin: 0 -2px;
+      z-index: 1;
+    }
+    .list-row__progress-line--filled { background: #FF550C; }
+    .list-row__progress-line--empty  { background: rgba(255,85,12,0.25); }
+
     /* Token documentation surface — flat layout on the cream page background.
        Each category block: large title + description + two-col side-by-side.
        Narrow column keeps the two compare columns visually close. */
@@ -634,6 +869,40 @@
     }
     body[data-site-theme="dark"] .swatch__chip { border-color: rgba(255,255,255,0.12); }
     body[data-site-theme="dark"] .swatch__hex { color: #F3F1ED; }
+
+    /* ====== Dark theme — component playground + list row ====== */
+    body[data-site-theme="dark"] .component-playground {
+      border-top-color: rgba(255,255,255,0.08);
+    }
+    body[data-site-theme="dark"] .playground__canvas { background: #1B1B18; }
+    body[data-site-theme="dark"] .playground__controls {
+      background: #1B1B18;
+      border-color: rgba(255,255,255,0.08);
+    }
+    body[data-site-theme="dark"] .playground__controls-section + .playground__controls-section {
+      border-top-color: rgba(255,255,255,0.06);
+    }
+    body[data-site-theme="dark"] .playground__controls-section-title { color: rgba(243,241,237,0.5); }
+    body[data-site-theme="dark"] .playground__control-label { color: #F3F1ED; }
+    body[data-site-theme="dark"] .playground__toggle { background: rgba(255,255,255,0.15); }
+    body[data-site-theme="dark"] .playground__select {
+      background: #141410;
+      border-color: rgba(255,255,255,0.15);
+      color: #F3F1ED;
+    }
+    body[data-site-theme="dark"] .list-row { background: #0B0B0A; }
+    body[data-site-theme="dark"] .list-row::after { background: rgba(255,255,255,0.15); }
+    body[data-site-theme="dark"] .list-row__title,
+    body[data-site-theme="dark"] .list-row__trailing-title { color: #F3F1ED; }
+    body[data-site-theme="dark"] .list-row__description,
+    body[data-site-theme="dark"] .list-row__trailing-caption { color: rgba(243,241,237,0.6); }
+    body[data-site-theme="dark"] .list-row__progress-dot--empty {
+      background: #0B0B0A;
+      box-shadow: inset 0 0 0 1px #FF8A5C;
+    }
+    body[data-site-theme="dark"] .list-row__progress-dot--filled { background: #FF8A5C; }
+    body[data-site-theme="dark"] .list-row__progress-line--filled { background: #FF8A5C; }
+    body[data-site-theme="dark"] .list-row__progress-line--empty  { background: rgba(255,138,92,0.25); }
 
     /* Swatch — colored block with hex label, for token color comparisons */
     .swatch {
@@ -2952,6 +3221,7 @@
       </section>
       <section class="view-pane" data-view="components" hidden>
         <div class="audit-grid" id="componentsGrid"></div>
+        <div id="playgroundRoot"></div>
       </section>
     </main>
 
@@ -6447,6 +6717,157 @@
 
       const componentsGrid = document.getElementById('componentsGrid');
       if (componentsGrid) componentsGrid.innerHTML = componentsHtml;
+
+      /* ----------- COMPONENT PLAYGROUND · List row -----------
+         Mirrors the Figma component panel (node 19941:868) — Show Avatar,
+         Avatar variant, Show Description, Show Trailing + Caption, Show
+         Progress + step index — wired to a live preview. */
+      const PG_ICONS = {
+        monitor:  '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
+        identity: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>',
+        wallet:   '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h13v4H5a2 2 0 0 1-2-2z"/><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7H5a2 2 0 0 1-2-2"/><circle cx="17" cy="13" r="1.2" fill="currentColor"/></svg>',
+      };
+
+      const pgState = {
+        showAvatar: true,
+        avatarVariant: 'monitor',
+        showDescription: true,
+        showTrailing: true,
+        trailingCaption: true,
+        showProgress: true,
+        progressStep: 3,   // 0..4 — filled segments
+      };
+
+      function renderListRow(s) {
+        const avatar = s.showAvatar
+          ? `<div class="list-row__avatar list-row__avatar--${s.avatarVariant}">${PG_ICONS[s.avatarVariant] || ''}</div>`
+          : '';
+        const description = s.showDescription
+          ? `<p class="list-row__description">Description</p>`
+          : '';
+        const trailing = s.showTrailing
+          ? `<div class="list-row__trailing">
+              <p class="list-row__trailing-title">Title</p>
+              ${s.trailingCaption ? `<p class="list-row__trailing-caption">Caption</p>` : ''}
+            </div>`
+          : '';
+        // Progress: 4 segments, each = dot + line. progressStep filled segments.
+        const segs = [];
+        for (let i = 0; i < 4; i++) {
+          const filled = i < s.progressStep;
+          segs.push(`<div class="list-row__progress-segment">
+            <div class="list-row__progress-dot list-row__progress-dot--${filled ? 'filled' : 'empty'}"></div>
+            ${i < 3 ? `<div class="list-row__progress-line list-row__progress-line--${filled ? 'filled' : 'empty'}"></div>` : ''}
+          </div>`);
+        }
+        const progress = s.showProgress
+          ? `<div class="list-row__progress">${segs.join('')}</div>`
+          : '';
+        return `
+          <div class="list-row">
+            <div class="list-row__content">
+              ${avatar}
+              <div class="list-row__main">
+                <div class="list-row__text-trail">
+                  <div class="list-row__text">
+                    <p class="list-row__title">Title</p>
+                    ${description}
+                  </div>
+                  ${trailing}
+                </div>
+                ${progress}
+              </div>
+            </div>
+          </div>`;
+      }
+
+      function renderPlaygroundControls() {
+        const toggle = (key, label) => `
+          <div class="playground__control-row">
+            <span class="playground__control-label">${label}</span>
+            <button type="button" class="playground__toggle" role="switch"
+              aria-checked="${pgState[key]}" data-pg-toggle="${key}"
+              aria-label="${label}"></button>
+          </div>`;
+        const select = (key, label, options) => `
+          <div class="playground__control-row">
+            <span class="playground__control-label">${label}</span>
+            <select class="playground__select" data-pg-select="${key}">
+              ${options.map(o => `<option value="${o.value}"${pgState[key] == o.value ? ' selected' : ''}>${o.label}</option>`).join('')}
+            </select>
+          </div>`;
+        return `
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title">Avatar</p>
+            ${toggle('showAvatar', 'Show Avatar')}
+            ${select('avatarVariant', 'Variant', [
+              { value: 'monitor',  label: 'Monitor' },
+              { value: 'identity', label: 'Identity' },
+              { value: 'wallet',   label: 'Wallet' },
+            ])}
+          </div>
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title">Text</p>
+            ${toggle('showDescription', 'Show Description')}
+          </div>
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title">Trailing</p>
+            ${toggle('showTrailing', 'Show Trailing')}
+            ${toggle('trailingCaption', 'Caption')}
+          </div>
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title">Progress</p>
+            ${toggle('showProgress', 'Show Progress')}
+            ${select('progressStep', 'Steps', [
+              { value: 0, label: '0 / 4' },
+              { value: 1, label: '1 / 4' },
+              { value: 2, label: '2 / 4' },
+              { value: 3, label: '3 / 4' },
+              { value: 4, label: '4 / 4' },
+            ])}
+          </div>`;
+      }
+
+      function mountPlayground() {
+        const root = document.getElementById('playgroundRoot');
+        if (!root) return;
+        root.innerHTML = `
+          <section class="component-playground">
+            <h3 class="audit-block__title">List row · Interactive</h3>
+            <p class="audit-block__subtitle">All variants exposed — toggle the right-panel props to see the row reflow. Mirrors the Figma component (node 19941:868).</p>
+            <div class="playground">
+              <div class="playground__canvas" id="listRowPreview"></div>
+              <aside class="playground__controls" id="listRowControls"></aside>
+            </div>
+          </section>`;
+
+        function updatePreview() {
+          document.getElementById('listRowPreview').innerHTML = renderListRow(pgState);
+        }
+        function mountControls() {
+          document.getElementById('listRowControls').innerHTML = renderPlaygroundControls();
+          document.querySelectorAll('[data-pg-toggle]').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const key = btn.dataset.pgToggle;
+              pgState[key] = !pgState[key];
+              btn.setAttribute('aria-checked', String(pgState[key]));
+              updatePreview();
+            });
+          });
+          document.querySelectorAll('[data-pg-select]').forEach(sel => {
+            sel.addEventListener('change', () => {
+              const key = sel.dataset.pgSelect;
+              const v = sel.value;
+              // progressStep is numeric; everything else is a string
+              pgState[key] = (key === 'progressStep') ? Number(v) : v;
+              updatePreview();
+            });
+          });
+        }
+        updatePreview();
+        mountControls();
+      }
+      mountPlayground();
 
       const switcher = document.getElementById('viewSwitcher');
       const panes = document.querySelectorAll('.view-pane');
