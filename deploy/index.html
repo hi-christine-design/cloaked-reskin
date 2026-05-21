@@ -4337,8 +4337,7 @@
       <!-- COMPONENTS sub-nav — visible only when viewSwitcher is on "Components" -->
       <div class="site-sidebar__section-header site-sidebar__section-header--components">Components</div>
       <nav class="components-nav" role="tablist" id="componentsNav">
-        <button role="tab" data-components-tab="overview" aria-selected="true">Overview</button>
-        <button role="tab" data-components-tab="list-row" aria-selected="false">List row</button>
+        <button role="tab" data-components-tab="list-row" aria-selected="true">List row</button>
         <button role="tab" data-components-tab="button" aria-selected="false">Button</button>
         <button role="tab" data-components-tab="icon-button" aria-selected="false">Icon button</button>
         <button role="tab" data-components-tab="tab" aria-selected="false">Tab</button>
@@ -4364,10 +4363,6 @@
               <tr>
                 <td>Native iOS look (SF Pro, light cream backgrounds, subtle shadows)</td>
                 <td>Editorial: dark / light / dark section layering, Simula serif headlines</td>
-              </tr>
-              <tr>
-                <td>Standard iOS components</td>
-                <td>Orange brand glow, more atmospheric custom surfaces</td>
               </tr>
               <tr>
                 <td>High information density per screen</td>
@@ -8206,7 +8201,6 @@
       // Sub-page content map — the sidebar Components nav swaps content
       // into #componentsGrid based on which entry is active.
       const componentsContentMap = {
-        overview: [buttonBlock, cardBlock, listRowOverviewBlock, tabBlock, headerBlock, dividerBlock, navigationBlock].join(''),
         button:     buttonBlock,
         tab:        tabBlock,
         header:     headerBlock,
@@ -8217,7 +8211,6 @@
       };
 
       const componentsGrid = document.getElementById('componentsGrid');
-      if (componentsGrid) componentsGrid.innerHTML = componentsContentMap.overview;
 
       /* ----------- COMPONENT PLAYGROUND · List row -----------
          Faithful translation of the Figma List Item component
@@ -9183,7 +9176,7 @@
           setComponentsSub(btn.dataset.componentsTab);
         });
         // Default sub-page
-        setComponentsSub('overview');
+        setComponentsSub('list-row');
       }
     })();
 
