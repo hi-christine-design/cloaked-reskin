@@ -214,12 +214,21 @@
       min-height: 100vh;
     }
 
-    /* ===== Cover view — editorial intro page ===== */
+    /* ===== Cover view — editorial intro page =====
+       Typography uses the project's --ct-text-* token system so the cover
+       reads as part of the same product, not a separate landing surface:
+         - Section titles use H1-serif (Simula 32) — the same family the
+           reskin phone mockups use for headlines like "Got it. Let's look
+           at your data instead." That's what gives the editorial tone.
+         - Body / table cells / paragraphs use the Body sans token with a
+           slightly looser line-height (1.4–1.5) for long-form reading
+           (the token's 1.1 is tuned for tight UI labels, not paragraphs). */
     .cover-page {
       max-width: 760px;
       margin: 0 auto;
       padding: 64px 24px 96px;
       color: #120f03;
+      font-family: var(--ct-text-body-family);
     }
     /* Inline variant — used when .cover-page is rendered inside another
        padded surface (e.g. the Components view's #componentsGrid sitting
@@ -229,28 +238,46 @@
       padding: 16px 0 32px;
     }
     .cover-page h2 {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
+      font-family: var(--ct-text-h1-serif-family);
+      font-weight: var(--ct-text-h1-serif-weight);
+      font-size: var(--ct-text-h1-serif-size);
+      line-height: var(--ct-text-h1-serif-line-height);
+      letter-spacing: var(--ct-text-h1-serif-letter-spacing);
       margin: 0 0 24px;
-      line-height: 1.2;
     }
-    .cover-page h2 + h2 { margin-top: 64px; }
+    .cover-page h2 + h2,
+    .cover-page table + h2,
+    .cover-page .why + h2 { margin-top: 64px; }
+    .cover-page > p {
+      font-family: var(--ct-text-body-family);
+      font-weight: var(--ct-text-body-weight);
+      font-size: var(--ct-text-body-size);
+      line-height: 1.5;
+      letter-spacing: var(--ct-text-body-letter-spacing);
+      margin: 0 0 32px;
+      max-width: 640px;
+    }
+    .cover-page > p em {
+      font-family: var(--ct-text-h2-serif-family);
+      font-style: italic;
+    }
     .cover-page table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 8px;
-      font-size: 15px;
-      line-height: 1.45;
+      font-family: var(--ct-text-body-family);
+      font-size: var(--ct-text-body-size);
+      line-height: 1.4;
     }
     .cover-page thead th {
       background: #0b0b0a;
       color: #f3f1ed;
       text-align: left;
       padding: 16px 20px;
-      font-weight: 600;
-      font-size: 14px;
+      font-family: var(--ct-text-body-family);
+      font-weight: 500;
+      font-size: var(--ct-text-body-small-size);
+      letter-spacing: var(--ct-text-body-letter-spacing);
       vertical-align: top;
       width: 50%;
     }
@@ -263,13 +290,29 @@
     .cover-page tbody tr:nth-child(even) td { background: #ece9e2; }
     .cover-page .why p {
       margin: 0 0 20px;
-      font-size: 15px;
-      line-height: 1.6;
+      font-family: var(--ct-text-body-family);
+      font-size: var(--ct-text-body-size);
+      line-height: 1.5;
+      letter-spacing: var(--ct-text-body-letter-spacing);
       color: #1f1b0d;
     }
     .cover-page .why p strong {
-      font-weight: 700;
+      font-weight: 600;
       color: #120f03;
+    }
+    .cover-page code {
+      font-family: var(--ct-font-mono);
+      font-size: 13px;
+      background: rgba(11,11,10,0.08);
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+    .cover-page__meta {
+      font-family: var(--ct-text-body-small-family);
+      font-size: var(--ct-text-body-small-size);
+      line-height: var(--ct-text-body-small-line-height);
+      letter-spacing: var(--ct-text-body-small-letter-spacing);
+      opacity: 0.65;
     }
 
     /* Cover view dark theme */
@@ -8285,7 +8328,7 @@
       const overviewBlock = `
         <div class="cover-page cover-page--inline">
           <h2>Minimum components, maximum impact</h2>
-          <p style="font-size:17px;line-height:1.6;margin:0 0 32px;max-width:640px;">
+          <p>
             These eight components are the smallest set we need to update to reskin the app.
             They sound modest — a button here, a divider there — but they repeat across
             <em>every</em> page. Fixing them once changes how every screen feels.
@@ -8301,35 +8344,35 @@
             </thead>
             <tbody>
               <tr>
-                <td><strong>List row</strong><br><span style="opacity:0.7;font-size:14px;">Avatar + title + meta + trailing action</span></td>
+                <td><strong>List row</strong><br><span class="cover-page__meta">Avatar + title + meta + trailing action</span></td>
                 <td>Identities, Inbox, Settings, ID Monitoring, Password Manager — the workhorse of every list-based screen</td>
               </tr>
               <tr>
-                <td><strong>Button</strong><br><span style="opacity:0.7;font-size:14px;">Primary / Secondary / Tertiary / Link × Default / Small</span></td>
+                <td><strong>Button</strong><br><span class="cover-page__meta">Primary / Secondary / Tertiary / Link × Default / Small</span></td>
                 <td>Every primary CTA: "Improve your Digital Health", "Save", "Continue", "Block", "Add new"</td>
               </tr>
               <tr>
-                <td><strong>Icon button</strong><br><span style="opacity:0.7;font-size:14px;">Primary / Secondary × Default / Small</span></td>
+                <td><strong>Icon button</strong><br><span class="cover-page__meta">Primary / Secondary × Default / Small</span></td>
                 <td>Header chrome (menu, back, share), inline actions inside cards and list rows</td>
               </tr>
               <tr>
-                <td><strong>Tab</strong><br><span style="opacity:0.7;font-size:14px;">3-tab and 5-tab strips</span></td>
+                <td><strong>Tab</strong><br><span class="cover-page__meta">3-tab and 5-tab strips</span></td>
                 <td>Section switchers on Identity, Phone, Inbox, Call Guard, ID Monitoring</td>
               </tr>
               <tr>
-                <td><strong>Header</strong><br><span style="opacity:0.7;font-size:14px;">Landing and detail-page layouts</span></td>
+                <td><strong>Header</strong><br><span class="cover-page__meta">Landing and detail-page layouts</span></td>
                 <td>Top of every screen — brand, large title, back, close, story pagination</td>
               </tr>
               <tr>
-                <td><strong>Divider</strong><br><span style="opacity:0.7;font-size:14px;">BKGD_01 / BKGD_02 with optional hairline and secondary text</span></td>
+                <td><strong>Divider</strong><br><span class="cover-page__meta">BKGD_01 / BKGD_02 with optional hairline and secondary text</span></td>
                 <td>Section breaks inside lists (Today / This week / Older), inline form groupings</td>
               </tr>
               <tr>
-                <td><strong>Card</strong><br><span style="opacity:0.7;font-size:14px;">Stat / dashboard tile</span></td>
+                <td><strong>Card</strong><br><span class="cover-page__meta">Stat / dashboard tile</span></td>
                 <td>Homepage progress, exposure count, ID monitoring summary, dashboard surfaces</td>
               </tr>
               <tr>
-                <td><strong>Navigation</strong><br><span style="opacity:0.7;font-size:14px;">Bottom tab bar with 5 destinations</span></td>
+                <td><strong>Navigation</strong><br><span class="cover-page__meta">Bottom tab bar with 5 destinations</span></td>
                 <td>Persistent at the bottom of every primary screen — Home, Exposure, Guard, Phone, Wallet</td>
               </tr>
             </tbody>
