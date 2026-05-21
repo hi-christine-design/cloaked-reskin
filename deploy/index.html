@@ -430,25 +430,34 @@
     .list-row__avatar--monitor  { background: #5936C1; } /* Monitoring (dark web) */
     .list-row__avatar--guard    { background: #D78E20; } /* Guard (call/sms/email guard) */
     .list-row__avatar--identity { background: #379AAD; } /* Identity */
+    /* Layout dimensions copied verbatim from the Figma List Item spec
+       (node 19941:868): main is flex-col gap-12 items-start justify-center;
+       text-trail is h-38 gap-16 items-center; text inside is h-38 with
+       justify-between so title sits at the top, description at the bottom. */
     .list-row__main {
       display: flex;
       flex-direction: column;
       flex: 1 1 0;
       gap: 12px;
+      align-items: flex-start;
+      justify-content: center;
       min-width: 0;
     }
     .list-row__text-trail {
       display: flex;
       align-items: center;
       gap: 16px;
+      height: 38px;
       width: 100%;
     }
     .list-row__text {
       display: flex;
       flex-direction: column;
       flex: 1 1 0;
+      height: 38px;
+      align-items: flex-start;
+      justify-content: space-between;
       min-width: 0;
-      gap: 2px;
     }
     .list-row__title {
       font-size: 16px;
@@ -476,7 +485,6 @@
       justify-content: center;
       text-align: right;
       flex-shrink: 0;
-      gap: 2px;
     }
     .list-row__trailing-title {
       font-size: 16px;
@@ -540,9 +548,6 @@
       background: #FF550C;
       transition: width 0.2s ease;
     }
-
-    /* Size variants — Small drops the bottom padding (no progress, smaller row) */
-    .list-row--small { padding-top: 12px; padding-bottom: 12px; }
 
     /* Trailing variants — Tag, CTA, Label, checkbox, icon (Text block already
        handled by .list-row__trailing markup) */
@@ -6950,9 +6955,8 @@
       };
 
       const pgState = {
-        size: 'default',          // 'default' | 'small'  (small hides avatar + progress)
         showAvatar: true,
-        avatarVariant: 'monitor', // monitor | identity | wallet | phone | shield
+        avatarVariant: 'monitor', // monitor | guard | identity
         showDescription: true,
         showTrailing: true,
         trailingType: 'text-block', // text-block | tag | cta | label | checkbox | icon
@@ -7008,18 +7012,16 @@
       }
 
       function renderListRow(s) {
-        // Per the Figma Small variant, size=small drops avatar + progress.
-        const isSmall = s.size === 'small';
-        const avatar = (!isSmall && s.showAvatar)
+        const avatar = s.showAvatar
           ? `<div class="list-row__avatar list-row__avatar--${s.avatarVariant}">${PG_ICONS[s.avatarVariant] || ''}</div>`
           : '';
         const description = s.showDescription
           ? `<p class="list-row__description">Description</p>`
           : '';
         const trailing = s.showTrailing ? renderTrailing(s) : '';
-        const progress = (!isSmall && s.showProgress) ? renderProgress(s) : '';
+        const progress = s.showProgress ? renderProgress(s) : '';
         return `
-          <div class="list-row${isSmall ? ' list-row--small' : ''}">
+          <div class="list-row">
             <div class="list-row__content">
               ${avatar}
               <div class="list-row__main">
@@ -7062,19 +7064,15 @@
         // Top group — root toggles (no header, mirrors Figma)
         const topGroup = `
           <div class="playground__controls-section">
-            ${select('size', 'Size', [
-              { value: 'default', label: 'Default' },
-              { value: 'small',   label: 'Small' },
-            ])}
-            ${s.size !== 'small' ? toggle('showAvatar', 'Show Avatar') : ''}
+            ${toggle('showAvatar', 'Show Avatar')}
             ${toggle('showTrailing', 'Show _Trailing')}
             ${toggle('showDescription', 'Show Description')}
-            ${s.size !== 'small' ? toggle('showProgress', 'Show _Progress') : ''}
+            ${toggle('showProgress', 'Show _Progress')}
           </div>`;
 
         // icon/Avatar group — only when avatar is showing.
         // Mirrors the Figma Category_TBD variable set exactly.
-        const avatarGroup = (s.size !== 'small' && s.showAvatar) ? `
+        const avatarGroup = s.showAvatar ? `
           <div class="playground__controls-section">
             <p class="playground__controls-section-title playground__controls-section-title--group">icon/Avatar</p>
             ${select('avatarVariant', 'Variant', [
@@ -7109,8 +7107,8 @@
             ${trailingSubControl}
           </div>` : '';
 
-        // _Progress group — only when progress is showing and not Small
-        const progressGroup = (s.size !== 'small' && s.showProgress) ? `
+        // _Progress group — only when progress is showing
+        const progressGroup = s.showProgress ? `
           <div class="playground__controls-section">
             <p class="playground__controls-section-title playground__controls-section-title--group">_Progress</p>
             ${select('progressType', 'Type', [
