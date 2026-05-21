@@ -2902,6 +2902,23 @@
       display: flex;
       flex-direction: column;
     }
+    /* Dark mode for the hand-coded original mockups: invert brightness while
+       preserving hue identity (white→dark, dark→white, but the brand orange
+       and blues stay roughly the right hue). The double filter is the
+       standard CSS dark-mode invert trick — it's a quick-win pass; for
+       pixel-accurate dark mode the matching production PNG (Screen toggle)
+       is more faithful. */
+    body[data-site-theme="dark"] .original {
+      filter: invert(0.94) hue-rotate(180deg);
+      background: #f7f7f7; /* gets inverted to dark by the filter */
+    }
+    /* Keep raster images/screenshots upright (don't double-invert them). */
+    body[data-site-theme="dark"] .original img,
+    body[data-site-theme="dark"] .original video,
+    body[data-site-theme="dark"] .original svg image,
+    body[data-site-theme="dark"] .original [data-no-invert] {
+      filter: invert(1) hue-rotate(180deg);
+    }
     .og-statusbar {
       display: flex;
       justify-content: space-between;
@@ -7089,20 +7106,23 @@
         'Both systems have a semantic role layer — Cloaked\'s original called them <strong>role tokens</strong> (Surfaces, Foreground, Borders, State). What the reskin adds is the <strong>theme layer</strong>: each token resolves to a different primitive in Light vs Dark mode, but the name and role stay the same. Components ask for <code>--ct-bkgd-01</code>, not <code>#F3F1ED</code>, so flipping one attribute on <code>&lt;html data-theme&gt;</code> re-skins the entire app. The reskin also reorganizes around <em>component intent</em> (CTA Primary, AI, Banner, Category accents) instead of generic CSS-property roles (bg / fg / border) — so the token name tells you which component uses it.'
       );
 
-      /* ----------- TOKENS · Spacing ----------- */
-      const spacingScale = [4, 8, 12, 16, 20, 24, 32, 40, 48, 56, 64, 72, 80, 96, 120, 240];
+      /* ----------- TOKENS · Spacing -----------
+         Mirrors the Cloaked Foundation > Space scale exactly: 14 tokens
+         numbered --space-1 … --space-14 on a 4px base. */
+      const spacingScale = [
+        ['--space-1', 4],   ['--space-2', 8],   ['--space-3', 12],
+        ['--space-4', 16],  ['--space-5', 20],  ['--space-6', 24],
+        ['--space-7', 32],  ['--space-8', 40],  ['--space-9', 48],
+        ['--space-10', 56], ['--space-11', 64], ['--space-12', 80],
+        ['--space-13', 96], ['--space-14', 120],
+      ];
       const reskinSpacing = `
-        <div>${spacingScale.map(n => `
+        <div>${spacingScale.map(([name, n]) => `
           <div class="token-spacing-row">
-            <span class="token-spacing-row__name">--ct-spacing-${n}</span>
+            <span class="token-spacing-row__name">${name}</span>
             <span class="token-spacing-row__bar" style="width:${Math.min(n, 240)}px;max-width:100%;"></span>
             <span class="token-spacing-row__px">${n}px</span>
           </div>`).join('')}
-          <div class="token-spacing-row">
-            <span class="token-spacing-row__name">--ct-opacity-disabled</span>
-            <span class="token-spacing-row__bar" style="width:60%;opacity:0.3;"></span>
-            <span class="token-spacing-row__px">0.3</span>
-          </div>
         </div>`;
       const emptySpacing = `
         <div class="token-empty">
@@ -7112,11 +7132,11 @@
         </div>`;
 
       const spacingContent = categoryBlock(
-        'Spacing & Opacity',
-        'A locked numeric scale for padding, gaps, and the single disabled opacity.',
+        'Spacing',
+        '4px base. Every spacing decision picks from this list — no in-betweens.',
         'original - none', emptySpacing,
-        'cloaked reskin - 16 spacing + 1 opacity', reskinSpacing,
-        'Locked the system to a discrete <strong>4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 48 / 56 / 64 / 72 / 80 / 96 / 120 / 240</strong> scale (<code>--ct-spacing-*</code>). Roughly an 8-point grid with 4 as the smallest step. Anything not on the scale is a <em>decision</em>, not a default — which catches the in-between values that used to creep in. Plus one opacity token: <code>--ct-opacity-disabled (0.3)</code> — the only opacity value the system blesses for inactive states.'
+        'cloaked reskin - 14 tokens', reskinSpacing,
+        'A discrete 14-step scale (<code>--space-1</code> … <code>--space-14</code>) on a <strong>4px base</strong>. Steps below 24 climb in 4px increments; above 24 the scale opens up (32, 40, 48, 56, 64, 80, 96, 120) to absorb section-level spacing without exploding the count. Anything not on the scale is a <em>decision</em>, not a default — which catches the 10s, 18s, and 14s that used to drift into the codebase.'
       );
 
       /* ----------- TOKENS · Icons -----------
