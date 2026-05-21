@@ -186,9 +186,12 @@
       padding: 32px;
       min-height: 100vh;
     }
+    /* Tokens + Components view-pane backgrounds match .site-main (#141410)
+       so the inner content area shares one tone with the surrounding chrome —
+       mirroring the unified #f3f1ee surface in light mode. */
     body[data-site-theme="dark"] .view-pane[data-view="tokens"],
     body[data-site-theme="dark"] .view-pane[data-view="components"] {
-      background: #0B0B0A;
+      background: #141410;
     }
 
     /* Main area — pane container. Cream backdrop matches the sidebar so the whole
