@@ -213,13 +213,25 @@
       background: transparent;
       padding: 0;
     }
+    /* Components type system — 5 styles, mirrors the Tokens page rhythm:
+       title (SF Pro 20), subtitle (SF Pro 14 muted), col-label (mono caps 11),
+       reason (SF Pro 13), reason code (mono 12 chip). */
     .audit-block__title {
-      font-family: 'Aeonik Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 12px;
-      letter-spacing: -0.36px;
-      text-transform: uppercase;
-      color: #141410;
-      margin: 0 0 16px;
+      margin: 0 0 8px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 1.2;
+      letter-spacing: 0;
+      color: #120f03;
+      text-transform: none;
+    }
+    .audit-block__subtitle {
+      margin: 0 0 40px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #84827E;
     }
     .audit-block__compare {
       display: grid;
@@ -593,6 +605,7 @@
 
     /* ====== Dark theme — audit grid (Components view) ====== */
     body[data-site-theme="dark"] .audit-block__title { color: #F3F1ED; }
+    body[data-site-theme="dark"] .audit-block__subtitle { color: rgba(243,241,237,0.6); }
     body[data-site-theme="dark"] .audit-block__col-label { color: rgba(243,241,237,0.5); }
     body[data-site-theme="dark"] .audit-block__col {
       background: #1B1B18;
@@ -5845,9 +5858,10 @@
             <div class="audit-block__col">${newNode}</div>
           </div>
         </div>`;
-      const block = (title, compare, reason) => `
+      const block = (title, subtitle, compare, reason) => `
         <div class="audit-block">
           <h3 class="audit-block__title">${title}</h3>
+          ${subtitle ? `<p class="audit-block__subtitle">${subtitle}</p>` : ''}
           ${compare}
           <p class="audit-block__reason">${reason}</p>
         </div>`;
@@ -6378,6 +6392,7 @@
       /* ----------- COMPONENTS ----------- */
       const componentsHtml = [
         block('Button · Primary CTA',
+          'Primary action across the app — used wherever a single high-emphasis CTA appears.',
           renderPair(
             '<button style="background:#FF7314;color:#fff;border:0;border-radius:999px;padding:14px 28px;font-size:15px;font-weight:600;font-family:-apple-system,sans-serif;">Improve your digital health</button>',
             '<button style="background:#0B0B0A;color:#FFFFFF;border:0;border-radius:24px;height:40px;padding:0 24px;font-size:14px;font-family:-apple-system,sans-serif;letter-spacing:0.07px;">Improve digital health</button>'
@@ -6385,6 +6400,7 @@
           'Full-bleed pill in brand orange → fixed-height (<code>h-40</code>) primary container in near-black. The button stops competing with the page accent and becomes a neutral action — orange is now reserved for inspect/system signals only.'),
 
         block('Card · Stat',
+          'Surfaces a single key metric with one supporting line of context.',
           renderPair(
             '<div style="background:#fff;border-radius:18px;box-shadow:0 4px 12px rgba(0,0,0,0.06);padding:20px;font-family:-apple-system,sans-serif;width:100%;"><p style="margin:0;font-size:36px;font-weight:700;color:#5B8DEF;">165</p><p style="margin:8px 0 0;font-size:13px;color:#666;">data risks removed</p></div>',
             '<div style="background:#fff;border-radius:0;padding:20px;font-family:-apple-system,sans-serif;width:100%;border-bottom:1px solid rgba(11,11,10,0.08);"><p style="margin:0;font-size:36px;line-height:1;color:#0B0B0A;font-weight:400;">4,216</p><p style="margin:6px 0 0;font-size:14px;color:#84827E;">Actions taken to protect you</p></div>'
@@ -6392,6 +6408,7 @@
           'Shadowed rounded card → flat surface with a single 1px hairline. Cards stop floating; sections share an edge. <strong>Cream gap</strong> between sections (<code>--ct-bkgd-01</code>) replaces drop shadow as the separator.'),
 
         block('List row',
+          'Standard row used across Settings, Identity, Wallet, and Password Manager.',
           renderPair(
             '<div style="background:#fff;border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;font-family:-apple-system,sans-serif;width:100%;"><span style="width:36px;height:36px;border-radius:999px;background:#eaeaea;"></span><div style="flex:1;"><div style="font-size:14px;font-weight:600;">Phone</div><div style="font-size:12px;color:#666;">Call Guard</div></div></div>',
             '<div style="background:#fff;padding:20px;display:flex;align-items:center;gap:12px;font-family:-apple-system,sans-serif;width:100%;border-bottom:1px solid rgba(11,11,10,0.08);"><span style="width:40px;height:40px;border-radius:999px;background:#F3F1ED;"></span><div style="flex:1;"><div style="font-size:16px;color:#0B0B0A;">Account Security</div></div><span style="color:#0B0B0A;">›</span></div>'
@@ -6399,6 +6416,7 @@
           'Standardized to 20px padding, 40px avatar, 1px bottom hairline. <strong>Always a trailing slot</strong> — chevron for nav, diagonal arrow for outbound link, toggle for setting. One row spec across Settings, Identity, Password Manager, Wallet.'),
 
         block('Tab strip',
+          'Section switcher used inside sub-pages and detail views.',
           renderPair(
             '<div style="background:#fff;border-radius:999px;padding:4px;display:inline-flex;font-family:-apple-system,sans-serif;font-size:13px;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.06);"><span style="padding:6px 14px;background:#fff;border-radius:999px;box-shadow:0 1px 2px rgba(0,0,0,0.08);">Details</span><span style="padding:6px 14px;color:#999;">Contacts</span><span style="padding:6px 14px;color:#999;">Settings</span></div>',
             '<div style="background:#fff;border-bottom:1px solid rgba(11,11,10,0.08);display:flex;width:100%;font-family:-apple-system,sans-serif;font-size:14px;"><span style="flex:1;text-align:center;padding:14px 0;border-bottom:1px solid #0B0B0A;margin-bottom:-1px;color:#0B0B0A;">Details</span><span style="flex:1;text-align:center;padding:14px 0;opacity:0.3;color:#0B0B0A;">Contacts</span><span style="flex:1;text-align:center;padding:14px 0;opacity:0.3;color:#0B0B0A;">Settings</span></div>'
@@ -6406,6 +6424,7 @@
           'Pill-segmented control → underline tab strip. One reusable helper (<code>underlineTabs()</code>) drives both <strong>centered (≤3)</strong> and <strong>carousel (>3)</strong> layouts. Active state is a 1px border that meets the row divider; inactive is opacity 0.3.'),
 
         block('Header · Sub-page',
+          'Top chrome for nested screens — back affordance, title, optional trailing action.',
           renderPair(
             '<div style="background:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;font-family:-apple-system,sans-serif;width:100%;border-bottom:1px solid #eee;"><span style="width:32px;height:32px;border-radius:999px;background:#eaeaea;display:inline-flex;align-items:center;justify-content:center;">‹</span><span style="font-size:15px;font-weight:600;color:#0B0B0A;">Settings</span><span style="width:32px;height:32px;border-radius:999px;background:#eaeaea;"></span></div>',
             '<div style="background:#fff;padding:24px 16px 12px;display:flex;align-items:center;justify-content:space-between;font-family:-apple-system,sans-serif;width:100%;"><span style="color:#0B0B0A;font-size:24px;line-height:1;">‹</span><span style="font-size:16px;color:#0B0B0A;">Settings</span><span style="width:24px;height:24px;"></span></div>'
