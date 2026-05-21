@@ -1286,9 +1286,12 @@
     body[data-view="tokens"] .site-sidebar__section-header--components,
     body[data-view="tokens"] .components-nav { display: none; }
 
-    /* Components sub-page visibility — Overview shows the audit grid,
-       List row shows the interactive playground. */
-    body[data-components-sub="overview"] #playgroundRoot { display: none; }
+    /* Components sub-page visibility — only the List row sub-page shows
+       the interactive playground; every other sub (Overview, Button, Tab,
+       Header, Divider, Card, Navigation) shows the audit grid only, with
+       content swapped in by JS. */
+    body[data-components-sub] #playgroundRoot { display: none; }
+    body[data-components-sub="list-row"] #playgroundRoot { display: block; }
     body[data-components-sub="list-row"] #componentsGrid { display: none; }
 
     /* Main scroll container & pane row */
@@ -3530,6 +3533,12 @@
       <nav class="components-nav" role="tablist" id="componentsNav">
         <button role="tab" data-components-tab="overview" aria-selected="true">Overview</button>
         <button role="tab" data-components-tab="list-row" aria-selected="false">List row</button>
+        <button role="tab" data-components-tab="button" aria-selected="false">Button</button>
+        <button role="tab" data-components-tab="tab" aria-selected="false">Tab</button>
+        <button role="tab" data-components-tab="header" aria-selected="false">Header</button>
+        <button role="tab" data-components-tab="divider" aria-selected="false">Divider</button>
+        <button role="tab" data-components-tab="card" aria-selected="false">Card</button>
+        <button role="tab" data-components-tab="navigation" aria-selected="false">Navigation</button>
       </nav>
     </aside>
 
@@ -7145,51 +7154,81 @@
         setTokenTab('colors');
       }
 
-      /* ----------- COMPONENTS ----------- */
-      const componentsHtml = [
-        block('Button · Primary CTA',
-          'Primary action across the app — used wherever a single high-emphasis CTA appears.',
-          renderPair(
-            '<button style="background:#FF7314;color:#fff;border:0;border-radius:999px;padding:14px 28px;font-size:15px;font-weight:600;font-family:-apple-system,sans-serif;">Improve your digital health</button>',
-            '<button style="background:#0B0B0A;color:#FFFFFF;border:0;border-radius:24px;height:40px;padding:0 24px;font-size:14px;font-family:-apple-system,sans-serif;letter-spacing:0.07px;">Improve digital health</button>'
-          ),
-          'Full-bleed pill in brand orange → fixed-height (<code>h-40</code>) primary container in near-black. The button stops competing with the page accent and becomes a neutral action — orange is now reserved for inspect/system signals only.'),
+      /* ----------- COMPONENTS -----------
+         Each comparison block is its own named variable so sub-pages can
+         pull a single block (Button, Card, Tab, Header) or assemble the
+         full overview from them. */
+      const buttonBlock = block('Button · Primary CTA',
+        'Primary action across the app — used wherever a single high-emphasis CTA appears.',
+        renderPair(
+          '<button style="background:#FF7314;color:#fff;border:0;border-radius:999px;padding:14px 28px;font-size:15px;font-weight:600;font-family:-apple-system,sans-serif;">Improve your digital health</button>',
+          '<button style="background:#0B0B0A;color:#FFFFFF;border:0;border-radius:24px;height:40px;padding:0 24px;font-size:14px;font-family:-apple-system,sans-serif;letter-spacing:0.07px;">Improve digital health</button>'
+        ),
+        'Full-bleed pill in brand orange → fixed-height (<code>h-40</code>) primary container in near-black. The button stops competing with the page accent and becomes a neutral action — orange is now reserved for inspect/system signals only.');
 
-        block('Card · Stat',
-          'Surfaces a single key metric with one supporting line of context.',
-          renderPair(
-            '<div style="background:#fff;border-radius:18px;box-shadow:0 4px 12px rgba(0,0,0,0.06);padding:20px;font-family:-apple-system,sans-serif;width:100%;"><p style="margin:0;font-size:36px;font-weight:700;color:#5B8DEF;">165</p><p style="margin:8px 0 0;font-size:13px;color:#666;">data risks removed</p></div>',
-            '<div style="background:#fff;border-radius:0;padding:20px;font-family:-apple-system,sans-serif;width:100%;border-bottom:1px solid rgba(11,11,10,0.08);"><p style="margin:0;font-size:36px;line-height:1;color:#0B0B0A;font-weight:400;">4,216</p><p style="margin:6px 0 0;font-size:14px;color:#84827E;">Actions taken to protect you</p></div>'
-          ),
-          'Shadowed rounded card → flat surface with a single 1px hairline. Cards stop floating; sections share an edge. <strong>Cream gap</strong> between sections (<code>--ct-bkgd-01</code>) replaces drop shadow as the separator.'),
+      const cardBlock = block('Card · Stat',
+        'Surfaces a single key metric with one supporting line of context.',
+        renderPair(
+          '<div style="background:#fff;border-radius:18px;box-shadow:0 4px 12px rgba(0,0,0,0.06);padding:20px;font-family:-apple-system,sans-serif;width:100%;"><p style="margin:0;font-size:36px;font-weight:700;color:#5B8DEF;">165</p><p style="margin:8px 0 0;font-size:13px;color:#666;">data risks removed</p></div>',
+          '<div style="background:#fff;border-radius:0;padding:20px;font-family:-apple-system,sans-serif;width:100%;border-bottom:1px solid rgba(11,11,10,0.08);"><p style="margin:0;font-size:36px;line-height:1;color:#0B0B0A;font-weight:400;">4,216</p><p style="margin:6px 0 0;font-size:14px;color:#84827E;">Actions taken to protect you</p></div>'
+        ),
+        'Shadowed rounded card → flat surface with a single 1px hairline. Cards stop floating; sections share an edge. <strong>Cream gap</strong> between sections (<code>--ct-bkgd-01</code>) replaces drop shadow as the separator.');
 
-        block('List row',
-          'Standard row used across Settings, Identity, Wallet, and Password Manager.',
-          renderPair(
-            '<div style="background:#fff;border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;font-family:-apple-system,sans-serif;width:100%;"><span style="width:36px;height:36px;border-radius:999px;background:#eaeaea;"></span><div style="flex:1;"><div style="font-size:14px;font-weight:600;">Phone</div><div style="font-size:12px;color:#666;">Call Guard</div></div></div>',
-            '<div style="background:#fff;padding:20px;display:flex;align-items:center;gap:12px;font-family:-apple-system,sans-serif;width:100%;border-bottom:1px solid rgba(11,11,10,0.08);"><span style="width:40px;height:40px;border-radius:999px;background:#F3F1ED;"></span><div style="flex:1;"><div style="font-size:16px;color:#0B0B0A;">Account Security</div></div><span style="color:#0B0B0A;">›</span></div>'
-          ),
-          'Standardized to 20px padding, 40px avatar, 1px bottom hairline. <strong>Always a trailing slot</strong> — chevron for nav, diagonal arrow for outbound link, toggle for setting. One row spec across Settings, Identity, Password Manager, Wallet.'),
+      const listRowOverviewBlock = block('List row',
+        'Standard row used across Settings, Identity, Wallet, and Password Manager.',
+        renderPair(
+          '<div style="background:#fff;border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;font-family:-apple-system,sans-serif;width:100%;"><span style="width:36px;height:36px;border-radius:999px;background:#eaeaea;"></span><div style="flex:1;"><div style="font-size:14px;font-weight:600;">Phone</div><div style="font-size:12px;color:#666;">Call Guard</div></div></div>',
+          '<div style="background:#fff;padding:20px;display:flex;align-items:center;gap:12px;font-family:-apple-system,sans-serif;width:100%;border-bottom:1px solid rgba(11,11,10,0.08);"><span style="width:40px;height:40px;border-radius:999px;background:#F3F1ED;"></span><div style="flex:1;"><div style="font-size:16px;color:#0B0B0A;">Account Security</div></div><span style="color:#0B0B0A;">›</span></div>'
+        ),
+        'Standardized to 20px padding, 40px avatar, 1px bottom hairline. <strong>Always a trailing slot</strong> — chevron for nav, diagonal arrow for outbound link, toggle for setting. One row spec across Settings, Identity, Password Manager, Wallet.');
 
-        block('Tab strip',
-          'Section switcher used inside sub-pages and detail views.',
-          renderPair(
-            '<div style="background:#fff;border-radius:999px;padding:4px;display:inline-flex;font-family:-apple-system,sans-serif;font-size:13px;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.06);"><span style="padding:6px 14px;background:#fff;border-radius:999px;box-shadow:0 1px 2px rgba(0,0,0,0.08);">Details</span><span style="padding:6px 14px;color:#999;">Contacts</span><span style="padding:6px 14px;color:#999;">Settings</span></div>',
-            '<div style="background:#fff;border-bottom:1px solid rgba(11,11,10,0.08);display:flex;width:100%;font-family:-apple-system,sans-serif;font-size:14px;"><span style="flex:1;text-align:center;padding:14px 0;border-bottom:1px solid #0B0B0A;margin-bottom:-1px;color:#0B0B0A;">Details</span><span style="flex:1;text-align:center;padding:14px 0;opacity:0.3;color:#0B0B0A;">Contacts</span><span style="flex:1;text-align:center;padding:14px 0;opacity:0.3;color:#0B0B0A;">Settings</span></div>'
-          ),
-          'Pill-segmented control → underline tab strip. One reusable helper (<code>underlineTabs()</code>) drives both <strong>centered (≤3)</strong> and <strong>carousel (>3)</strong> layouts. Active state is a 1px border that meets the row divider; inactive is opacity 0.3.'),
+      const tabBlock = block('Tab strip',
+        'Section switcher used inside sub-pages and detail views.',
+        renderPair(
+          '<div style="background:#fff;border-radius:999px;padding:4px;display:inline-flex;font-family:-apple-system,sans-serif;font-size:13px;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,0.06);"><span style="padding:6px 14px;background:#fff;border-radius:999px;box-shadow:0 1px 2px rgba(0,0,0,0.08);">Details</span><span style="padding:6px 14px;color:#999;">Contacts</span><span style="padding:6px 14px;color:#999;">Settings</span></div>',
+          '<div style="background:#fff;border-bottom:1px solid rgba(11,11,10,0.08);display:flex;width:100%;font-family:-apple-system,sans-serif;font-size:14px;"><span style="flex:1;text-align:center;padding:14px 0;border-bottom:1px solid #0B0B0A;margin-bottom:-1px;color:#0B0B0A;">Details</span><span style="flex:1;text-align:center;padding:14px 0;opacity:0.3;color:#0B0B0A;">Contacts</span><span style="flex:1;text-align:center;padding:14px 0;opacity:0.3;color:#0B0B0A;">Settings</span></div>'
+        ),
+        'Pill-segmented control → underline tab strip. One reusable helper (<code>underlineTabs()</code>) drives both <strong>centered (≤3)</strong> and <strong>carousel (>3)</strong> layouts. Active state is a 1px border that meets the row divider; inactive is opacity 0.3.');
 
-        block('Header · Sub-page',
-          'Top chrome for nested screens — back affordance, title, optional trailing action.',
-          renderPair(
-            '<div style="background:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;font-family:-apple-system,sans-serif;width:100%;border-bottom:1px solid #eee;"><span style="width:32px;height:32px;border-radius:999px;background:#eaeaea;display:inline-flex;align-items:center;justify-content:center;">‹</span><span style="font-size:15px;font-weight:600;color:#0B0B0A;">Settings</span><span style="width:32px;height:32px;border-radius:999px;background:#eaeaea;"></span></div>',
-            '<div style="background:#fff;padding:24px 16px 12px;display:flex;align-items:center;justify-content:space-between;font-family:-apple-system,sans-serif;width:100%;"><span style="color:#0B0B0A;font-size:24px;line-height:1;">‹</span><span style="font-size:16px;color:#0B0B0A;">Settings</span><span style="width:24px;height:24px;"></span></div>'
-          ),
-          'Removed the grey circle backgrounds on header icons (global change). Icons are now <strong>24px stroke marks on transparent</strong> — the chrome stops competing with content. Padding bumped to <code>pt-60 pb-12</code> for proper iOS safe-area clearance.'),
-      ].join('');
+      const headerBlock = block('Header · Sub-page',
+        'Top chrome for nested screens — back affordance, title, optional trailing action.',
+        renderPair(
+          '<div style="background:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;font-family:-apple-system,sans-serif;width:100%;border-bottom:1px solid #eee;"><span style="width:32px;height:32px;border-radius:999px;background:#eaeaea;display:inline-flex;align-items:center;justify-content:center;">‹</span><span style="font-size:15px;font-weight:600;color:#0B0B0A;">Settings</span><span style="width:32px;height:32px;border-radius:999px;background:#eaeaea;"></span></div>',
+          '<div style="background:#fff;padding:24px 16px 12px;display:flex;align-items:center;justify-content:space-between;font-family:-apple-system,sans-serif;width:100%;"><span style="color:#0B0B0A;font-size:24px;line-height:1;">‹</span><span style="font-size:16px;color:#0B0B0A;">Settings</span><span style="width:24px;height:24px;"></span></div>'
+        ),
+        'Removed the grey circle backgrounds on header icons (global change). Icons are now <strong>24px stroke marks on transparent</strong> — the chrome stops competing with content. Padding bumped to <code>pt-60 pb-12</code> for proper iOS safe-area clearance.');
+
+      const dividerBlock = block('Divider',
+        'The single 1px line used everywhere — between list rows, sections, and inside cards.',
+        renderPair(
+          '<div style="width:100%;font-family:-apple-system,sans-serif;"><div style="padding:12px 0;color:#0B0B0A;">Item one</div><div style="height:1px;background:#E5E5E5;"></div><div style="padding:12px 0;color:#0B0B0A;">Item two</div><div style="height:1px;background:#E5E5E5;"></div><div style="padding:12px 0;color:#0B0B0A;">Item three</div></div>',
+          '<div style="width:100%;font-family:-apple-system,sans-serif;"><div style="padding:12px 0;color:#0B0B0A;">Item one</div><div style="height:1px;background:rgba(11,11,10,0.15);"></div><div style="padding:12px 0;color:#0B0B0A;">Item two</div><div style="height:1px;background:rgba(11,11,10,0.15);"></div><div style="padding:12px 0;color:#0B0B0A;">Item three</div></div>'
+        ),
+        'Solid grey hairline (<code>#E5E5E5</code>) → semi-transparent <code>rgba(11,11,10,0.15)</code> via <code>--ct-divider</code>. The alpha layer means the divider always reads at the right intensity over <strong>any</strong> surface — white card, cream section, dark mode — without redefining the token per context.');
+
+      const navigationBlock = block('Navigation · Bottom bar',
+        'The persistent tab bar at the bottom of every primary screen.',
+        renderPair(
+          '<div style="background:#fff;border-radius:24px;padding:12px 8px;display:flex;align-items:center;justify-content:space-around;font-family:-apple-system,sans-serif;font-size:11px;width:100%;box-shadow:0 -2px 8px rgba(0,0,0,0.05);"><span style="display:flex;flex-direction:column;align-items:center;gap:2px;color:#0B0B0A;font-weight:600;">⌂<span>Home</span></span><span style="display:flex;flex-direction:column;align-items:center;gap:2px;color:#999;">✦<span>Exposure</span></span><span style="display:flex;flex-direction:column;align-items:center;gap:2px;color:#999;">☎<span>Guard</span></span><span style="display:flex;flex-direction:column;align-items:center;gap:2px;color:#999;">📱<span>Phone</span></span></div>',
+          '<div style="background:#fff;padding:12px 0 24px;display:flex;align-items:center;justify-content:space-around;font-family:-apple-system,sans-serif;font-size:11px;width:100%;border-top:1px solid rgba(11,11,10,0.08);"><span style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#0B0B0A;">⌂<span style="font-size:11px;">Home</span></span><span style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#0B0B0A;opacity:0.4;">✦<span style="font-size:11px;">Exposure</span></span><span style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#0B0B0A;opacity:0.4;">☎<span style="font-size:11px;">Guard</span></span><span style="display:flex;flex-direction:column;align-items:center;gap:4px;color:#0B0B0A;opacity:0.4;">📱<span style="font-size:11px;">Phone</span></span></div>'
+        ),
+        'Floating rounded pill with shadow → flat full-width bar with a single 1px top hairline. <strong>Active state</strong> shifts from bold weight to full opacity — inactive items drop to <code>opacity 0.4</code> instead of being colored grey. Safe-area padding (24px bottom) baked in.');
+
+      // Sub-page content map — the sidebar Components nav swaps content
+      // into #componentsGrid based on which entry is active.
+      const componentsContentMap = {
+        overview: [buttonBlock, cardBlock, listRowOverviewBlock, tabBlock, headerBlock, dividerBlock, navigationBlock].join(''),
+        button:     buttonBlock,
+        tab:        tabBlock,
+        header:     headerBlock,
+        divider:    dividerBlock,
+        card:       cardBlock,
+        navigation: navigationBlock,
+        // list-row: the dedicated playground (componentsGrid is hidden in that mode)
+      };
 
       const componentsGrid = document.getElementById('componentsGrid');
-      if (componentsGrid) componentsGrid.innerHTML = componentsHtml;
+      if (componentsGrid) componentsGrid.innerHTML = componentsContentMap.overview;
 
       /* ----------- COMPONENT PLAYGROUND · List row -----------
          Faithful translation of the Figma List Item component
@@ -7575,20 +7614,30 @@
       });
       setView('pages');
 
-      // Components sub-nav: Overview / List row.
+      // Components sub-nav: Overview / List row / Button / Tab / Header /
+      // Divider / Card / Navigation. Clicking a sub-nav button swaps the
+      // content rendered into #componentsGrid; for the list-row sub the
+      // grid is hidden via CSS and the dedicated playground takes over.
       const componentsNav = document.getElementById('componentsNav');
+      function setComponentsSub(tab) {
+        if (componentsNav) {
+          componentsNav.querySelectorAll('button').forEach(b => {
+            b.setAttribute('aria-selected', b.dataset.componentsTab === tab ? 'true' : 'false');
+          });
+        }
+        if (componentsGrid && componentsContentMap[tab]) {
+          componentsGrid.innerHTML = componentsContentMap[tab];
+        }
+        document.body.setAttribute('data-components-sub', tab);
+      }
       if (componentsNav) {
         componentsNav.addEventListener('click', (e) => {
           const btn = e.target.closest('button[data-components-tab]');
           if (!btn) return;
-          const tab = btn.dataset.componentsTab;
-          componentsNav.querySelectorAll('button').forEach(b => {
-            b.setAttribute('aria-selected', b.dataset.componentsTab === tab ? 'true' : 'false');
-          });
-          document.body.setAttribute('data-components-sub', tab);
+          setComponentsSub(btn.dataset.componentsTab);
         });
         // Default sub-page
-        document.body.setAttribute('data-components-sub', 'overview');
+        setComponentsSub('overview');
       }
     })();
 
