@@ -518,6 +518,147 @@
     .list-row__progress-line--filled { background: #FF550C; }
     .list-row__progress-line--empty  { background: rgba(255,85,12,0.25); }
 
+    /* Linear progress — 8px bar, cream track, brand-orange fill */
+    .list-row__progress-linear {
+      position: relative;
+      height: 8px;
+      background: #f3f1ed;
+      overflow: hidden;
+      width: 100%;
+    }
+    .list-row__progress-linear-fill {
+      position: absolute;
+      top: 0; left: 0;
+      height: 100%;
+      background: #FF550C;
+      transition: width 0.2s ease;
+    }
+
+    /* Size variants — Small drops the bottom padding (no progress, smaller row) */
+    .list-row--small { padding-top: 12px; padding-bottom: 12px; }
+
+    /* Trailing variants — Tag, CTA, Label, checkbox, icon (Text block already
+       handled by .list-row__trailing markup) */
+    .list-row__trail-tag {
+      background: #f3f1ed;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 16px;
+      line-height: 1.3;
+      color: #141410;
+      flex-shrink: 0;
+    }
+    .list-row__trail-cta {
+      background: #0b0b0a;
+      color: #ffffff;
+      height: 37px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 24px;
+      border-radius: 24px;
+      font-size: 14px;
+      letter-spacing: 0.07px;
+      line-height: 1.2;
+      flex-shrink: 0;
+      border: 0;
+      font-family: inherit;
+    }
+    .list-row__trail-label {
+      font-size: 16px;
+      line-height: 1.3;
+      color: #141410;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .list-row__trail-checkbox {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(11,11,10,0.05);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: transparent;
+    }
+    .list-row__trail-checkbox--checked {
+      background: #FF550C;
+      color: #ffffff;
+    }
+    .list-row__trail-icon {
+      width: 24px;
+      height: 24px;
+      color: #141410;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Slider — for the Linear progress value */
+    .playground__slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100px;
+      height: 4px;
+      background: #DBD9D6;
+      border-radius: 2px;
+      outline: none;
+      flex-shrink: 0;
+    }
+    .playground__slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #FF550C;
+      cursor: pointer;
+      border: 0;
+    }
+    .playground__slider::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #FF550C;
+      cursor: pointer;
+      border: 0;
+    }
+    .playground__slider-value {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      color: #84827E;
+      min-width: 32px;
+      text-align: right;
+    }
+    /* Section header with disclosure chevron — mirrors Figma's collapsible
+       property groups. We don't actually collapse; the chevron is decorative
+       to match the visual rhythm of the inspiration panel. */
+    .playground__controls-section-title--group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #141410;
+      text-transform: none;
+      letter-spacing: 0;
+      font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      font-size: 12px;
+    }
+    .playground__controls-section-title--group::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg) translate(-1px, -1px);
+      flex-shrink: 0;
+    }
+
     /* Token documentation surface — flat layout on the cream page background.
        Each category block: large title + description + two-col side-by-side.
        Narrow column keeps the two compare columns visually close. */
@@ -903,6 +1044,28 @@
     body[data-site-theme="dark"] .list-row__progress-dot--filled { background: #FF8A5C; }
     body[data-site-theme="dark"] .list-row__progress-line--filled { background: #FF8A5C; }
     body[data-site-theme="dark"] .list-row__progress-line--empty  { background: rgba(255,138,92,0.25); }
+    body[data-site-theme="dark"] .list-row__progress-linear { background: rgba(255,255,255,0.06); }
+    body[data-site-theme="dark"] .list-row__progress-linear-fill { background: #FF8A5C; }
+    body[data-site-theme="dark"] .list-row__trail-tag {
+      background: rgba(255,255,255,0.06);
+      color: #F3F1ED;
+    }
+    body[data-site-theme="dark"] .list-row__trail-cta {
+      background: #F3F1ED;
+      color: #0B0B0A;
+    }
+    body[data-site-theme="dark"] .list-row__trail-label { color: #F3F1ED; }
+    body[data-site-theme="dark"] .list-row__trail-checkbox { background: rgba(255,255,255,0.08); }
+    body[data-site-theme="dark"] .list-row__trail-checkbox--checked {
+      background: #FF8A5C;
+      color: #0B0B0A;
+    }
+    body[data-site-theme="dark"] .list-row__trail-icon { color: #F3F1ED; }
+    body[data-site-theme="dark"] .playground__slider { background: rgba(255,255,255,0.15); }
+    body[data-site-theme="dark"] .playground__slider::-webkit-slider-thumb { background: #FF8A5C; }
+    body[data-site-theme="dark"] .playground__slider::-moz-range-thumb { background: #FF8A5C; }
+    body[data-site-theme="dark"] .playground__slider-value { color: rgba(243,241,237,0.5); }
+    body[data-site-theme="dark"] .playground__controls-section-title--group { color: #F3F1ED; }
 
     /* Swatch — colored block with hex label, for token color comparisons */
     .swatch {
@@ -6719,39 +6882,74 @@
       if (componentsGrid) componentsGrid.innerHTML = componentsHtml;
 
       /* ----------- COMPONENT PLAYGROUND · List row -----------
-         Mirrors the Figma component panel (node 19941:868) — Show Avatar,
-         Avatar variant, Show Description, Show Trailing + Caption, Show
-         Progress + step index — wired to a live preview. */
+         Faithful translation of the Figma List Item component
+         (node 19941:868) and its variant set. All props the Figma panel
+         exposes are wired to a single pgState object that re-renders the
+         row on every change. */
+      const SVG = (path, w) => `<svg viewBox="0 0 24 24" width="${w||20}" height="${w||20}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
       const PG_ICONS = {
-        monitor:  '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
-        identity: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>',
-        wallet:   '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h13v4H5a2 2 0 0 1-2-2z"/><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7H5a2 2 0 0 1-2-2"/><circle cx="17" cy="13" r="1.2" fill="currentColor"/></svg>',
+        // Avatar icon variants (centered inside a 40px colored circle)
+        monitor:  SVG('<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>'),
+        identity: SVG('<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>'),
+        wallet:   SVG('<path d="M3 7a2 2 0 0 1 2-2h13v4H5a2 2 0 0 1-2-2z"/><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7H5a2 2 0 0 1-2-2"/><circle cx="17" cy="13" r="1.2" fill="currentColor"/>'),
+        phone:    SVG('<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/>'),
+        shield:   SVG('<path d="M12 2 4 5v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/>'),
+        // Trailing "icon" variants (24px, stroke marks on transparent)
+        chevron:  SVG('<path d="M9 18l6-6-6-6"/>', 24),
+        arrow:    SVG('<path d="M5 12h14M13 5l7 7-7 7"/>', 24),
+        check:    SVG('<path d="M20 6 9 17l-5-5"/>', 24),
+        x:        SVG('<path d="M18 6 6 18M6 6l12 12"/>', 24),
+        // Checkbox checked state
+        checkmark: SVG('<path d="M20 6 9 17l-5-5"/>', 20),
       };
 
       const pgState = {
+        size: 'default',          // 'default' | 'small'  (small hides avatar + progress)
         showAvatar: true,
-        avatarVariant: 'monitor',
+        avatarVariant: 'monitor', // monitor | identity | wallet | phone | shield
         showDescription: true,
         showTrailing: true,
-        trailingCaption: true,
+        trailingType: 'text-block', // text-block | tag | cta | label | checkbox | icon
+        trailingCaption: true,    // text-block only
+        trailingChecked: false,   // checkbox only
+        trailingIcon: 'chevron',  // icon only
         showProgress: true,
-        progressStep: 3,   // 0..4 — filled segments
+        progressType: 'steps',    // steps | linear
+        progressStep: 3,          // steps: 0..4
+        progressValue: 47,        // linear: 0..100
       };
 
-      function renderListRow(s) {
-        const avatar = s.showAvatar
-          ? `<div class="list-row__avatar list-row__avatar--${s.avatarVariant}">${PG_ICONS[s.avatarVariant] || ''}</div>`
-          : '';
-        const description = s.showDescription
-          ? `<p class="list-row__description">Description</p>`
-          : '';
-        const trailing = s.showTrailing
-          ? `<div class="list-row__trailing">
-              <p class="list-row__trailing-title">Title</p>
-              ${s.trailingCaption ? `<p class="list-row__trailing-caption">Caption</p>` : ''}
-            </div>`
-          : '';
-        // Progress: 4 segments, each = dot + line. progressStep filled segments.
+      // Renders the trailing block based on type. Each branch matches the
+      // Figma _Trailing variant set (Tag / CTA / Text block / Label / checkbox / icon).
+      function renderTrailing(s) {
+        switch (s.trailingType) {
+          case 'tag':
+            return `<span class="list-row__trail-tag">Call</span>`;
+          case 'cta':
+            return `<button type="button" class="list-row__trail-cta">Run</button>`;
+          case 'label':
+            return `<span class="list-row__trail-label">Label</span>`;
+          case 'checkbox':
+            return `<span class="list-row__trail-checkbox${s.trailingChecked ? ' list-row__trail-checkbox--checked' : ''}">${s.trailingChecked ? PG_ICONS.checkmark : ''}</span>`;
+          case 'icon':
+            return `<span class="list-row__trail-icon">${PG_ICONS[s.trailingIcon] || ''}</span>`;
+          case 'text-block':
+          default:
+            return `<div class="list-row__trailing">
+                <p class="list-row__trailing-title">Title</p>
+                ${s.trailingCaption ? `<p class="list-row__trailing-caption">Caption</p>` : ''}
+              </div>`;
+        }
+      }
+
+      function renderProgress(s) {
+        if (s.progressType === 'linear') {
+          const v = Math.max(0, Math.min(100, s.progressValue));
+          return `<div class="list-row__progress-linear">
+              <div class="list-row__progress-linear-fill" style="width:${v}%"></div>
+            </div>`;
+        }
+        // Steps — 4 segments
         const segs = [];
         for (let i = 0; i < 4; i++) {
           const filled = i < s.progressStep;
@@ -6760,11 +6958,22 @@
             ${i < 3 ? `<div class="list-row__progress-line list-row__progress-line--${filled ? 'filled' : 'empty'}"></div>` : ''}
           </div>`);
         }
-        const progress = s.showProgress
-          ? `<div class="list-row__progress">${segs.join('')}</div>`
+        return `<div class="list-row__progress">${segs.join('')}</div>`;
+      }
+
+      function renderListRow(s) {
+        // Per the Figma Small variant, size=small drops avatar + progress.
+        const isSmall = s.size === 'small';
+        const avatar = (!isSmall && s.showAvatar)
+          ? `<div class="list-row__avatar list-row__avatar--${s.avatarVariant}">${PG_ICONS[s.avatarVariant] || ''}</div>`
           : '';
+        const description = s.showDescription
+          ? `<p class="list-row__description">Description</p>`
+          : '';
+        const trailing = s.showTrailing ? renderTrailing(s) : '';
+        const progress = (!isSmall && s.showProgress) ? renderProgress(s) : '';
         return `
-          <div class="list-row">
+          <div class="list-row${isSmall ? ' list-row--small' : ''}">
             <div class="list-row__content">
               ${avatar}
               <div class="list-row__main">
@@ -6782,50 +6991,97 @@
       }
 
       function renderPlaygroundControls() {
+        const s = pgState;
         const toggle = (key, label) => `
           <div class="playground__control-row">
             <span class="playground__control-label">${label}</span>
             <button type="button" class="playground__toggle" role="switch"
-              aria-checked="${pgState[key]}" data-pg-toggle="${key}"
+              aria-checked="${s[key]}" data-pg-toggle="${key}"
               aria-label="${label}"></button>
           </div>`;
         const select = (key, label, options) => `
           <div class="playground__control-row">
             <span class="playground__control-label">${label}</span>
             <select class="playground__select" data-pg-select="${key}">
-              ${options.map(o => `<option value="${o.value}"${pgState[key] == o.value ? ' selected' : ''}>${o.label}</option>`).join('')}
+              ${options.map(o => `<option value="${o.value}"${s[key] == o.value ? ' selected' : ''}>${o.label}</option>`).join('')}
             </select>
           </div>`;
-        return `
+        const slider = (key, label, min, max) => `
+          <div class="playground__control-row">
+            <span class="playground__control-label">${label}</span>
+            <input type="range" class="playground__slider" data-pg-slider="${key}" min="${min}" max="${max}" value="${s[key]}" />
+            <span class="playground__slider-value">${s[key]}%</span>
+          </div>`;
+
+        // Top group — root toggles (no header, mirrors Figma)
+        const topGroup = `
           <div class="playground__controls-section">
-            <p class="playground__controls-section-title">Avatar</p>
-            ${toggle('showAvatar', 'Show Avatar')}
+            ${select('size', 'Size', [
+              { value: 'default', label: 'Default' },
+              { value: 'small',   label: 'Small' },
+            ])}
+            ${s.size !== 'small' ? toggle('showAvatar', 'Show Avatar') : ''}
+            ${toggle('showTrailing', 'Show _Trailing')}
+            ${toggle('showDescription', 'Show Description')}
+            ${s.size !== 'small' ? toggle('showProgress', 'Show _Progress') : ''}
+          </div>`;
+
+        // icon/Monitor group — only when avatar is showing
+        const avatarGroup = (s.size !== 'small' && s.showAvatar) ? `
+          <div class="playground__controls-section">
+            <p class="playground__controls-section-title playground__controls-section-title--group">icon/Avatar</p>
             ${select('avatarVariant', 'Variant', [
               { value: 'monitor',  label: 'Monitor' },
               { value: 'identity', label: 'Identity' },
               { value: 'wallet',   label: 'Wallet' },
+              { value: 'phone',    label: 'Phone' },
+              { value: 'shield',   label: 'Shield' },
             ])}
-          </div>
+          </div>` : '';
+
+        // _Trailing group — only when trailing is showing
+        const trailingTypeOpts = [
+          { value: 'tag',        label: 'Tag' },
+          { value: 'cta',        label: 'CTA' },
+          { value: 'text-block', label: 'Text block' },
+          { value: 'label',      label: 'Label' },
+          { value: 'checkbox',   label: 'checkbox' },
+          { value: 'icon',       label: 'icon' },
+        ];
+        const trailingSubControl =
+          s.trailingType === 'text-block' ? toggle('trailingCaption', 'Secondary') :
+          s.trailingType === 'checkbox'   ? toggle('trailingChecked', 'Checked')   :
+          s.trailingType === 'icon'       ? select('trailingIcon', 'Icon', [
+            { value: 'chevron', label: 'Chevron' },
+            { value: 'arrow',   label: 'Arrow' },
+            { value: 'check',   label: 'Check' },
+            { value: 'x',       label: 'X' },
+          ]) : '';
+        const trailingGroup = s.showTrailing ? `
           <div class="playground__controls-section">
-            <p class="playground__controls-section-title">Text</p>
-            ${toggle('showDescription', 'Show Description')}
-          </div>
+            <p class="playground__controls-section-title playground__controls-section-title--group">_Trailing</p>
+            ${select('trailingType', 'Type', trailingTypeOpts)}
+            ${trailingSubControl}
+          </div>` : '';
+
+        // _Progress group — only when progress is showing and not Small
+        const progressGroup = (s.size !== 'small' && s.showProgress) ? `
           <div class="playground__controls-section">
-            <p class="playground__controls-section-title">Trailing</p>
-            ${toggle('showTrailing', 'Show Trailing')}
-            ${toggle('trailingCaption', 'Caption')}
-          </div>
-          <div class="playground__controls-section">
-            <p class="playground__controls-section-title">Progress</p>
-            ${toggle('showProgress', 'Show Progress')}
-            ${select('progressStep', 'Steps', [
+            <p class="playground__controls-section-title playground__controls-section-title--group">_Progress</p>
+            ${select('progressType', 'Type', [
+              { value: 'steps',  label: 'Steps' },
+              { value: 'linear', label: 'Linear' },
+            ])}
+            ${s.progressType === 'steps' ? select('progressStep', 'steps', [
               { value: 0, label: '0 / 4' },
               { value: 1, label: '1 / 4' },
               { value: 2, label: '2 / 4' },
               { value: 3, label: '3 / 4' },
               { value: 4, label: '4 / 4' },
-            ])}
-          </div>`;
+            ]) : slider('progressValue', 'Value', 0, 100)}
+          </div>` : '';
+
+        return topGroup + avatarGroup + trailingGroup + progressGroup;
       }
 
       function mountPlayground() {
@@ -6841,31 +7097,46 @@
             </div>
           </section>`;
 
+        const numericKeys = new Set(['progressStep', 'progressValue']);
         function updatePreview() {
           document.getElementById('listRowPreview').innerHTML = renderListRow(pgState);
         }
-        function mountControls() {
-          document.getElementById('listRowControls').innerHTML = renderPlaygroundControls();
-          document.querySelectorAll('[data-pg-toggle]').forEach(btn => {
+        // Re-render the controls panel (some sub-controls appear/disappear based on
+        // parent toggles, mirroring Figma's conditional property panel).
+        function rerenderControls() {
+          const root = document.getElementById('listRowControls');
+          root.innerHTML = renderPlaygroundControls();
+          // Wire up all controls each time the panel re-renders.
+          root.querySelectorAll('[data-pg-toggle]').forEach(btn => {
             btn.addEventListener('click', () => {
               const key = btn.dataset.pgToggle;
               pgState[key] = !pgState[key];
-              btn.setAttribute('aria-checked', String(pgState[key]));
               updatePreview();
+              rerenderControls();
             });
           });
-          document.querySelectorAll('[data-pg-select]').forEach(sel => {
+          root.querySelectorAll('[data-pg-select]').forEach(sel => {
             sel.addEventListener('change', () => {
               const key = sel.dataset.pgSelect;
-              const v = sel.value;
-              // progressStep is numeric; everything else is a string
-              pgState[key] = (key === 'progressStep') ? Number(v) : v;
+              pgState[key] = numericKeys.has(key) ? Number(sel.value) : sel.value;
+              updatePreview();
+              rerenderControls();
+            });
+          });
+          root.querySelectorAll('[data-pg-slider]').forEach(slider => {
+            slider.addEventListener('input', () => {
+              const key = slider.dataset.pgSlider;
+              pgState[key] = Number(slider.value);
+              // Update the inline value label without re-rendering the whole panel —
+              // re-rendering on every input frame would steal focus from the slider.
+              const label = slider.parentElement.querySelector('.playground__slider-value');
+              if (label) label.textContent = pgState[key] + '%';
               updatePreview();
             });
           });
         }
         updatePreview();
-        mountControls();
+        rerenderControls();
       }
       mountPlayground();
 
