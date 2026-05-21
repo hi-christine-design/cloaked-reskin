@@ -1399,16 +1399,12 @@
     /* Hide/show the two original-side views based on the panel-stack mode. */
     .panel-stack[data-orig-mode="default"] [data-orig-view="png"] { display: none; }
     .panel-stack[data-orig-mode="png"]     [data-orig-view="default"] { display: none; }
-    /* Both original-side views fill the .phone-scroll container so the
-       inner .original / .reskin layouts (which set min-height:100%) can
-       resolve against the 852px phone height. Without this, the wrapper
-       div collapses to its content size and the inner mockup floats up. */
-    [data-orig-view] {
-      width: 100%;
-      min-height: 100%;
-      display: flex;
-      flex-direction: column;
-    }
+    /* The wrapper uses display:contents so it doesn't establish a new
+       containing block — .original (with min-height:100%) sees .phone-scroll
+       as its parent and resolves against the 852px phone height. Without
+       this, the wrapper collapses to its content size and the bottom of
+       the mockup floats up with empty space below. */
+    [data-orig-view] { display: contents; }
     [data-orig-view="png"] img {
       display: block;
       width: 100%;
@@ -2902,23 +2898,12 @@
       display: flex;
       flex-direction: column;
     }
-    /* Dark mode for the hand-coded original mockups: invert brightness while
-       preserving hue identity (white→dark, dark→white, but the brand orange
-       and blues stay roughly the right hue). The double filter is the
-       standard CSS dark-mode invert trick — it's a quick-win pass; for
-       pixel-accurate dark mode the matching production PNG (Screen toggle)
-       is more faithful. */
-    body[data-site-theme="dark"] .original {
-      filter: invert(0.94) hue-rotate(180deg);
-      background: #f7f7f7; /* gets inverted to dark by the filter */
-    }
-    /* Keep raster images/screenshots upright (don't double-invert them). */
-    body[data-site-theme="dark"] .original img,
-    body[data-site-theme="dark"] .original video,
-    body[data-site-theme="dark"] .original svg image,
-    body[data-site-theme="dark"] .original [data-no-invert] {
-      filter: invert(1) hue-rotate(180deg);
-    }
+    /* Dark mode for the hand-coded original mockups — handled via JS
+       token swap (see applyOriginalColorTheme below). The function walks
+       every inline style attribute on .original elements and replaces hex
+       colors using the Cloaked Color JSON's light↔dark mapping, exactly
+       as the design system intends. This gives semantically accurate
+       dark mode instead of a blunt filter inversion. */
     .og-statusbar {
       display: flex;
       justify-content: space-between;
@@ -7802,6 +7787,63 @@
       const KEY = 'cloaked-reskin:site-theme';
       const btn = document.getElementById('themeToggle');
       if (!btn) return;
+
+      /* Cloaked Color JSON: light hex → dark hex mapping (extracted from
+         Light/Dark Mode tokens.json). When the site flips to dark, walk
+         every inline style on hand-coded .original markup and swap the
+         hex values in place — semantically equivalent to the design
+         system's "token name stays the same, value swaps" approach.
+         Each element stores its original style on data-original-style so
+         we can revert exactly when flipping back to light. */
+      const ORIG_DARK = {
+        '#FFFFFF': '#000000', '#F7F7F7': '#0D0D0D', '#F2F2F2': '#1A1A1A',
+        '#CCCCCC': '#404040', '#B3B3B3': '#4C4C4C', '#A6A6A6': '#595959',
+        '#999999': '#666666', '#8C8C8C': '#737373', '#737373': '#8C8C8C',
+        '#666666': '#999999', '#595959': '#A6A6A6', '#4C4C4C': '#B3B3B3',
+        '#404040': '#CCCCCC', '#333333': '#D9D9D9', '#262626': '#E5E5E5',
+        '#1A1A1A': '#F2F2F2', '#0D0D0D': '#F7F7F7', '#000000': '#FFFFFF',
+        '#E5E5E5': '#262626', '#D9D9D9': '#333333',
+        '#FFE9E0': '#210B02', '#FFDBCC': '#431906', '#CC3D00': '#D0470C',
+        '#FF550C': '#FF6625', '#EC4545': '#EE5555', '#F27F0D': '#F4983B',
+        '#009933': '#01AE3A', '#A474FF': '#AC80FF', '#635EF9': '#6E69FF',
+        '#DCD0FF': '#2B166C', '#2A9AE8': '#30A2F2', '#3F7AEF': '#4782F7',
+        '#B2E0FF': '#1D415A', '#62C081': '#6BC689', '#C4E7D0': '#004116',
+        '#F36669': '#FF7376', '#C53535': '#DD4141', '#FCBEBE': '#691C1C',
+        '#FBF8EF': '#130F02', '#F3EFE2': '#1C180B', '#E9E6DA': '#201C0F',
+        '#A09C8F': '#292519', '#292519': '#A09C8F', '#201C0F': '#E9E6DA',
+        '#1C180B': '#F3EFE2', '#130F02': '#FBF8EF',
+      };
+      // Expand 3-digit hex (#fff) to 6-digit before lookup so the map hits.
+      const expand3 = (m) => '#' + m[1].repeat(2) + m[2].repeat(2) + m[3].repeat(2);
+      function swapColorsInStyle(style) {
+        // 6-digit hex
+        let out = style.replace(/#[0-9a-fA-F]{6}\b/g, (h) => ORIG_DARK[h.toUpperCase()] || h);
+        // 3-digit hex (expand → lookup → keep original casing if no map)
+        out = out.replace(/#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])\b/g, (m, r, g, b) => {
+          const full = expand3([m, r, g, b]);
+          return ORIG_DARK[full.toUpperCase()] || m;
+        });
+        return out;
+      }
+      function applyOriginalColorTheme(theme) {
+        document.querySelectorAll('.original [style], .original').forEach(el => {
+          // Cache the original (light) style on first touch
+          if (!el.hasAttribute('data-original-style')) {
+            el.setAttribute('data-original-style', el.getAttribute('style') || '');
+          }
+          const origStyle = el.getAttribute('data-original-style');
+          if (theme === 'dark') {
+            const swapped = swapColorsInStyle(origStyle);
+            if (swapped !== origStyle) el.setAttribute('style', swapped);
+            else if (!origStyle) el.removeAttribute('style');
+          } else {
+            // Revert
+            if (origStyle) el.setAttribute('style', origStyle);
+            else el.removeAttribute('style');
+          }
+        });
+      }
+
       function applyTheme(theme) {
         document.body.setAttribute('data-site-theme', theme);
         btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
@@ -7810,6 +7852,9 @@
            their dark or light values. The html element keeps data-theme="light"
            as a fallback for any --ct-* usage outside the phone subtrees. */
         document.querySelectorAll('.reskin').forEach(el => el.setAttribute('data-theme', theme));
+        // Swap inline hex colors on hand-coded original mockups using the
+        // Cloaked Color JSON light↔dark mapping.
+        applyOriginalColorTheme(theme);
       }
       // Restore saved preference (defaults to dark if none)
       const saved = (() => {
