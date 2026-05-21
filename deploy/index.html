@@ -1347,6 +1347,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 12px;
       font-family: 'Aeonik Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: 12px;
       line-height: normal;
@@ -1359,6 +1360,55 @@
       min-width: 0;
       position: static;
       text-align: center;
+    }
+    /* 2-segment chip next to the "Original" label — swaps the original-side
+       phone content between the default rendering (hand-rolled HTML where
+       available, fallback PNG otherwise) and the new screenshot PNG. */
+    .orig-mode-switch {
+      display: inline-flex;
+      border: 1px solid rgba(20,20,16,0.15);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .orig-mode-switch button {
+      background: transparent;
+      border: 0;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-family: 'Aeonik Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 10px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      color: rgba(20,20,16,0.55);
+      transition: background 0.12s ease, color 0.12s ease;
+    }
+    .orig-mode-switch button:hover { color: #141410; }
+    .orig-mode-switch button[aria-selected="true"] {
+      background: #141410;
+      color: #ffffff;
+    }
+    body[data-site-theme="dark"] .orig-mode-switch {
+      border-color: rgba(255,255,255,0.15);
+    }
+    body[data-site-theme="dark"] .orig-mode-switch button { color: rgba(243,241,237,0.55); }
+    body[data-site-theme="dark"] .orig-mode-switch button:hover { color: #F3F1ED; }
+    body[data-site-theme="dark"] .orig-mode-switch button[aria-selected="true"] {
+      background: #F3F1ED;
+      color: #141410;
+    }
+    /* Hide/show the two original-side views based on the panel-stack mode. */
+    .panel-stack[data-orig-mode="default"] [data-orig-view="png"] { display: none; }
+    .panel-stack[data-orig-mode="png"]     [data-orig-view="default"] { display: none; }
+    /* The PNG view fills the .phone-scroll container at top-aligned crop. */
+    [data-orig-view="png"] {
+      width: 100%;
+      min-height: 100%;
+      display: block;
+    }
+    [data-orig-view="png"] img {
+      display: block;
+      width: 100%;
+      height: auto;
     }
 
     .panel {
@@ -6137,6 +6187,36 @@
       'messages': 'Messages', 'menu': 'Menu',
     };
 
+    /* Map each tab key to its real screenshot PNG (from cloaked_original
+       screens). When the user toggles "Screen" mode on a panel, the original
+       side renders this PNG instead of the hand-rolled HTML mockup. */
+    const originalScreenshots = {
+      'homepage': 'homepage.png',
+      'exposure': 'exposure cleanup.png',
+      'automations': 'automation.png',
+      'identity-phone': 'identity - phone.png',
+      'identity-email': 'identity email.png',
+      'identity-inbox': 'identity inbox.png',
+      'identity-phone-number': 'phone number.png',
+      'inbox-call-guard': 'call guard.png',
+      'identity-monitoring': 'id mon detail.png',
+      'id-mon-empty': 'id mon empty.png',
+      'id-mon-events': 'id mon events.png',
+      'id-mon-detail': 'id mon detail.png',
+      'vpn': 'VPN.png',
+      'password-manager': 'password manager.png',
+      'spotify-identity': 'spotify identity.png',
+      'edit-password-overlay': 'edit password overlay.png',
+      'edit-password': 'edit password.png',
+      'wallet': 'wallet.png',
+      'otp': 'one time passcode.png',
+      'esim': 'manage e-sim.png',
+      'id-theft': 'identity theft.png',
+      'settings': 'Setting.png',
+      'messages': 'messages.png',
+      'menu': 'menu.png',
+    };
+
     const paneRoot = document.getElementById('paneRoot');
     tabConfig.forEach((entry, idx) => {
       const pane = document.createElement('section');
@@ -6145,16 +6225,29 @@
       if (idx === 0) pane.dataset.active = 'true';
       const reskinHTML = reskins[entry.key] || '<div style="padding:32px;color:var(--ct-text-secondary);">Reskin coming soon.</div>';
       const originalHTML = originals[entry.key];
-      const originalInner = originalHTML
+      const defaultInner = originalHTML
         ? `<div class="original">${originalHTML}</div>`
         : `<img loading="lazy" src="assets/reskin/${entry.file}" alt="${labelMap[entry.tab]} — original" />`;
+      const screenshotFile = originalScreenshots[entry.tab];
+      const screenshotInner = screenshotFile
+        ? `<img loading="lazy" src="assets/original/${encodeURIComponent(screenshotFile)}" alt="${labelMap[entry.tab]} — original screenshot" />`
+        : '';
+      // Each panel-stack carries its own data-orig-mode so toggles are per-page.
+      const origSwitch = screenshotFile ? `
+        <div class="orig-mode-switch" role="tablist" aria-label="Original view mode">
+          <button type="button" role="tab" data-orig-mode="default" aria-selected="true">HTML</button>
+          <button type="button" role="tab" data-orig-mode="png"     aria-selected="false">Screen</button>
+        </div>` : '';
       pane.innerHTML = `
         <div class="pane-row">
-          <div class="panel-stack">
+          <div class="panel-stack" data-orig-mode="default">
             <div class="panel-stack__card">
-              <div class="panel"><div class="phone-scale"><div class="phone phone--before"><div class="phone-scroll">${originalInner}</div></div></div></div>
+              <div class="panel"><div class="phone-scale"><div class="phone phone--before"><div class="phone-scroll">
+                <div data-orig-view="default">${defaultInner}</div>
+                ${screenshotInner ? `<div data-orig-view="png">${screenshotInner}</div>` : ''}
+              </div></div></div></div>
             </div>
-            <span class="label">Original</span>
+            <div class="label"><span>Original</span>${origSwitch}</div>
           </div>
           <div class="panel-stack">
             <div class="panel-stack__card">
@@ -6165,6 +6258,21 @@
         </div>
       `;
       paneRoot.appendChild(pane);
+    });
+
+    // Per-panel toggle: HTML view <-> screenshot PNG. Each .orig-mode-switch
+    // updates its parent .panel-stack[data-orig-mode], which the CSS uses to
+    // show/hide [data-orig-view="default"] vs [data-orig-view="png"].
+    paneRoot.addEventListener('click', (e) => {
+      const btn = e.target.closest('.orig-mode-switch button[data-orig-mode]');
+      if (!btn) return;
+      const mode = btn.dataset.origMode;
+      const stack = btn.closest('.panel-stack');
+      if (!stack) return;
+      stack.setAttribute('data-orig-mode', mode);
+      btn.parentElement.querySelectorAll('button').forEach(b => {
+        b.setAttribute('aria-selected', b.dataset.origMode === mode ? 'true' : 'false');
+      });
     });
 
     const tabBar = document.getElementById('tabBar');
