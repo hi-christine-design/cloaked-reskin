@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# Claude Code local state
+.claude/
+
+# Vercel deployment state (per-machine)
+.vercel/
+
+# Editor / OS noise
+*.swp
+*.swo
+Thumbs.db
+
+# Node (not used today, but cheap insurance)
+node_modules/
