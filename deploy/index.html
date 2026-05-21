@@ -3580,6 +3580,98 @@
       display: block;
     }
 
+    /* ===========================================================
+       Dark-mode overrides for hand-coded .og-* original mockups.
+       Mirrors the Surface mapping in Cloaked Color JSON's Dark
+       Mode tokens:
+         L0 Background = Neutral.50  (#0D0D0D)
+         L1 Card       = Neutral.100 (#1A1A1A)
+         L2            = Neutral.0   (#000000)
+         L3            = Neutral.150 (#262626)
+       Neutral scale inverts: light Neutral.1000 (#000) ↔ dark Neutral.1000 (#FFF).
+       The hex-swap JS already handles inline styles; these rules
+       handle everything declared in .og-* CSS classes.
+       =========================================================== */
+    body[data-site-theme="dark"] .original {
+      color: #FFFFFF;
+      background: #0D0D0D;
+    }
+    body[data-site-theme="dark"] .og-icon-btn {
+      background: rgba(26,26,26,0.6);
+      box-shadow: 0 0 4px rgba(0,0,0,0.6), 0 8px 8px rgba(0,0,0,0.4);
+      color: #FFFFFF;
+    }
+    body[data-site-theme="dark"] .og-greeting p { color: #E5E5E5; }
+    body[data-site-theme="dark"] .og-meter-refresh { color: #FFFFFF; }
+    body[data-site-theme="dark"] .og-section-header p { color: #E5E5E5; }
+    body[data-site-theme="dark"] .og-progress-card {
+      background: #1A1A1A;
+      border-color: rgba(255,255,255,0.15);
+      box-shadow: 0 5px 10px rgba(0,0,0,0.4);
+    }
+    body[data-site-theme="dark"] .og-progress-num { color: #30A2F2; }
+    body[data-site-theme="dark"] .og-progress-label { color: #FFFFFF; }
+    body[data-site-theme="dark"] .og-progress-link { color: #FFFFFF; }
+    body[data-site-theme="dark"] .og-dot { background: rgba(255,255,255,0.2); }
+    body[data-site-theme="dark"] .og-dot.active { background: #FFFFFF; }
+    body[data-site-theme="dark"] .og-next-card {
+      background: rgba(26,26,26,0.8);
+      border-color: rgba(255,255,255,0.15);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    }
+    body[data-site-theme="dark"] .og-next-body { color: #E5E5E5; }
+    body[data-site-theme="dark"] .og-next-cta {
+      background: #FFFFFF;
+      color: #1A1A1A;
+    }
+    body[data-site-theme="dark"] .og-chevron-down { color: #FFFFFF; }
+    body[data-site-theme="dark"] .og-nav {
+      background: rgba(26,26,26,0.55);
+      box-shadow:
+        0 8px 24px rgba(0,0,0,0.6),
+        0 1px 0 rgba(255,255,255,0.06) inset,
+        0 0 0 0.5px rgba(255,255,255,0.06);
+    }
+    body[data-site-theme="dark"] .og-nav-tab { color: #E5E5E5; }
+    body[data-site-theme="dark"] .og-nav-tab.active {
+      background: #333333;
+      color: #FFFFFF;
+    }
+    body[data-site-theme="dark"] .og-icon-btn-flat { color: #FFFFFF; }
+    body[data-site-theme="dark"] .og-pill-blue { color: #FFFFFF; }
+    body[data-site-theme="dark"] .og-pill-grey {
+      background: #333333;
+      color: #FFFFFF;
+    }
+    body[data-site-theme="dark"] .og-progress-stripe {
+      background-color: #333333;
+    }
+    body[data-site-theme="dark"] .og-chip {
+      border-color: #333333;
+      color: #FFFFFF;
+      background: #1A1A1A;
+    }
+    body[data-site-theme="dark"] .og-tab-pill { color: #FFFFFF; }
+    body[data-site-theme="dark"] .og-tab-pill.active {
+      background: #FFFFFF;
+      color: #1A1A1A;
+    }
+    body[data-site-theme="dark"] .og-pack-card {
+      background: #1A1A1A;
+      border-color: rgba(255,255,255,0.10);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+    body[data-site-theme="dark"] .og-id-body .sub { color: #737373; }
+    body[data-site-theme="dark"] .og-search {
+      background: #333333;
+      color: #737373;
+    }
+    body[data-site-theme="dark"] .og-stat-num.blue { color: #30A2F2; }
+    body[data-site-theme="dark"] .og-circle-btn {
+      background: #333333;
+      color: #737373;
+    }
+
     /* Theme toggle — lives in the sidebar header, replacing the AI logo.
        40×40 cream circle with subtle 1px border. Sun in dark mode, moon in light. */
     .theme-toggle {
