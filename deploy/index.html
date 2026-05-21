@@ -769,18 +769,25 @@
       gap: 16px;
     }
     .icon-grid--brand { grid-template-columns: repeat(4, 1fr); }
+    /* Each tile = square frame holding the icon, with the label rendered
+       BELOW the frame (outside the colored bg). */
     .icon-tile {
       display: flex;
       flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+      color: #141410;
+    }
+    .icon-tile__frame {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #ffffff;
+      border: 1px solid rgba(11,11,10,0.06);
+      border-radius: 4px;
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 16px 8px;
-      background: #ffffff;
-      border-radius: 4px;
-      border: 1px solid rgba(11,11,10,0.06);
-      min-height: 88px;
-      color: #141410;
+      overflow: hidden;
     }
     .icon-tile__label {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
@@ -790,16 +797,28 @@
       word-break: break-word;
       line-height: 1.2;
     }
-    .icon-tile img {
+    .icon-tile__frame img {
+      display: block;
       width: 24px;
       height: 24px;
-      display: block;
     }
-    .icon-tile--brand img {
+    /* Brand Logo: round 40px crop (these are brand-identity marks) */
+    .icon-tile--brand .icon-tile__frame img {
       width: 40px;
       height: 40px;
       border-radius: 999px;
       object-fit: cover;
+    }
+    /* Flag + CloakedPay: render at the SVG's natural dimensions (no forced
+       size, no round crop) so each asset keeps its intended aspect ratio. */
+    .icon-tile--flag .icon-tile__frame img,
+    .icon-tile--cloakedpay .icon-tile__frame img {
+      width: auto;
+      height: auto;
+      max-width: 70%;
+      max-height: 70%;
+      border-radius: 0;
+      object-fit: contain;
     }
     .token-category {
       background: transparent;
@@ -1023,33 +1042,39 @@
     }
     .token-semantic-group:last-child { margin-bottom: 0; }
 
-    /* Dual-mode semantic row — token name on top, then Light/Dark sub-rows
-       stacked below. Used by Colors > Semantics in the reskin column to
-       show each token's Light and Dark resolution side-by-side. */
+    /* Dual-mode semantic row — same grid columns as the single-mode row
+       so the original and reskin sides line up visually. The chip area
+       holds two stacked mini chips (Light+Dark); the meta area holds the
+       token name plus the two resolves lines. */
     .token-semantic-row.token-semantic-row--dual {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+      grid-template-columns: 40px 1fr;
+      align-items: start;
       padding: 12px 0;
     }
-    .token-mode-stack {
+    .token-semantic-row__chips-stack {
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
-    .token-mode-row {
+    .token-mode-chip {
+      width: 40px;
+      height: 18px;
+      border-radius: 2px;
+      border: 1px solid rgba(11,11,10,0.08);
+      display: block;
+    }
+    .token-mode-resolves-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .token-mode-resolves-row {
       display: flex;
       align-items: center;
       gap: 10px;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
       font-size: 13px;
-    }
-    .token-mode-row__chip {
-      width: 20px;
-      height: 20px;
-      border-radius: 2px;
-      border: 1px solid rgba(11,11,10,0.08);
-      flex-shrink: 0;
     }
     .token-mode-row__label {
       font-family: 'Aeonik Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -1061,7 +1086,7 @@
       flex-shrink: 0;
     }
     .token-mode-row__resolves { color: #84827E; }
-    body[data-site-theme="dark"] .token-mode-row__chip {
+    body[data-site-theme="dark"] .token-mode-chip {
       border-color: rgba(255,255,255,0.12);
     }
     body[data-site-theme="dark"] .token-mode-row__label {
@@ -1121,10 +1146,10 @@
       background: transparent;
       border-color: rgba(255,255,255,0.08);
     }
-    body[data-site-theme="dark"] .icon-tile {
+    body[data-site-theme="dark"] .icon-tile { color: #F3F1ED; }
+    body[data-site-theme="dark"] .icon-tile__frame {
       background: #141410;
       border-color: rgba(255,255,255,0.06);
-      color: #F3F1ED;
     }
     body[data-site-theme="dark"] .icon-tile__label { color: rgba(243,241,237,0.5); }
     body[data-site-theme="dark"] .icon-group__title { color: #FF8A5C; }
@@ -1332,6 +1357,11 @@
       font-weight: 500;
     }
 
+    /* Section header for Assets gets extra top padding — it's not a clickable
+       button row, so it needs visual breathing room above to separate it from
+       the Tokens nav block sitting directly above. */
+    .site-sidebar__section-header--assets { margin-top: 24px; }
+
     /* Token-nav group — parent label (e.g. "Colors") with indented children
        buttons below. The label itself is non-clickable; only the buttons
        receive hover / selected states. */
@@ -1481,9 +1511,12 @@
        Default (no theme = light) hides the dark variant; dark theme hides
        the light variant. Both images use loading="lazy" so the network
        cost is only paid when the panel scrolls into view. */
-    .orig-screenshot--dark { display: none; }
-    body[data-site-theme="dark"] .orig-screenshot--light { display: none; }
-    body[data-site-theme="dark"] .orig-screenshot--dark  { display: block; }
+    .orig-screenshot--dark,
+    .orig-fallback--dark { display: none; }
+    body[data-site-theme="dark"] .orig-screenshot--light,
+    body[data-site-theme="dark"] .orig-fallback--light { display: none; }
+    body[data-site-theme="dark"] .orig-screenshot--dark,
+    body[data-site-theme="dark"] .orig-fallback--dark  { display: block; }
 
     .panel {
       background: transparent;
@@ -2972,15 +3005,11 @@
        as the design system intends. This gives semantically accurate
        dark mode instead of a blunt filter inversion. */
 
-    /* Pages without a hand-coded HTML original fall back to a
-       light-mode PNG (assets/reskin/*.png). In dark mode, invert it so
-       it visually matches the rest of the dark UI. Only the direct <img>
-       child of [data-orig-view="default"] is targeted — the two new
-       light/dark .orig-screenshot images (which already have their own
-       dark variant) are excluded. */
-    body[data-site-theme="dark"] [data-orig-view="default"] > img:not(.orig-screenshot) {
-      filter: invert(0.94) hue-rotate(180deg);
-    }
+    /* (Pages without a hand-coded HTML original used to fall back to a
+       light-only PNG with CSS filter inversion in dark mode. Now each
+       falls back to a real production light/dark PNG pair instead, so
+       no filter hack is needed — the proper Cloaked dark-mode colors
+       come straight from the screenshot.) */
     .og-statusbar {
       display: flex;
       justify-content: space-between;
@@ -3690,7 +3719,7 @@
 
       <!-- ASSETS sub-nav — also visible only on Tokens view; sits below the
            Tokens nav as a separate section. Icons moved out of Tokens. -->
-      <div class="site-sidebar__section-header site-sidebar__section-header--tokens">Assets</div>
+      <div class="site-sidebar__section-header site-sidebar__section-header--tokens site-sidebar__section-header--assets">Assets</div>
       <nav class="token-nav" role="tablist" id="assetsNav">
         <button role="tab" data-token-tab="icons">Icons</button>
       </nav>
@@ -6330,9 +6359,18 @@
       if (idx === 0) pane.dataset.active = 'true';
       const reskinHTML = reskins[entry.key] || '<div style="padding:32px;color:var(--ct-text-secondary);">Reskin coming soon.</div>';
       const originalHTML = originals[entry.key];
+      // When there's no hand-coded HTML, fall back to a real production
+       // screenshot. We render BOTH the light and dark dark variant
+       // (from assets/original-dark/ — already exists for every entry in
+       // originalScreenshots) so dark mode pulls in the actual Cloaked
+       // dark-mode colors instead of a CSS filter approximation.
+      const fallbackPng = originalScreenshots[entry.tab];
       const defaultInner = originalHTML
         ? `<div class="original">${originalHTML}</div>`
-        : `<img loading="lazy" src="assets/reskin/${entry.file}" alt="${labelMap[entry.tab]} — original" />`;
+        : fallbackPng
+          ? `<img loading="lazy" class="orig-fallback orig-fallback--light" src="assets/original/${encodeURIComponent(fallbackPng)}" alt="${labelMap[entry.tab]} — original (light)" />
+             <img loading="lazy" class="orig-fallback orig-fallback--dark"  src="assets/original-dark/${encodeURIComponent(fallbackPng)}" alt="${labelMap[entry.tab]} — original (dark)" />`
+          : `<img loading="lazy" src="assets/reskin/${entry.file}" alt="${labelMap[entry.tab]} — original" />`;
       const screenshotFile = originalScreenshots[entry.tab];
       // Light + dark versions share the same filename across the two
       // folders; CSS swaps visibility based on body[data-site-theme].
@@ -7093,22 +7131,27 @@
             ${resolves ? `<span class="token-semantic-row__resolves">${resolves}</span>` : ''}
           </div>
         </div>`;
-      // Dual-mode row — shows Light AND Dark chips/resolutions stacked for
-      // a single semantic token. Matches the design system intent: token
-      // name stays the same, value swaps per mode.
+      // Dual-mode row — same grid layout as the original-side row
+      // (40px chip area + 1fr meta) so the two columns visually align.
+      // The chip area holds two stacked mini chips (Light + Dark); the meta
+      // area holds the token name plus two resolves rows.
       const semanticRowDual = (lightHex, darkHex, name, lightRes, darkRes) => `
         <div class="token-semantic-row token-semantic-row--dual">
-          <span class="token-semantic-row__name">${name}</span>
-          <div class="token-mode-stack">
-            <div class="token-mode-row">
-              <span class="token-mode-row__chip" style="background:${lightHex};"></span>
-              <span class="token-mode-row__label">Light</span>
-              <span class="token-mode-row__resolves">${lightRes}</span>
-            </div>
-            <div class="token-mode-row">
-              <span class="token-mode-row__chip" style="background:${darkHex};"></span>
-              <span class="token-mode-row__label">Dark</span>
-              <span class="token-mode-row__resolves">${darkRes}</span>
+          <div class="token-semantic-row__chips-stack">
+            <span class="token-mode-chip" style="background:${lightHex};" title="Light"></span>
+            <span class="token-mode-chip" style="background:${darkHex};"  title="Dark"></span>
+          </div>
+          <div class="token-semantic-row__meta">
+            <span class="token-semantic-row__name">${name}</span>
+            <div class="token-mode-resolves-stack">
+              <div class="token-mode-resolves-row">
+                <span class="token-mode-row__label">Light</span>
+                <span class="token-mode-row__resolves">${lightRes}</span>
+              </div>
+              <div class="token-mode-resolves-row">
+                <span class="token-mode-row__label">Dark</span>
+                <span class="token-mode-row__resolves">${darkRes}</span>
+              </div>
             </div>
           </div>
         </div>`;
@@ -7341,9 +7384,18 @@
       const renderIconGroup = (cat) => {
         const entries = ICONS[cat] || [];
         const isImg = IMAGE_CATS.includes(cat);
+        // Category-specific tile modifier — Brand Logo gets the round 40px
+        // crop; flag and CloakedPay render at the asset's natural dimensions.
+        const tileMod =
+          cat === 'Brand Logo' ? ' icon-tile--brand' :
+          cat === 'flag'       ? ' icon-tile--flag' :
+          cat === 'CloakedPay' ? ' icon-tile--cloakedpay' :
+          '';
         const tiles = entries.map(([label, file]) => `
-          <div class="icon-tile${isImg ? ' icon-tile--brand' : ''}">
-            ${isImg ? IMG(cat, file, label) : ICON(cat, file)}
+          <div class="icon-tile${tileMod}">
+            <div class="icon-tile__frame">
+              ${isImg ? IMG(cat, file, label) : ICON(cat, file)}
+            </div>
             <span class="icon-tile__label">${label}</span>
           </div>`).join('');
         return `<div class="icon-group">
