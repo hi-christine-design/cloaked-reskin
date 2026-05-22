@@ -1419,11 +1419,7 @@
       color: #84827E;
     }
     .token-category__compare {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
       margin-bottom: 24px;
-      align-items: start;
     }
     .token-category__col-label {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro", system-ui, sans-serif;
@@ -7543,15 +7539,15 @@
       };
       const renderSwatches = (rows) => rows.map(([hex, name]) => swatchRow(hex, name)).join('');
       // Flexible category block — left and right columns can be any HTML
-      const categoryBlock = (title, subtitle, origLabel, origHtml, newLabel, newHtml, reason) => `
+      // The original side of every token category has been dropped — we
+      // only document the reskin (cloaked-design-md) system now. The
+      // function signature still accepts the original args so existing
+      // call sites keep working; the orig values are intentionally ignored.
+      const categoryBlock = (title, subtitle, _origLabel, _origHtml, newLabel, newHtml, reason) => `
         <div class="token-category">
           <h4 class="token-category__title">${title}</h4>
           ${subtitle ? `<p class="token-category__subtitle">${subtitle}</p>` : ''}
           <div class="token-category__compare">
-            <div>
-              <p class="token-category__col-label">${origLabel}</p>
-              ${origHtml}
-            </div>
             <div>
               <p class="token-category__col-label">${newLabel}</p>
               ${newHtml}
@@ -8187,19 +8183,13 @@
 
       const iconsGrid = Object.keys(ICONS).map(renderIconGroup).join('');
       const iconTotal = Object.values(ICONS).reduce((s, a) => s + a.length, 0);
-      // Icons sub-page uses a custom layout — the 2-col compare from
-      // categoryBlock would squeeze the grid into a 360px column, so we
-      // keep the before/after framing as a header but render the actual
-      // icon grid full-width below.
+      // Icons sub-page — single panel since the original-side documentation
+      // was dropped. Just the reskin library description above the grid.
       const iconsContent = `
         <div class="token-category">
           <h4 class="token-category__title">Icons</h4>
           <p class="token-category__subtitle">A first-class icon library — single-color stroke marks for product UI, brand logos for partner content, flags and payment marks for editorial slots. All sized at 24px on a consistent stroke weight.</p>
           <div class="token-category__compare" style="margin-bottom:40px;">
-            <div>
-              <p class="token-category__col-label">original</p>
-              <p class="token-category__subtitle" style="margin:0;">Cloaked already had an icon set in production — it's just not included in this comparison file. The reskin set on the right is the redesigned library that replaces it.</p>
-            </div>
             <div>
               <p class="token-category__col-label">cloaked reskin - ${iconTotal} icons</p>
               <p class="token-category__subtitle" style="margin:0;">One unified library across 9 categories. Stroke marks recolor with <code>currentColor</code>; brand logos ship full-color.</p>
