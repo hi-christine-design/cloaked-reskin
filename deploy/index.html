@@ -7961,34 +7961,43 @@
           ${rows.map(r => semanticRowDual(...r)).join('')}
         </div>`;
 
-      // Original role tokens (single mode — Light only).
-      // Source: Cloaked Design System 4.0 → Semantic Role tokens.
+      // Original Cloaked semantic role tokens (Light + Dark — both modes exist).
+      // Source: Cloaked Design System 4.0 → Color Variables.pdf (the document
+      // shows each semantic role mapped to a Neutral/Brand/Status primitive in
+      // BOTH light and dark mode, so dual rows are correct here). Coverage:
+      //   Surface (7) — L0 Background through L6
+      //   Status  (3) — Negative, Warning, Positive
+      //   Brand   (4) — 100, 200, 300 Cloaked, 400
+      //   Overlay / Status (6) — Negative/Warning/Positive at 10% and 20%
+      // = 20 role tokens with full theme layer.
       const origRoleTokens = [
-        semanticGroup('Surfaces', [
-          ['#FFFFFF', 'bg / canvas',         '#FFFFFF'],
-          ['#F3EFE2', 'bg / Marketing/200',  '#F3EFE2'],
-          ['#F7F7F7', 'bg / subtle',         '#F7F7F7'],
-          ['#F2F2F2', 'bg / muted',          '#F2F2F2'],
-          ['#000000', 'bg / inverse',        '#000000'],
+        semanticGroupDual('Surface', [
+          ['#F7F7F7', '#0D0D0D', 'Surface L0 Background',   '→ Neutral 50', '→ Neutral 50'],
+          ['#FFFFFF', '#1A1A1A', 'Surface L1 Card',         '→ Neutral 0',  '→ Neutral 100'],
+          ['#FFFFFF', '#000000', 'Surface L2 White / Black','→ Neutral 0',  '→ Neutral 0'],
+          ['#FFFFFF', '#262626', 'Surface L3 Bottom Cards', '→ Neutral 0',  '→ Neutral 150'],
+          ['#FFFFFF', '#333333', 'Surface L4',              '→ Neutral 0',  '→ Neutral 200'],
+          ['#FFFFFF', '#404040', 'Surface L5',              '→ Neutral 0',  '→ Neutral 250'],
+          ['#FFFFFF', '#4C4C4C', 'Surface L6',              '→ Neutral 0',  '→ Neutral 300'],
         ]),
-        semanticGroup('Foreground', [
-          ['#000000', 'fg / default',     '#000000'],
-          ['#1A1A1A', 'fg / strong',      '#1A1A1A'],
-          ['#262626', 'fg / muted',       '#262626'],
-          ['#595959', 'fg / subtle',      '#595959'],
-          ['#A6A6A6', 'fg / placeholder', '#A6A6A6'],
+        semanticGroupDual('Status', [
+          ['#EC4545', '#EE5555', 'Status / Negative', '→ red-300',    '→ red-300 (dark)'],
+          ['#F27F0D', '#F4983B', 'Status / Warning',  '→ orange-300', '→ orange-300 (dark)'],
+          ['#009933', '#31AD5A', 'Status / Positive', '→ green-300',  '→ green-300 (dark)'],
         ]),
-        semanticGroup('Borders', [
-          ['#F2F2F2', 'border / subtle',  '#F2F2F2'],
-          ['#E5E5E5', 'border / default', '#E5E5E5'],
-          ['#CCCCCC', 'border / strong',  '#CCCCCC'],
-          ['#3F7AEF', 'border / focus',   '#3F7AEF'],
+        semanticGroupDual('Brand', [
+          ['#FFE9E0', '#210B02', 'Brand 100',         '→ brand-100',  '→ brand-100 (dark)'],
+          ['#FFDBCC', '#431906', 'Brand 200',         '→ brand-200',  '→ brand-200 (dark)'],
+          ['#FF550C', '#FF6625', 'Brand 300 Cloaked', '→ brand-300',  '→ brand-300 (dark)'],
+          ['#CC3D00', '#D0470C', 'Brand 400',         '→ brand-400',  '→ brand-400 (dark)'],
         ]),
-        semanticGroup('State', [
-          ['#009933', 'state / success', '#009933'],
-          ['#EC4545', 'state / danger',  '#EC4545'],
-          ['#F27F0D', 'state / warning', '#F27F0D'],
-          ['#2A9AE8', 'state / info',    '#2A9AE8'],
+        semanticGroupDual('Overlay / Status', [
+          ['rgba(236,69,69,0.10)',  'rgba(238,85,85,0.30)',  'Negative 10%', '→ negative @ 10%', '→ negative @ 30%'],
+          ['rgba(236,69,69,0.20)',  'rgba(238,85,85,0.40)',  'Negative 20%', '→ negative @ 20%', '→ negative @ 40%'],
+          ['rgba(242,127,13,0.10)', 'rgba(244,152,59,0.30)', 'Warning 10%',  '→ warning @ 10%',  '→ warning @ 30%'],
+          ['rgba(242,127,13,0.20)', 'rgba(244,152,59,0.40)', 'Warning 20%',  '→ warning @ 20%',  '→ warning @ 40%'],
+          ['rgba(0,153,51,0.10)',   'rgba(49,173,90,0.30)',  'Positive 10%', '→ positive @ 10%', '→ positive @ 30%'],
+          ['rgba(0,153,51,0.20)',   'rgba(49,173,90,0.40)',  'Positive 20%', '→ positive @ 20%', '→ positive @ 40%'],
         ]),
       ].join('');
 
@@ -8042,16 +8051,12 @@
         ]),
       ].join('');
 
-      // Colors Semantics is the one Tokens page where we hide the original
-      // side — pass null for the orig args and categoryBlock collapses to
-      // a single column. (The original-side documentation, origRoleTokens,
-      // is still computed above and remains available for other future use.)
       const colorsSemanticsContent = categoryBlock(
         'Semantics',
         'Role-named color tokens. Each name (e.g. <code>--ct-bkgd-01</code>) resolves to a different primitive in Light and Dark modes — same name, different value.',
-        null, null,
+        'original - 20 role tokens · Light + Dark', origRoleTokens,
         'cloaked reskin - 28 role tokens · Light + Dark', reskinThemes,
-        'The reskin adds a <strong>theme layer</strong> on top of the role tokens: each token resolves to a different primitive in Light vs Dark mode, but the name and role stay the same. Components ask for <code>--ct-bkgd-01</code>, not <code>#F3F1ED</code>, so flipping one attribute on <code>&lt;html data-theme&gt;</code> re-skins the entire app. The reskin also reorganizes around <em>component intent</em> (CTA Primary, AI, Banner, Category accents) instead of generic CSS-property roles (bg / fg / border) — so the token name tells you which component uses it.'
+        'Both systems already have a <strong>theme layer</strong> — each semantic role resolves to a different primitive in Light vs Dark mode, with the name staying constant. The original organizes around <em>visual structure</em>: Surface levels (L0–L6) for depth, Status for state colors, Brand for accent. The reskin reorganizes around <em>component intent</em>: <code>--ct-cta-primary-container</code>, <code>--ct-banner-container</code>, <code>--ct-bkgd-ai-input</code> — the token name tells you which component uses it. Same theming mechanism, different naming axis.'
       );
 
       /* ----------- TOKENS · Spacing -----------
